@@ -5,11 +5,11 @@ import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class User {
-	String userID;
-	String userPW;
+	String userid;
+	String userpw;
 	String nickname;
 	String username;
-	String userEmail;
+	String useremail;
 	String userTel;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	LocalDate userBirth;
@@ -24,17 +24,18 @@ public class User {
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	LocalDate userdeactivatedate;
 	
-	public String getUserID() {
-		return userID;
+	
+	public String getUserid() {
+		return userid;
 	}
-	public void setUserID(String userID) {
-		this.userID = userID;
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
-	public String getUserPW() {
-		return userPW;
+	public String getUserpw() {
+		return userpw;
 	}
-	public void setUserPW(String userPW) {
-		this.userPW = userPW;
+	public void setUserpw(String userpw) {
+		this.userpw = userpw;
 	}
 	public String getNickname() {
 		return nickname;
@@ -48,11 +49,11 @@ public class User {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	public String getUserEmail() {
-		return userEmail;
+	public String getUseremail() {
+		return useremail;
 	}
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+	public void setUseremail(String useremail) {
+		this.useremail = useremail;
 	}
 	public String getUserTel() {
 		return userTel;
