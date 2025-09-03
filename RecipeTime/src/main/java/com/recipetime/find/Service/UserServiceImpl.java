@@ -1,7 +1,8 @@
 package com.recipetime.find.Service;
 
-import com.recipetime.find.DAO.UserDAO;
+import org.springframework.stereotype.Service;
 
-public class UserServiceImpl implements UserDAO {
+@Service
+public class UserServiceImpl implements UserService {
 
 }
