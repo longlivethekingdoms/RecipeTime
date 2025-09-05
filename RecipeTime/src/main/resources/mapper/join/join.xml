@@ -4,10 +4,15 @@
 <mapper namespace="join">
 
     <!-- 회원가입 -->
-    <insert id="add" parameterType="com.recipetime.find.Model.User">
+    <insert id="addUser" parameterType="com.recipetime.find.Model.User">
         INSERT INTO recipeuser
         (userid, userpw, nickname, username, useremail, usertel, userbirth, signupdate, accesslevel)
         VALUES (#{userid}, #{userpw}, #{nickname}, #{username}, #{useremail}, #{usertel}, #{userbirth}, NOW(), 'normal')
     </insert>
-
+    <insert id="initLoginState" parameterType="string">
+    	INSERT INTO userloginstate
+    	(userid, islogin, wrongnum, blocklogin, blockdate)
+    	VALUES (#{userid}, 0, 0, 0, NULL)
+    </insert>
+    
 </mapper>
