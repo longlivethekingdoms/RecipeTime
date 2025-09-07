@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class User {
+public class Users {
 	String userid;
 	String userpw;
 	String nickname;
@@ -23,7 +23,8 @@ public class User {
 	short userdeactivate;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	LocalDate userdeactivatedate;
-	
+	String agree01;
+	String agree02;
 	
 	public String getUserid() {
 		return userid;
@@ -102,6 +103,18 @@ public class User {
 	}
 	public void setUserdeactivatedate(LocalDate userdeactivatedate) {
 		this.userdeactivatedate = userdeactivatedate;
+	}
+	public String getAgree01() {
+		return agree01;
+	}
+	public void setAgree01(String agree01) {
+		this.agree01 = agree01;
+	}
+	public String getAgree02() {
+		return agree02;
+	}
+	public void setAgree02(String agree02) {
+		this.agree02 = agree02;
 	}
 	
 	
