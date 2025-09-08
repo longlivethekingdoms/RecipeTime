@@ -13,6 +13,11 @@ public class UserDAOImpl implements UserDAO {
 	private static final String namespace = "users";
 	
 	@Override
+	public void insertUserAdmin(Users users) {
+		sqlSession.insert(namespace + ".addAdmin", users);
+	}
+	
+	@Override
 	public int duplicateIDCheck(String userid) {	
 		return sqlSession.selectOne(namespace + ".duplicateIDCheck", userid);
 	}
@@ -29,7 +34,7 @@ public class UserDAOImpl implements UserDAO {
 
 	@Override
 	public void insertJoin(Users users) {
-		sqlSession.insert(namespace + ".insertJoin", users);
+		sqlSession.insert(namespace + ".addUser", users);
 	}
 
 }

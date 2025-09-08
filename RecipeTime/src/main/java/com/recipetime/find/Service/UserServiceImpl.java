@@ -12,6 +12,12 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserDAO userDAO;
 
+
+	@Override
+	public void insertUserAdmin(Users users) {
+		userDAO.insertUserAdmin(users);
+	}
+	
 	@Override
 	public String validateUser(Users users) {
 		
@@ -79,9 +85,4 @@ public class UserServiceImpl implements UserService {
 		userDAO.insertJoin(users);
 	}
 
-	@Override
-	public void insertUserAdmin(Users users) {
-		// TODO Auto-generated method stub
-		
-	}
 }

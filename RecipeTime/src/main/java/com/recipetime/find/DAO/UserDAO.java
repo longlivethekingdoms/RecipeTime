@@ -4,6 +4,8 @@ import com.recipetime.find.Model.Users;
 
 public interface UserDAO {
 
+	void insertUserAdmin(Users users);
+	
 	int duplicateIDCheck(String userid);
 
 	int duplicateNickname(String nickname);
