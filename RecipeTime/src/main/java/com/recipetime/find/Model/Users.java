@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Users {
 	String userid;
 	String userpw;
+	String confirmPw;
 	String nickname;
 	String username;
 	String useremail;
@@ -25,6 +26,9 @@ public class Users {
 	LocalDate userdeactivatedate;
 	String agree01;
 	String agree02;
+	boolean isduplicateIDCheck;
+	boolean isduplicateNickname;
+	boolean isduplicateEmail;
 	
 	public String getUserid() {
 		return userid;
@@ -37,6 +41,12 @@ public class Users {
 	}
 	public void setUserpw(String userpw) {
 		this.userpw = userpw;
+	}	
+	public String getConfirmPw() {
+		return confirmPw;
+	}
+	public void setConfirmPw(String confirmPw) {
+		this.confirmPw = confirmPw;
 	}
 	public String getNickname() {
 		return nickname;
@@ -115,6 +125,24 @@ public class Users {
 	}
 	public void setAgree02(String agree02) {
 		this.agree02 = agree02;
+	}
+	public boolean getIsduplicateIDCheck() {
+		return isduplicateIDCheck;
+	}
+	public void setIsduplicateIDCheck(boolean isduplicateIDCheck) {
+		this.isduplicateIDCheck = isduplicateIDCheck;
+	}
+	public boolean getIsduplicateNickname() {
+		return isduplicateNickname;
+	}
+	public void setIsduplicateNickname(boolean isduplicateNickname) {
+		this.isduplicateNickname = isduplicateNickname;
+	}
+	public boolean getIsduplicateEmail() {
+		return isduplicateEmail;
+	}
+	public void setIsduplicateEmail(boolean isduplicateEmail) {
+		this.isduplicateEmail = isduplicateEmail;
 	}
 	
 	

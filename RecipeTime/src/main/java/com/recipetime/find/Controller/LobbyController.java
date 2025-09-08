@@ -16,4 +16,9 @@ public class LobbyController {
 	String index() {
 		return "index";
 	}
+	
+	@GetMapping("/join")
+	String join() {
+		return "join";
+	}
 }

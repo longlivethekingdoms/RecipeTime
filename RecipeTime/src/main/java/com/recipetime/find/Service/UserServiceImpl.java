@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
 			return "ID를 입력하세요";
 		}
 		
-		if (!users.isduplicateIDCheck) {
+		if (!users.getIsduplicateIDCheck()) {			
 			return "ID 중복 체크를 해주십시오.";
 		}
 		
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 			return "닉네임을 입력하세요.";
 		}
 		
-		if (!users.isduplicateNickname) {
+		if (!users.getIsduplicateNickname()) {
 			return "닉네임 중복체크를 해주십시오.";
 		}
 
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         	return "이메일을 입력하세요.";
         }
         
-        if (!users.isduplicateEmail) {
+        if (!users.getIsduplicateEmail()) {
         	return "이메일 중복체크를 해주십시오.";
         }
         
@@ -77,5 +77,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void insertJoin(Users users) {
 		userDAO.insertJoin(users);
+	}
+
+	@Override
+	public void insertUserAdmin(Users users) {
+		// TODO Auto-generated method stub
+		
 	}
 }

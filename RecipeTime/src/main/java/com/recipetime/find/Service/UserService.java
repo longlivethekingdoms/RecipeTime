@@ -7,5 +7,7 @@ public interface UserService {
 	String validateUser(Users users);
 
 	void insertJoin(Users users);
+
+	void insertUserAdmin(Users users);
 	
 }

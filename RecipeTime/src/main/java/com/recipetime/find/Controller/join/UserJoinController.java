@@ -24,6 +24,12 @@ public class UserJoinController {
 	@Autowired
 	UserService userService;
 	
+	@RequestMapping(value = "/addUserAdmin")
+	public String addUserAdmin(@ModelAttribute("user") Users users, HttpServletRequest request, ModelMap model, HttpSession session) {
+		userService.insertUserAdmin(users);
+		return null;
+	}
+	
 	@RequestMapping(value = "/join/siteUseAgree")
 	public String siteUseAgree(@ModelAttribute("users") Users users, HttpServletRequest request, ModelMap model, HttpSession session) {
 		return "join/SiteUseAgree";
@@ -37,23 +43,6 @@ public class UserJoinController {
 		}
 		return "join/UserRegist";
 	}
-	
-//	@RequestMapping(value = "/join/duplicateCheck")
-//	@ResponseBody
-//	public Map<String, Object> duplicateCheck(@ModelAttribute("users") Users users) {
-//	    Map<String, Object> result = new HashMap<>();
-//
-//	    int duplicateCnt = userService.duplicateCheck(users);
-//	    if (duplicateCnt > 0) {
-//	        result.put("successYn", "N");
-//	        result.put("message", "이미 사용 중인 ID 입니다.");
-//	    } else {
-//	        result.put("successYn", "Y");
-//	        result.put("message", "사용 가능한 ID 입니다.");
-//	    }
-//
-//	    return result;  // 자동으로 JSON 변환됨
-//	}
 	
 	@RequestMapping(value = "/join/insertUser")
 	public String insertUser(@ModelAttribute("user") Users users, HttpServletRequest request, ModelMap model) {
