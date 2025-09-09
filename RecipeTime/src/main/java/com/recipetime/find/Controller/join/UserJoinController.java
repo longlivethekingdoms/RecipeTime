@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.recipetime.find.Model.Users;
 import com.recipetime.find.Service.UserService;
@@ -22,15 +23,13 @@ public class UserJoinController {
         return "/join/siteUseAgree"; // JSP 경로
     }
 
-    // 약관동의 확인 후 회원가입 폼으로 이동
     @PostMapping("/join/userRegist")
-    public String userRegist(Users users, Model model) {
-        // 약관 체크 확인
+    public String userRegist(Users users, RedirectAttributes redirectAttributes) {
         if (!"Y".equals(users.getAgree01()) || !"Y".equals(users.getAgree02())) {
-            model.addAttribute("message", "약관에 모두 동의해야 합니다.");
-            return "forward:/join/siteUseAgree";
+            redirectAttributes.addFlashAttribute("message", "약관에 모두 동의해야 합니다.");
+            return "redirect:/join/siteUseAgree";
         }
-        return "/join/userRegist"; // 회원가입 폼 JSP
+        return "/join/userRegist";
     }
 
     // 회원가입 처리

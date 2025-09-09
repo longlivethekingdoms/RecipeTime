@@ -22,5 +22,16 @@
     	VALUES (#{userid}, 0, 0, 0, NULL)
     </insert>
     
+    <select id="duplicateIDCheck" parameterType="String" resultType="int">
+    SELECT COUNT(*) FROM recipeuser WHERE userid = #{userid}
+	</select>
+	
+	<select id="duplicateNickname" parameterType="String" resultType="int">
+	    SELECT COUNT(*) FROM recipeuser WHERE nickname = #{nickname}
+	</select>
+	
+	<select id="duplicateEmail" parameterType="String" resultType="int">
+	    SELECT COUNT(*) FROM recipeuser WHERE useremail = #{useremail}
+	</select>
     
 </mapper>

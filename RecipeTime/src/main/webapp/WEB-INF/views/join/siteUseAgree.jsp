@@ -52,22 +52,31 @@
 	</form>
 	
 	<script>
-	const agreeAll = document.getElementById("agreeAll");
-	const agree01 = document.getElementById("agree01");
-	const agree02 = document.getElementById("agree02");
+	    const agreeAll = document.getElementById("agreeAll");
+	    const agree01 = document.getElementById("agree01");
+	    const agree02 = document.getElementById("agree02");
+	    const form = document.querySelector("form");
 	
-	// 전체 동의 체크 시 두 개도 체크
-	agreeAll.addEventListener("change", () => {
-	    agree01.checked = agreeAll.checked;
-	    agree02.checked = agreeAll.checked;
-	});
-	
-	// 개별 체크 변경 시 전체 동의 자동 반영
-	[agree01, agree02].forEach(el => {
-	    el.addEventListener("change", () => {
-	        agreeAll.checked = agree01.checked && agree02.checked;
+	    // 전체 동의 체크 시 두 개도 체크
+	    agreeAll.addEventListener("change", () => {
+	        agree01.checked = agreeAll.checked;
+	        agree02.checked = agreeAll.checked;
 	    });
-	});
-	</script>
+	
+	    // 개별 체크 변경 시 전체 동의 자동 반영
+	    [agree01, agree02].forEach(el => {
+	        el.addEventListener("change", () => {
+	            agreeAll.checked = agree01.checked && agree02.checked;
+	        });
+	    });
+	
+	    // ✅ 폼 제출 시 약관 체크 확인
+	    form.addEventListener("submit", function(e) {
+	        if (!agree01.checked || !agree02.checked) {
+	            alert("약관에 모두 동의해야 합니다.");
+	            e.preventDefault(); // 서버로 전송 안 함
+	        }
+	    });
+</script>
 	</body>
 </html>

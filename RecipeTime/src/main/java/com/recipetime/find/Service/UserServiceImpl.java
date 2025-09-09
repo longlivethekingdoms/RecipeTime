@@ -85,4 +85,19 @@ public class UserServiceImpl implements UserService {
 		userDAO.insertJoin(users);
 	}
 
+	@Override
+	public boolean duplicateID(String userid) {
+		return userDAO.duplicateIDCheck(userid) > 0;
+	}
+
+	@Override
+	public boolean duplicateNickname(String nickname) {
+		return userDAO.duplicateNickname(nickname) > 0;
+	}
+
+	@Override
+	public boolean duplicateEmail(String useremail) {
+		return userDAO.duplicateEmail(useremail) > 0;
+	}
+
 }

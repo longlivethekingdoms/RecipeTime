@@ -9,4 +9,10 @@ public interface UserService {
 	String validateUser(Users users);
 
 	void insertJoin(Users users);
+
+	boolean duplicateID(String userid);
+
+	boolean duplicateNickname(String nickname);
+
+	boolean duplicateEmail(String useremail);
 }
