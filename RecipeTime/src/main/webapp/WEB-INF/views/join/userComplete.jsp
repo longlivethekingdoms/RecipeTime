@@ -5,15 +5,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-	<title><c:out value="${title}"/></title>
+<title>Insert title here</title>
 </head>
 <body>
-	<jsp:include page="/WEB-INF/views/template/header.jsp"/>
-	
-	<div class="main-content">
-		
-	</div>
-	
-	<jsp:include page="/WEB-INF/views/template/footer.jsp"/>
+
 </body>
 </html>

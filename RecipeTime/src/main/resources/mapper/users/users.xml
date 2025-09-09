@@ -4,17 +4,17 @@
 <mapper namespace="users">
 
 	<!-- 관리자 추가 -->
-	<insert id="addAdmin" parameterType="com.recipetime.find.Model.User">
+	<insert id="addAdmin" parameterType="com.recipetime.find.Model.Users">
 		INSERT INTO recipeuser
-		(userid, userpw, nickname, username, useremail, usertel, userbirth, signupdate, accesslevel)
-		VALUES (#{userid}, #{userpw}, #{nickname}, #{username}, #{useremail}, #{usertel}, NULL, NOW(), 'manager')
+		(userid, userpw, nickname, username, useremail, usertel, userbirth, signupdate, accesslevel, userdeactivate)
+		VALUES (#{userid}, #{userpw}, #{nickname}, #{username}, #{useremail}, #{usertel}, #{userbirth}, NOW(), 'manager', 0)
 	</insert>
 	
     <!-- 회원가입 -->
-    <insert id="addUser" parameterType="com.recipetime.find.Model.User">
+    <insert id="addUser" parameterType="com.recipetime.find.Model.Users">
         INSERT INTO recipeuser
         (userid, userpw, nickname, username, useremail, usertel, userbirth, signupdate, accesslevel)
-        VALUES (#{userid}, #{userpw}, #{nickname}, #{username}, #{useremail}, #{usertel}, #{userbirth}, NOW(), 'normal')
+        VALUES (#{userid}, #{userpw}, #{nickname}, #{username}, #{useremail}, #{usertel}, #{userbirth}, NOW(), 'normal', 0)
     </insert>
     <insert id="initLoginState" parameterType="string">
     	INSERT INTO userloginstate

@@ -8,11 +8,11 @@
 </settings>
 	
 <typeAliases>
-<typeAlias type="com.recipetime.find.Model.User" alias="user"/>
+<typeAlias type="com.recipetime.find.Model.Users" alias="user"/>
 </typeAliases>
 	
 <mappers>
-	<mapper resource="mapper/user/user.xml"/>
+	<mapper resource="mapper/users/users.xml"/>
 </mappers>
 
 </configuration>

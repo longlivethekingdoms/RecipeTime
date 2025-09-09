@@ -11,9 +11,9 @@ public class Users {
 	String nickname;
 	String username;
 	String useremail;
-	String userTel;
+	String usertel;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
-	LocalDate userBirth;
+	LocalDate userbirth;
 	String accesslevel;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	LocalDate recentlogindate;
@@ -66,17 +66,18 @@ public class Users {
 	public void setUseremail(String useremail) {
 		this.useremail = useremail;
 	}
-	public String getUserTel() {
-		return userTel;
+	public String getUsertel() {
+		return usertel;
 	}
-	public void setUserTel(String userTel) {
-		this.userTel = userTel;
+	public void setUsertel(String usertel) {
+		this.usertel = usertel;
 	}
-	public LocalDate getUserBirth() {
-		return userBirth;
+	
+	public LocalDate getUserbirth() {
+		return userbirth;
 	}
-	public void setUserBirth(LocalDate userBirth) {
-		this.userBirth = userBirth;
+	public void setUserbirth(LocalDate userbirth) {
+		this.userbirth = userbirth;
 	}
 	public String getAccesslevel() {
 		return accesslevel;

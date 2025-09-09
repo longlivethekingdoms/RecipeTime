@@ -69,11 +69,11 @@ public class UserServiceImpl implements UserService {
             return "이미 사용 중인 이메일입니다.";
         }
   
-        if (users.getUserTel() == null || users.getUserTel().isEmpty()) {
+        if (users.getUsertel() == null || users.getUsertel().isEmpty()) {
             return "전화번호를 입력하세요.";
         }
         
-        if (users.getUserBirth() == null) {
+        if (users.getUserbirth() == null) {
         	return "생년월일을 입력하세요.";
         }
 		
