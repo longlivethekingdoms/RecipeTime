@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +30,9 @@ public class UserJoinController {
     
     @PostMapping("/addUserAdmin")
     @ResponseBody
-    public String addUserAdmin(@RequestBody Users user) {
+    public ResponseEntity<String> addUserAdmin(@RequestBody Users user) {
         userService.insertUserAdmin(user);
-        return "관리자 계정 추가 완료";
+        return ResponseEntity.ok("관리자 추가 성공");
     }
 
     // 약관동의 페이지

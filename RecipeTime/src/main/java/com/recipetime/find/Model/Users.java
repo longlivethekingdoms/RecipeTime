@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Users {
 	String userid;
 	String userpw;
@@ -13,16 +15,21 @@ public class Users {
 	String useremail;
 	String usertel;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape .STRING , pattern = "yyyy-mm-dd")
 	LocalDate userbirth;
 	String accesslevel;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape .STRING , pattern = "yyyy-mm-dd")
 	LocalDate recentlogindate;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape .STRING , pattern = "yyyy-mm-dd")
 	LocalDate changepwdate;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape .STRING , pattern = "yyyy-mm-dd")
 	LocalDate signupdate;
 	short userdeactivate;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape .STRING , pattern = "yyyy-mm-dd")
 	LocalDate userdeactivatedate;
 	String agree01;
 	String agree02;
