@@ -51,6 +51,12 @@
 	    <button type="submit">다음</button>
 	</form>
 	
+	<c:if test="${not empty message}">
+	    <script type="text/javascript">
+	        alert("${message}");
+	    </script>
+	</c:if>
+	
 	<script>
 	    const agreeAll = document.getElementById("agreeAll");
 	    const agree01 = document.getElementById("agree01");

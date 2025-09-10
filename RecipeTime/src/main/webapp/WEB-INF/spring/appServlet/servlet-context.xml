@@ -27,6 +27,21 @@
 	
 	<context:component-scan base-package="com.recipetime.find" />
 	
+	<!--
+	<interceptors>
+		<interceptor>
+			<mapping path="/mypage/**"/>
+			
+			<beans:bean class="com.recipetime.find.interceptor.UserInterceptor"></beans:bean>
+		</interceptor>
+		
+		<interceptor>
+			<mapping path="/users/**"/>
+			
+			<beans:bean class="com.recipetime.find.interceptor.AdminInterceptor"></beans:bean>
+		</interceptor>
+	</interceptors>
+	  -->
 	<tx:annotation-driven/>
 	
 </beans:beans>
