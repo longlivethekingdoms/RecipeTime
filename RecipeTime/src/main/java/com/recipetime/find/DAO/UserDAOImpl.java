@@ -44,4 +44,9 @@ public class UserDAOImpl implements UserDAO {
 		sqlSession.insert(namespace + ".addUserLoginState", userid);
 	}
 
+	@Override
+	public Users findByUserid(String userid) {
+		return sqlSession.selectOne(namespace + ".findByUserid", userid);
+	}
+
 }

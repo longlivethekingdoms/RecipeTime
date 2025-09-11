@@ -47,6 +47,8 @@
 	            전체 동의
 	        </label>
 	    </div>
+	    
+	    <button type="button"><a href="<c:url value='/' />">홈으로</a></button>
 	
 	    <button type="submit">다음</button>
 	</form>

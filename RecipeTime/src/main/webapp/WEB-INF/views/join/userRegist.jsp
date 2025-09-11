@@ -78,7 +78,7 @@
     <!-- 약관동의 유지 -->
     <input type="hidden" name="agree01" value="${users.agree01}" />
     <input type="hidden" name="agree02" value="${users.agree02}" />
-
+	
     <button type="submit">회원가입 완료</button>
 </form>
 

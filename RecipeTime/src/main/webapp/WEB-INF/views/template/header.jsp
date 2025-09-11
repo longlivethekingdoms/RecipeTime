@@ -16,13 +16,13 @@
 					
 					<c:choose>
 		                <c:when test="${empty sessionScope.loginUser}">
-		                    <li><a href="<c:url value='/users/login' />">로그인</a></li>
-		                    <li><a href="<c:url value='/users/findId' />">아이디 찾기</a></li>
-		                    <li><a href="<c:url value='/users/findPw' />">비밀번호 찾기</a></li>
+		                    <li><a href="<c:url value='/login/login' />">로그인</a></li>
+		                    <li><a href="<c:url value='/login/findId' />">아이디 찾기</a></li>
+		                    <li><a href="<c:url value='/login/findPw' />">비밀번호 찾기</a></li>
 		                    <li><a href="<c:url value='/join/siteUseAgree' />">회원가입</a></li>
 		                </c:when>
 		                <c:otherwise>
-		                    <li><a href="<c:url value='/logout.do' />">로그아웃</a></li>	
+		                    <li><a href="<c:url value='/login/logout'/>">로그아웃</a></li>	
 		                    <li class="dropdown">
 		                        <a href="#">마이홈페이지</a>
 		                        <ul class="dropdown-menu">

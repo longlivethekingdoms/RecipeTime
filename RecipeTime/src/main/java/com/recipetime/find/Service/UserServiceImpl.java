@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void insertJoin(Users users) {
 		userDAO.insertJoin(users);
+		userDAO.insertUserLoginState(users.getUserid());
 	}
 
 	@Override
@@ -103,6 +104,15 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean duplicateEmail(String useremail) {
 		return userDAO.duplicateEmail(useremail) > 0;
+	}
+
+	@Override
+	public Users login(String userid, String userpw) {
+		Users user = userDAO.findByUserid(userid);
+		if(user != null && user.getUserpw().equals(userpw)) {
+			return user;
+		}
+		return null;
 	}
 
 }

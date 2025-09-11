@@ -16,4 +16,5 @@ public interface UserDAO {
 
 	void insertUserLoginState(String userid);
 
+	Users findByUserid(String userid);
 }

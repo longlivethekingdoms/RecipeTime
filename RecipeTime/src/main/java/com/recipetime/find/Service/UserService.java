@@ -15,4 +15,6 @@ public interface UserService {
 	boolean duplicateNickname(String nickname);
 
 	boolean duplicateEmail(String useremail);
+
+	Users login(String userid, String userpw);
 }

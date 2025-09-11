@@ -32,12 +32,18 @@
     SELECT COUNT(*) FROM recipeuser WHERE userid = #{userid}
 	</select>
 	
-	<select id="duplicateNickname" parameterType="String" resultType="int">
+	<select id="duplicateNickname" resultType="int">
 	    SELECT COUNT(*) FROM recipeuser WHERE nickname = #{nickname}
 	</select>
 	
-	<select id="duplicateEmail" parameterType="String" resultType="int">
+	<select id="duplicateEmail" resultType="int">
 	    SELECT COUNT(*) FROM recipeuser WHERE useremail = #{useremail}
 	</select>
     
+    <!-- 로그인 -->
+    <select id="findByUserid" resultType="com.recipetime.find.Model.Users">
+    SELECT *
+    FROM recipeuser
+    WHERE userid = #{userid}
+	</select>
 </mapper>
