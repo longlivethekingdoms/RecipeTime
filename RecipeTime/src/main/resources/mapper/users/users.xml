@@ -4,25 +4,31 @@
 <mapper namespace="users">
 
 	<!-- 관리자 추가 -->
-	<insert id="addAdmin" parameterType="com.recipetime.find.Model.Users">
+	<insert id="addAdmin">
 		INSERT INTO recipeuser
 		(userid, userpw, nickname, username, useremail, usertel, userbirth, signupdate, accesslevel, userdeactivate)
 		VALUES (#{userid}, #{userpw}, #{nickname}, #{username}, #{useremail}, #{usertel}, #{userbirth}, NOW(), 'manager', 0)
 	</insert>
 	
+	<insert id="addUserLoginState">
+		INSERT INTO userloginstate
+		(userid, wrongnum, blocklogin)
+		VALUES (#{userid}, 0, 0)
+	</insert>
+	
     <!-- 회원가입 -->
-    <insert id="addUser" parameterType="com.recipetime.find.Model.Users">
+    <insert id="addUser">
         INSERT INTO recipeuser
-        (userid, userpw, nickname, username, useremail, usertel, userbirth, signupdate, accesslevel)
+        (userid, userpw, nickname, username, useremail, usertel, userbirth, signupdate, accesslevel, userdeactivate)
         VALUES (#{userid}, #{userpw}, #{nickname}, #{username}, #{useremail}, #{usertel}, #{userbirth}, NOW(), 'normal', 0)
     </insert>
-    <insert id="initLoginState" parameterType="string">
+    <insert id="initLoginState">
     	INSERT INTO userloginstate
     	(userid, islogin, wrongnum, blocklogin, blockdate)
     	VALUES (#{userid}, 0, 0, 0, NULL)
     </insert>
     
-    <select id="duplicateIDCheck" parameterType="String" resultType="int">
+    <select id="duplicateIDCheck" resultType="int">
     SELECT COUNT(*) FROM recipeuser WHERE userid = #{userid}
 	</select>
 	

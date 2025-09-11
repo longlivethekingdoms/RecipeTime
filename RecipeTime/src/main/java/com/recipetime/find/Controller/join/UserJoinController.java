@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class UserJoinController {
     @GetMapping("/userRegist")
     public String userRegistPage(Users users, RedirectAttributes redirectAttributes) {
         if (!"Y".equals(users.getAgree01()) || !"Y".equals(users.getAgree02())) {
-            redirectAttributes.addFlashAttribute("message", "잘못된 접근입니다. 약관에 동의해주세요.");
+            redirectAttributes.addAttribute("message", "잘못된 접근입니다. 약관에 동의해주세요.");
             return "redirect:/join/siteUseAgree";
         }
         return "/join/userRegist";
@@ -56,7 +57,7 @@ public class UserJoinController {
         String agree02 = request.getParameter("agree02");
 
         if (!"Y".equals(agree01) || !"Y".equals(agree02)) {
-            redirectAttributes.addFlashAttribute("message", "약관에 모두 동의해야 합니다.");
+            redirectAttributes.addAttribute("message", "약관에 모두 동의해야 합니다.");
             return "redirect:/join/siteUseAgree";
         }
         return "/join/userRegist";
@@ -71,13 +72,13 @@ public class UserJoinController {
             return "forward:/join/siteUseAgree";
         }
 
-        // 유효성 검사
-        String validationMessage = userService.validateUser(users);
-        if (validationMessage != null) {
-            model.addAttribute("message", validationMessage);
-            return "forward:/join/userRegist";
-        }
-
+//        // 유효성 검사
+//        String validationMessage = userService.validateUser(users);
+//        if (validationMessage != null) {
+//            model.addAttribute("message", validationMessage);
+//            return "forward:/join/userRegist";
+//        }
+        
         // 회원가입
         userService.insertJoin(users);
         model.addAttribute("message", "회원가입이 완료되었습니다.");
@@ -85,12 +86,20 @@ public class UserJoinController {
     }
     
     @GetMapping("/userComplete")
-    public String userComplete(Users users, RedirectAttributes redirectAttributes) {
+    public String userComplete(Users users, Model model, RedirectAttributes redirectAttributes) {
         // 약관 동의 여부 확인
         if (!"Y".equals(users.getAgree01()) || !"Y".equals(users.getAgree02())) {
-            redirectAttributes.addFlashAttribute("message", "잘못된 접근입니다. 약관에 동의해주세요.");
+            redirectAttributes.addAttribute("message", "잘못된 접근입니다. 약관에 동의해주세요.");
             return "redirect:/join/siteUseAgree";
         }
+        
+//        // 유효성 검사
+//        String validationMessage = userService.validateUser(users);
+//        if (validationMessage != null) {
+//            model.addAttribute("message", validationMessage);
+//            return "forward:/join/userRegist";
+//        }
+        
         return "/join/userComplete";
     }
     

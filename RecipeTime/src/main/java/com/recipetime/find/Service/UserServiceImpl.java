@@ -2,6 +2,7 @@ package com.recipetime.find.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.recipetime.find.DAO.UserDAO;
 import com.recipetime.find.Model.Users;
@@ -12,10 +13,14 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserDAO userDAO;
 
-
+	@Transactional
 	@Override
 	public void insertUserAdmin(Users users) {
+		//1.recipeuseradmin추가
 		userDAO.insertUserAdmin(users);
+		//2.userloginstate추가
+		userDAO.insertUserLoginState(users.getUserid());
+		
 	}
 	
 	@Override
@@ -26,7 +31,7 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		if (!users.getIsduplicateIDCheck()) {			
-			return "ID 중복 체크를 해주십시오.";
+			return "ID 중복 체크를 해주세요.";
 		}
 		
 		if (userDAO.duplicateIDCheck(users.getUserid())> 0) {

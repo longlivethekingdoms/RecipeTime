@@ -14,4 +14,6 @@ public interface UserDAO {
 
 	void insertJoin(Users users);
 
+	void insertUserLoginState(String userid);
+
 }

@@ -82,8 +82,9 @@
     <button type="submit">회원가입 완료</button>
 </form>
 
+
 <script>
-let idChecked = false;
+/*let idChecked = false;
 let nicknameChecked = false;
 let emailChecked = false;
 
@@ -104,7 +105,9 @@ document.getElementById('checkID').addEventListener('click', () => {
 document.getElementById('checkNickname').addEventListener('click', () => {
     const nickname = document.getElementById('nickname').value.trim();
     if (!nickname) { alert("닉네임을 입력하세요."); return; }
-
+	
+    console.log(idChecked);
+    
     fetch(`/join/duplicateCheckNickname?nickname=${nickname}`)
         .then(res => res.json())
         .then(data => {
@@ -146,7 +149,7 @@ document.getElementById('userForm').addEventListener('submit', (e) => {
         e.preventDefault();
         return;
     }
-});
+});*/
 </script>
 
 </body>

@@ -15,21 +15,21 @@ public class Users {
 	String useremail;
 	String usertel;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
-	@JsonFormat(shape = JsonFormat.Shape .STRING , pattern = "yyyy-mm-dd")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	LocalDate userbirth;
 	String accesslevel;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
-	@JsonFormat(shape = JsonFormat.Shape .STRING , pattern = "yyyy-mm-dd")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	LocalDate recentlogindate;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
-	@JsonFormat(shape = JsonFormat.Shape .STRING , pattern = "yyyy-mm-dd")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	LocalDate changepwdate;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
-	@JsonFormat(shape = JsonFormat.Shape .STRING , pattern = "yyyy-mm-dd")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	LocalDate signupdate;
 	short userdeactivate;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
-	@JsonFormat(shape = JsonFormat.Shape .STRING , pattern = "yyyy-mm-dd")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	LocalDate userdeactivatedate;
 	String agree01;
 	String agree02;
