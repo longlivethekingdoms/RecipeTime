@@ -1,0 +1,34 @@
+<mapper namespace="posts">
+	<!-- 레시피 등록 -->
+    <insert id="insertPost" useGeneratedKeys="true" keyProperty="recipeid">
+        INSERT INTO recipepost
+        (recipetitle, recipecontent, recipewritedate, recipefixdate, recipeviews, 
+         ishotdisplay, isbestdisplay, isprivate, userid, maincategoryid, subcategoryid, subcategoryname)
+        VALUES
+        (#{recipetitle}, #{recipecontent}, NOW(), NOW(), 0, 
+         #{ishotdisplay}, #{isbestdisplay}, #{isprivate}, #{userid}, 
+         #{category.maincategoryid}, #{category.subcategoryid}, #{category.subcategoryname})
+    </insert>
+
+    <!-- 태그 등록 -->
+    <insert id="insertTag">
+        INSERT INTO recipetag (recipeid, tagorder, tagname)
+        VALUES (#{recipeid}, #{tagorder}, #{tagname})
+    </insert>
+
+    <!-- 첨부파일 등록 -->
+    <insert id="insertAttachment">
+        INSERT INTO attachment (fileorder, filename, fileuuid, fileext, type, isMain, recipeid, recipestepid)
+        VALUES (#{fileorder}, #{filename}, #{fileuuid}, #{fileext}, #{type}, #{isMain}, #{recipeid}, #{recipestepid})
+    </insert>
+
+    <!-- 레시피 단계 등록 -->
+    <insert id="insertSequence" useGeneratedKeys="true" keyProperty="recipestepid">
+        INSERT INTO recipesequence (recipeid, recipestep, explain, recipevidlink, 
+                                    ingactivate, toolactivate, fireactivate, tipactivate,
+                                    ingexp, toolexp, fireexp, tipexp)
+        VALUES (#{recipeid}, #{recipestep}, #{explain}, #{recipevidlink}, 
+                #{ingactivate}, #{toolactivate}, #{fireactivate}, #{tipactivate},
+                #{ingexp}, #{toolexp}, #{fireexp}, #{tipexp})
+    </insert>
+</mapper>
