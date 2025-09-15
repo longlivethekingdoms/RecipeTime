@@ -22,7 +22,8 @@
 		                    <li><a href="<c:url value='/join/siteUseAgree' />">회원가입</a></li>
 		                </c:when>
 		                <c:otherwise>
-		                    <li><a href="<c:url value='/login/logout'/>">로그아웃</a></li>	
+		                    <li><a href="<c:url value='/login/logout'/>">로그아웃</a></li>
+		                    <li><a href="<c:url value='/post/insert'/>">글쓰기</a>	
 		                    <li class="dropdown">
 		                        <a href="#">마이홈페이지</a>
 		                        <ul class="dropdown-menu">
