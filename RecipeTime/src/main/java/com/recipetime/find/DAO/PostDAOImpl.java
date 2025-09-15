@@ -1,6 +1,8 @@
 package com.recipetime.find.DAO;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,44 +12,49 @@ import com.recipetime.find.Model.Post;
 
 @Repository
 public class PostDAOImpl implements PostDAO {
-	
-	@Autowired
-	private SqlSession sqlSession;
-	
-	@Override
-	public void insertPost(Post post) {
-		sqlSession.insert("posts.insertPost", post);
-	}
 
-	@Override
-	public void insertTags(Post post) {
-		if(post.getTags() != null) {
-			post.getTags().forEach(tag -> sqlSession.insert("posts.insertTag", tag));
-		}
-	}
+    private static final String namespace = "postMapper.";
 
-	@Override
-	public void insertAttachments(Post post) {
-		if(post.getAttachments() != null) {
-			post.getAttachments().forEach(att -> sqlSession.insert("posts.insertAttachment", att));
-		}
-	}
+    @Autowired
+    private SqlSession sqlSession;
 
-	@Override
-	public void insertSequences(Post post) {
-		if(post.getSequences() != null) {
-			post.getSequences().forEach(seq -> sqlSession.insert("posts.insertSequence", seq));
-		}
-	}
+    @Override
+    public void insertPost(Post post) {
+        sqlSession.insert(namespace + "insertPost", post);
+    }
 
-	@Override
-	public List<Post> getAllPosts() {
-		return sqlSession.selectList("posts.getAllPosts");
-	}
+    @Override
+    public void insertTags(Post post) {
+        sqlSession.insert(namespace + "insertTags", post);
+    }
 
-	@Override
-	public Post getPostById(int recipeid) {
-		return sqlSession.selectOne("posts.getPostById", recipeid);
-	}
+    @Override
+    public void insertAttachments(Post post) {
+        sqlSession.insert(namespace + "insertAttachments", post);
+    }
 
+    @Override
+    public void insertSequences(Post post) {
+        sqlSession.insert(namespace + "insertSequences", post);
+    }
+
+    @Override
+    public List<Post> getAllPosts() {
+        return sqlSession.selectList(namespace + "getAllPosts");
+    }
+
+    @Override
+    public Post getPostById(int recipeid, String currentUserId, boolean isAdmin) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("recipeid", recipeid);
+        params.put("currentUserId", currentUserId);
+        params.put("isAdmin", isAdmin);
+
+        return sqlSession.selectOne(namespace + "getPostById", params);
+    }
+    
+    @Override
+    public void deactivatePost(int recipeid) {
+        sqlSession.update("post.deactivatePost", recipeid);
+    }
 }

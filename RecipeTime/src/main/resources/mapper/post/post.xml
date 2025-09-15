@@ -1,63 +1,59 @@
-<mapper namespace="posts">
-	<!-- 레시피 등록 -->
-    <insert id="insertPost" parameterType="com.recipetime.find.Model.Post" useGeneratedKeys="true" keyProperty="recipeid">
-        INSERT INTO recipepost
-        (recipetitle, recipecontent, recipewritedate, recipefixdate,
-         recipemainvidlink, ishotdisplay, isbestdisplay, isprivate,
-         recipedeactivate, isreport, userid, maincategoryid, subcategoryid, subcategoryname)
-        VALUES
-        (#{recipetitle}, #{recipecontent}, NOW(), NOW(),
-         #{recipemainvidlink}, #{ishotdisplay}, #{isbestdisplay}, #{isprivate},
-         #{recipedeactivate}, #{isreport}, #{userid}, #{maincategoryid}, #{subcategoryid}, #{subcategoryname})
+<mapper namespace="postMapper">
+
+    <insert id="insertPost" parameterType="com.recipetime.find.Model.Post">
+        INSERT INTO recipepost (recipetitle, recipecontent, recipewritedate, userid, maincategoryid, subcategoryid, subcategoryname, isprivate, recipedeactivate)
+        VALUES (#{recipetitle}, #{recipecontent}, NOW(), #{userid}, #{maincategoryid}, #{subcategoryid}, #{subcategoryname}, #{isprivate}, #{recipedeactivate});
     </insert>
 
-    <!-- 태그 등록 -->
-    <insert id="insertTag">
+    <insert id="insertTags" parameterType="com.recipetime.find.Model.Post">
         INSERT INTO recipetag (recipeid, tagorder, tagname)
-        VALUES (#{recipeid}, #{tagorder}, #{tagname})
-    </insert>
-
-    <!-- 첨부파일 등록 -->
-    <insert id="insertAttachment">
-        INSERT INTO attachment (fileorder, filename, fileuuid, fileext, type, isMain, recipeid, recipestepid)
-        VALUES (#{fileorder}, #{filename}, #{fileuuid}, #{fileext}, #{type}, #{isMain}, #{recipeid}, #{recipestepid})
-    </insert>
-
-    <!-- 레시피 단계 등록 -->
-    <insert id="insertSequence" useGeneratedKeys="true" keyProperty="recipestepid">
-        INSERT INTO recipesequence (recipeid, recipestep, explain, recipevidlink, 
-                                    ingactivate, toolactivate, fireactivate, tipactivate,
-                                    ingexp, toolexp, fireexp, tipexp)
-        VALUES (#{recipeid}, #{recipestep}, #{explain}, #{recipevidlink}, 
-                #{ingactivate}, #{toolactivate}, #{fireactivate}, #{tipactivate},
-                #{ingexp}, #{toolexp}, #{fireexp}, #{tipexp})
-    </insert>
-    
-     <!-- 게시글 조회 (일반 유저용) -->
-    <select id="getPostForUser" parameterType="map" resultType="com.recipetime.find.Model.Post">
-        SELECT *
-        FROM recipepost
-        WHERE recipeid = #{recipeid}
-          AND recipedeactivate = 0
-          AND (isprivate = 1 OR userid = #{loginUserId})
-    </select>
-
-    <!-- 게시글 조회 (관리자용) -->
-    <select id="getPostForAdmin" parameterType="int" resultType="com.recipetime.find.Model.Post">
-        SELECT *
-        FROM recipepost
-        WHERE recipeid = #{recipeid}
-    </select>
-
-    <!-- 게시글 등록 -->
-    <insert id="insertPost" parameterType="com.recipetime.find.Model.Post" useGeneratedKeys="true" keyProperty="recipeid">
-        INSERT INTO recipepost
-        (recipetitle, recipecontent, recipewritedate, recipefixdate,
-         recipemainvidlink, ishotdisplay, isbestdisplay, isprivate,
-         recipedeactivate, isreport, userid, maincategoryid, subcategoryid, subcategoryname)
         VALUES
-        (#{recipetitle}, #{recipecontent}, NOW(), NOW(),
-         #{recipemainvidlink}, #{ishotdisplay}, #{isbestdisplay}, #{isprivate},
-         #{recipedeactivate}, #{isreport}, #{userid}, #{maincategoryid}, #{subcategoryid}, #{subcategoryname})
+        <foreach collection="tags" item="tag" separator=",">
+            (#{recipeid}, #{tag.tagorder}, #{tag.tagname})
+        </foreach>
     </insert>
+
+    <insert id="insertAttachments" parameterType="com.recipetime.find.Model.Post">
+        INSERT INTO attachment (fileorder, filename, fileuuid, fileext, recipeid)
+        VALUES
+        <foreach collection="attachments" item="att" separator=",">
+            (#{att.fileorder}, #{att.filename}, #{att.fileuuid}, #{att.fileext}, #{recipeid})
+        </foreach>
+    </insert>
+
+    <insert id="insertSequences" parameterType="com.recipetime.find.Model.Post">
+        INSERT INTO recipesequence (recipeid, recipestep, explain, recipevidlink, ingactivate, toolactivate, fireactivate, tipactivate, ingexp, toolexp, fireexp, tipexp)
+        VALUES
+        <foreach collection="sequences" item="seq" separator=",">
+            (#{recipeid}, #{seq.recipestep}, #{seq.explain}, #{seq.recipevidlink},
+             #{seq.ingactivate}, #{seq.toolactivate}, #{seq.fireactivate}, #{seq.tipactivate},
+             #{seq.ingexp}, #{seq.toolexp}, #{seq.fireexp}, #{seq.tipexp})
+        </foreach>
+    </insert>
+
+    <select id="getAllPosts" resultType="com.recipetime.find.Model.Post">
+        SELECT * FROM recipepost WHERE recipedeactivate = 0 AND isprivate = 1
+    </select>
+
+    <select id="getPostById" parameterType="map" resultType="com.recipetime.find.Model.Post">
+        SELECT *
+        FROM recipepost
+        WHERE recipeid = #{recipeid}
+          AND (
+              (#{isAdmin} = true AND recipedeactivate = 1)
+              OR (#{isAdmin} = false AND recipedeactivate = 0)
+          )
+          AND (
+              isprivate = 1
+              OR (isprivate = 0 AND userid = #{currentUserId})
+          )
+    </select>
+    
+    <update id="deactivatePost" parameterType="int">
+	    UPDATE recipepost
+	    SET recipedeactivate = 1,
+	        isprivate = 1,
+	        recipedeactivatedate = NOW()
+	    WHERE recipeid = #{recipeid}
+	</update>
 </mapper>

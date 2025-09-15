@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/recipe/insert" method="post" enctype="multipart/form-data">
+<form action="${pageContext.request.contextPath}/post/insert" method="post" enctype="multipart/form-data">
     <label>레시피 제목:</label>
     <input type="text" name="recipetitle" required><br>
 
@@ -47,14 +47,14 @@
 </form>
 
 <script>
-let tagIndex = 1;
-document.getElementById('addTag').addEventListener('click', () => {
-    const div = document.createElement('div');
-    div.innerHTML = `<input type="text" name="tags[${tagIndex}]" required>
-                     <button type="button" onclick="this.parentElement.remove()">-</button>`;
-    document.getElementById('tagContainer').appendChild(div);
-    tagIndex++;
-});
+	let tagIndex = 1;
+	document.getElementById('addTag').addEventListener('click', () => {
+	    const div = document.createElement('div');
+	    div.innerHTML = `<input type="text" name="tags[${tagIndex}]" required>
+	                     <button type="button" onclick="this.parentElement.remove()">-</button>`;
+	    document.getElementById('tagContainer').appendChild(div);
+	    tagIndex++;
+	});
 </script>
 </body>
 </html>
