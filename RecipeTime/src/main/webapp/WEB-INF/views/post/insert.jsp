@@ -14,6 +14,8 @@
     </style>
 </head>
 <body>
+	<jsp:include page="/WEB-INF/views/template/header.jsp"/>
+	
     <h2>레시피 작성</h2>
     <form id="postForm" action="/post/insert" method="post" enctype="multipart/form-data">
         <!-- 제목 -->
@@ -120,6 +122,9 @@
             <button type="button" id="addSequence">순서 추가</button>
         </div>
 
+		<!-- isprivate hidden 필드 -->
+    	<input type="hidden" id="isprivate" name="isprivate" value="1">
+		
          <!-- isprivate 버튼 -->
 	    <div class="section">
 	        <button type="button" onclick="submitWithPrivacy(0)">공개</button>
@@ -129,7 +134,7 @@
 
     <script>
         // 태그 추가
-        $("#addTag").click(function() {
+         $("#addTag").click(function() {
             $("#tagList").append(
                 '<div class="tag"><input type="text" name="tags[]" required> <button type="button" class="remove">삭제</button></div>'
             );
@@ -196,7 +201,7 @@
             document.getElementById("postForm").submit();
         }
 
-     // 작성 중 이탈 방지
+        // 작성 중 이탈 방지
         window.addEventListener("beforeunload", function (e) {
             if (document.querySelector("input[name='recipetitle']").value.trim() !== "" ||
                 document.querySelector("textarea[name='recipecontent']").value.trim() !== "") {

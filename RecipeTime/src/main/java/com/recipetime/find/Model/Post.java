@@ -9,33 +9,34 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Post {
 	private int recipeid;
-    private String recipetitle;
-    private String recipecontent;
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+	private String recipetitle;
+	private String recipecontent;
+	private String recipemainvidlink;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	@JsonFormat(pattern="yyyy-MM-dd")
-    private LocalDate recipewritedate;
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+	private LocalDate recipewritedate;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	@JsonFormat(pattern="yyyy-MM-dd")
-    private LocalDate recipefixdate;
-    private int recipeviews;
-    private String recipemainvidlink;
-    private int ishotdisplay;
-    private int isbestdisplay;
-    private int isprivate;
-    private int recipedeactivate;
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+	private LocalDate recipefixdate;
+	private int recipeviews;
+	private int typeid;
+	private int situationid;
+	private int methodid;
+	private int peopleid;
+	private int timeid;
+	private int difficultyid;
+	private int recipedeactivate;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	@JsonFormat(pattern="yyyy-MM-dd")
-    private LocalDate recipedeactivatedate;
-    private int isreport;
-    private String userid;
-    private int maincategoryid;
-    private int subcategoryid;
-    private String subcategoryname;
-
-    private List<PostSequence> sequences; // 단계 목록
-    private List<Attachment> attachments;   // 이미지/대표 이미지
-    private CategoryType category; //카테고리
-    private List<Tag> tags;  // 태그
+	private LocalDate recipedeactivatedate;
+	private int isreport;
+	private String userid;
+	
+	private List<PostSequence> sequences;
+	private List<Ingredients> ingredients;
+	private List<Attachment> attachments;
+	private List<Tag> tags;
+	
 	public int getRecipeid() {
 		return recipeid;
 	}
@@ -53,6 +54,12 @@ public class Post {
 	}
 	public void setRecipecontent(String recipecontent) {
 		this.recipecontent = recipecontent;
+	}
+	public String getRecipemainvidlink() {
+		return recipemainvidlink;
+	}
+	public void setRecipemainvidlink(String recipemainvidlink) {
+		this.recipemainvidlink = recipemainvidlink;
 	}
 	public LocalDate getRecipewritedate() {
 		return recipewritedate;
@@ -72,29 +79,41 @@ public class Post {
 	public void setRecipeviews(int recipeviews) {
 		this.recipeviews = recipeviews;
 	}
-	public String getRecipemainvidlink() {
-		return recipemainvidlink;
+	public int getTypeid() {
+		return typeid;
 	}
-	public void setRecipemainvidlink(String recipemainvidlink) {
-		this.recipemainvidlink = recipemainvidlink;
+	public void setTypeid(int typeid) {
+		this.typeid = typeid;
 	}
-	public int getIshotdisplay() {
-		return ishotdisplay;
+	public int getSituationid() {
+		return situationid;
 	}
-	public void setIshotdisplay(int ishotdisplay) {
-		this.ishotdisplay = ishotdisplay;
+	public void setSituationid(int situationid) {
+		this.situationid = situationid;
 	}
-	public int getIsbestdisplay() {
-		return isbestdisplay;
+	public int getMethodid() {
+		return methodid;
 	}
-	public void setIsbestdisplay(int isbestdisplay) {
-		this.isbestdisplay = isbestdisplay;
+	public void setMethodid(int methodid) {
+		this.methodid = methodid;
 	}
-	public int getIsprivate() {
-		return isprivate;
+	public int getPeopleid() {
+		return peopleid;
 	}
-	public void setIsprivate(int isprivate) {
-		this.isprivate = isprivate;
+	public void setPeopleid(int peopleid) {
+		this.peopleid = peopleid;
+	}
+	public int getTimeid() {
+		return timeid;
+	}
+	public void setTimeid(int timeid) {
+		this.timeid = timeid;
+	}
+	public int getDifficultyid() {
+		return difficultyid;
+	}
+	public void setDifficultyid(int difficultyid) {
+		this.difficultyid = difficultyid;
 	}
 	public int getRecipedeactivate() {
 		return recipedeactivate;
@@ -120,29 +139,17 @@ public class Post {
 	public void setUserid(String userid) {
 		this.userid = userid;
 	}
-	public int getMaincategoryid() {
-		return maincategoryid;
-	}
-	public void setMaincategoryid(int maincategoryid) {
-		this.maincategoryid = maincategoryid;
-	}
-	public int getSubcategoryid() {
-		return subcategoryid;
-	}
-	public void setSubcategoryid(int subcategoryid) {
-		this.subcategoryid = subcategoryid;
-	}
-	public String getSubcategoryname() {
-		return subcategoryname;
-	}
-	public void setSubcategoryname(String subcategoryname) {
-		this.subcategoryname = subcategoryname;
-	}
 	public List<PostSequence> getSequences() {
 		return sequences;
 	}
 	public void setSequences(List<PostSequence> sequences) {
 		this.sequences = sequences;
+	}
+	public List<Ingredients> getIngredients() {
+		return ingredients;
+	}
+	public void setIngredients(List<Ingredients> ingredients) {
+		this.ingredients = ingredients;
 	}
 	public List<Attachment> getAttachments() {
 		return attachments;
@@ -150,18 +157,12 @@ public class Post {
 	public void setAttachments(List<Attachment> attachments) {
 		this.attachments = attachments;
 	}
-	public CategoryType getCategory() {
-		return category;
-	}
-	public void setCategory(CategoryType category) {
-		this.category = category;
-	}
 	public List<Tag> getTags() {
 		return tags;
 	}
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
-    
-    
+	
+	
 }

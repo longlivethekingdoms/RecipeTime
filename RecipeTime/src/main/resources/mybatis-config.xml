@@ -9,10 +9,17 @@
 	
 <typeAliases>
 <typeAlias type="com.recipetime.find.Model.Users" alias="user"/>
+<typeAlias type="com.recipetime.find.Model.Post" alias="post"/>
+<typeAlias type="com.recipetime.find.Model.PostSequence" alias="postsequence"/>
+<typeAlias type="com.recipetime.find.Model.Tag" alias="tag"/>
+<typeAlias type="com.recipetime.find.Model.Ingredients" alias="ingredient"/>
+<typeAlias type="com.recipetime.find.Model.CategoryType" alias="categorytype"/>
+<typeAlias type="com.recipetime.find.Model.Attachment" alias="attachment"/>
 </typeAliases>
 	
 <mappers>
 	<mapper resource="mapper/users/users.xml"/>
+	<mapper resource="mapper/post/post.xml"/>
 </mappers>
 
 </configuration>

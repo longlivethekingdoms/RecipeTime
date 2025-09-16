@@ -1,11 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="postMapper">
 
-    <insert id="insertPost" parameterType="com.recipetime.find.Model.Post">
+    <insert id="insertPost">
         INSERT INTO recipepost (recipetitle, recipecontent, recipewritedate, userid, maincategoryid, subcategoryid, subcategoryname, isprivate, recipedeactivate)
-        VALUES (#{recipetitle}, #{recipecontent}, NOW(), #{userid}, #{maincategoryid}, #{subcategoryid}, #{subcategoryname}, #{isprivate}, #{recipedeactivate});
+        VALUES (#{recipetitle}, #{recipecontent}, NOW(), #{userid}, #{maincategoryid}, #{subcategoryid}, #{subcategoryname}, #{isprivate}, 0);
     </insert>
 
-    <insert id="insertTags" parameterType="com.recipetime.find.Model.Post">
+    <insert id="insertTags">
         INSERT INTO recipetag (recipeid, tagorder, tagname)
         VALUES
         <foreach collection="tags" item="tag" separator=",">
@@ -13,15 +16,23 @@
         </foreach>
     </insert>
 
-    <insert id="insertAttachments" parameterType="com.recipetime.find.Model.Post">
+    <insert id="insertAttachments">
         INSERT INTO attachment (fileorder, filename, fileuuid, fileext, recipeid)
         VALUES
         <foreach collection="attachments" item="att" separator=",">
             (#{att.fileorder}, #{att.filename}, #{att.fileuuid}, #{att.fileext}, #{recipeid})
         </foreach>
     </insert>
+    
+    <insert id="insertIngredients">
+	    INSERT INTO ingredients (recipeid, ingorder, ingname, ingquantity, unit, exp)
+	    VALUES
+	    <foreach collection="ingredients" item="ing" separator=",">
+	        (#{recipeid}, #{ing.ingorder}, #{ing.ingname}, #{ing.ingquantity}, #{ing.unit}, #{ing.exp})
+	    </foreach>
+	</insert>
 
-    <insert id="insertSequences" parameterType="com.recipetime.find.Model.Post">
+    <insert id="insertSequences">
         INSERT INTO recipesequence (recipeid, recipestep, explain, recipevidlink, ingactivate, toolactivate, fireactivate, tipactivate, ingexp, toolexp, fireexp, tipexp)
         VALUES
         <foreach collection="sequences" item="seq" separator=",">
@@ -35,7 +46,7 @@
         SELECT * FROM recipepost WHERE recipedeactivate = 0 AND isprivate = 1
     </select>
 
-    <select id="getPostById" parameterType="map" resultType="com.recipetime.find.Model.Post">
+    <select id="getPostById" resultType="com.recipetime.find.Model.Post">
         SELECT *
         FROM recipepost
         WHERE recipeid = #{recipeid}
@@ -49,7 +60,7 @@
           )
     </select>
     
-    <update id="deactivatePost" parameterType="int">
+    <update id="deactivatePost">
 	    UPDATE recipepost
 	    SET recipedeactivate = 1,
 	        isprivate = 1,

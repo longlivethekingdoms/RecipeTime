@@ -26,16 +26,17 @@ public class UserLoginController {
 	
 	@PostMapping("/doLogin")
 	public String doLogin(Users users, HttpSession session, Model model) {
-        Users loginUser = userService.login(users.getUserid(), users.getUserpw());
+	    Users loginUser = userService.login(users.getUserid(), users.getUserpw());
 
-        if (loginUser != null) {
-            session.setAttribute("loginUser", loginUser); // 세션에 저장
-            return "redirect:/"; // 로그인 성공 시 메인으로
-        } else {
-            model.addAttribute("message", "아이디 또는 비밀번호가 올바르지 않습니다.");
-            return "/login/login"; // 다시 로그인 페이지
-        }
-    }
+	    if (loginUser != null) {
+	        session.setAttribute("loginUser", loginUser);          // Users 객체
+	        session.setAttribute("loginUserId", loginUser.getUserid()); // ID 별도 저장
+	        return "redirect:/"; // 로그인 성공 시 메인으로
+	    } else {
+	        model.addAttribute("message", "아이디 또는 비밀번호가 올바르지 않습니다.");
+	        return "/login/login"; // 다시 로그인 페이지
+	    }
+	}
 	
 	@GetMapping("/logout")
     public String logout(HttpSession session) {
