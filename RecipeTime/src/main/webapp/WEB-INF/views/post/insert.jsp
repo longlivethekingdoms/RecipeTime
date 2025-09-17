@@ -17,7 +17,7 @@
 	<jsp:include page="/WEB-INF/views/template/header.jsp"/>
 	
     <h2>레시피 작성</h2>
-    <form id="postForm" action="/post/insert" method="post" enctype="multipart/form-data">
+    <form id="postForm" action="<c:url value='/post/insert'/>" method="post" enctype="multipart/form-data">
         <!-- 제목 -->
         <div class="section">
             <label>제목 *</label><br>
@@ -31,63 +31,50 @@
         </div>
 
         <!-- 카테고리 -->
-		<div class="section">
-		    <label>카테고리 *</label><br>
-		
-		    <!-- 종류 -->
-		    <select name="typeCategory" required>
-		        <option value="">-- 종류 선택 --</option>
-		        <option value="국">국</option>
-		        <option value="밥">밥</option>
-		        <option value="찌개">찌개</option>
-		        <option value="기타">기타</option>
-		    </select>
-		
-		    <!-- 상황 -->
-		    <select name="situationCategory" required>
-		        <option value="">-- 상황 선택 --</option>
-		        <option value="일상">일상</option>
-		        <option value="초스피드">초스피드</option>
-		        <option value="손님접대">손님접대</option>
-		        <option value="기타">기타</option>
-		    </select>
-		
-		    <!-- 방법 -->
-		    <select name="methodCategory" required>
-		        <option value="">-- 방법 선택 --</option>
-		        <option value="볶음">볶음</option>
-		        <option value="끓이기">끓이기</option>
-		        <option value="무침">무침</option>
-		        <option value="기타">기타</option>
-		    </select>
-		
-		    <!-- 인원 -->
-		    <select name="personCategory" required>
-		        <option value="">-- 인원 선택 --</option>
-		        <option value="1인분">1인분</option>
-		        <option value="2인분">2인분</option>
-		        <option value="3인분">3인분</option>
-		        <option value="기타">기타</option>
-		    </select>
-		
-		    <!-- 요리시간 -->
-		    <select name="timeCategory" required>
-		        <option value="">-- 요리시간 선택 --</option>
-		        <option value="5분">5분</option>
-		        <option value="10분">10분</option>
-		        <option value="15분">15분</option>
-		        <option value="30분">30분</option>
-		        <option value="1시간 이상">1시간 이상</option>
-		    </select>
-		
-		    <!-- 난이도 -->
-		    <select name="difficultyCategory" required>
-		        <option value="">-- 난이도 선택 --</option>
-		        <option value="쉬움">쉬움</option>
-		        <option value="보통">보통</option>
-		        <option value="어려움">어려움</option>
-		    </select>
-		</div>
+        <div class="section">
+            <label>카테고리 *</label><br>
+            <select name="typeid" required>
+                <option value="">-- 종류 선택 --</option>
+                <c:forEach var="opt" items="${typeOptions}">
+                    <option value="${opt.optionid}">${opt.optionname}</option>
+                </c:forEach>
+            </select>
+
+            <select name="situationid" required>
+                <option value="">-- 상황 선택 --</option>
+                <c:forEach var="opt" items="${situationOptions}">
+                    <option value="${opt.optionid}">${opt.optionname}</option>
+                </c:forEach>
+            </select>
+
+            <select name="methodid" required>
+                <option value="">-- 방법 선택 --</option>
+                <c:forEach var="opt" items="${methodOptions}">
+                    <option value="${opt.optionid}">${opt.optionname}</option>
+                </c:forEach>
+            </select>
+
+            <select name="peopleid" required>
+                <option value="">-- 인원 선택 --</option>
+                <c:forEach var="opt" items="${peopleOptions}">
+                    <option value="${opt.optionid}">${opt.optionname}</option>
+                </c:forEach>
+            </select>
+
+            <select name="timeid" required>
+                <option value="">-- 요리시간 선택 --</option>
+                <c:forEach var="opt" items="${timeOptions}">
+                    <option value="${opt.optionid}">${opt.optionname}</option>
+                </c:forEach>
+            </select>
+
+            <select name="difficultyid" required>
+                <option value="">-- 난이도 선택 --</option>
+                <c:forEach var="opt" items="${difficultyOptions}">
+                    <option value="${opt.optionid}">${opt.optionname}</option>
+                </c:forEach>
+            </select>
+        </div>
 
         <!-- 대표 이미지 -->
         <div class="section">
@@ -98,7 +85,7 @@
         <!-- 동영상 URL -->
         <div class="section">
             <label>레시피 동영상 URL</label><br>
-            <input type="url" name="recipemainvidlink">
+            <input type="url" name="recipeMainVidLink">
         </div>
 
         <!-- 태그 -->
@@ -122,21 +109,20 @@
             <button type="button" id="addSequence">순서 추가</button>
         </div>
 
-		<!-- isprivate hidden 필드 -->
-    	<input type="hidden" id="isprivate" name="isprivate" value="1">
-		
-         <!-- isprivate 버튼 -->
-	    <div class="section">
-	        <button type="button" onclick="submitWithPrivacy(0)">공개</button>
-	        <button type="button" onclick="submitWithPrivacy(1)">비공개</button>
-	    </div>
+        <!-- 공개 여부 -->
+        <input type="hidden" id="isprivate" name="isprivate" value="0">
+
+        <div class="section">
+            <button type="button" onclick="submitWithPrivacy(0)">공개</button>
+            <button type="button" onclick="submitWithPrivacy(1)">비공개</button>
+        </div>
     </form>
 
     <script>
         // 태그 추가
-         $("#addTag").click(function() {
+        $("#addTag").click(function() {
             $("#tagList").append(
-                '<div class="tag"><input type="text" name="tags[]" required> <button type="button" class="remove">삭제</button></div>'
+                '<div class="tag"><input type="text" name="recipetags[]" required> <button type="button" class="remove">삭제</button></div>'
             );
         });
 
@@ -167,9 +153,9 @@
                 '<div class="extra hidden ingredient">설명: <input type="text" name="sequences[' + sequenceCount + '][ingredientNote]"></div>' +
                 '<label><input type="checkbox" class="toggle" data-target="tool"> 도구 </label>' +
                 '<div class="extra hidden tool">설명: <input type="text" name="sequences[' + sequenceCount + '][toolNote]"></div>' +
-                '<label><input type="checkbox" class="toggle" data-target="fire"> 불</label>' +
+                '<label><input type="checkbox" class="toggle" data-target="fire"> 불 </label>' +
                 '<div class="extra hidden fire">설명: <input type="text" name="sequences[' + sequenceCount + '][fireNote]"></div>' +
-                '<label><input type="checkbox" class="toggle" data-target="tip"> 팁</label>' +
+                '<label><input type="checkbox" class="toggle" data-target="tip"> 팁 </label>' +
                 '<div class="extra hidden tip">설명: <input type="text" name="sequences[' + sequenceCount + '][tipNote]"></div>' +
                 ' <button type="button" class="remove">삭제</button>' +
                 '</div>'
@@ -179,13 +165,12 @@
         // 삭제 버튼
         $(document).on("click", ".remove", function() {
             $(this).parent().remove();
-            // 순서 재정렬
             $("#sequenceList .sequence").each(function(index) {
                 $(this).find(".sequence-number").text((index + 1) + ".");
             });
         });
 
-        // ON/OFF 토글
+        // 토글
         $(document).on("change", ".toggle", function() {
             let target = $(this).data("target");
             let extra = $(this).closest(".sequence").find("." + target);

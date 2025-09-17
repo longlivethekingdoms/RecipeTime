@@ -3,68 +3,92 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="postMapper">
 
-    <insert id="insertPost">
-        INSERT INTO recipepost (recipetitle, recipecontent, recipewritedate, userid, maincategoryid, subcategoryid, subcategoryname, isprivate, recipedeactivate)
-        VALUES (#{recipetitle}, #{recipecontent}, NOW(), #{userid}, #{maincategoryid}, #{subcategoryid}, #{subcategoryname}, #{isprivate}, 0);
+    <!-- 게시글 본문 insert, 생성키를 recipeid에 채움 -->
+    <insert id="insertPost" parameterType="com.recipetime.find.Model.Post" useGeneratedKeys="true" keyProperty="recipeid">
+        INSERT INTO recipepost
+        (recipetitle, recipecontent, recipeMainVidLink, recipewritedate, recipefixdate, recipeviews,
+         ishotdisplay, isbestdisplay, isprivate, typeid, situationid, methodid, peopleid, timeid, difficultyid,
+         recipedeactivate, isreport, userid)
+        VALUES
+        (#{recipetitle}, #{recipecontent}, #{recipeMainVidLink}, NOW(), NULL, 0,
+         #{ishotdisplay}, #{isbestdisplay}, #{isprivate}, #{typeid}, #{situationid}, #{methodid}, #{peopleid}, #{timeid}, #{difficultyid},
+         #{recipedeactivate}, #{isreport}, #{userid})
     </insert>
 
-    <insert id="insertTags">
+    <!-- 태그 리스트 일괄 삽입: parameter로 List<Tag> 전달 -->
+    <insert id="insertTags" parameterType="java.util.List">
         INSERT INTO recipetag (recipeid, tagorder, tagname)
         VALUES
-        <foreach collection="tags" item="tag" separator=",">
-            (#{recipeid}, #{tag.tagorder}, #{tag.tagname})
+        <foreach collection="list" item="tag" separator=",">
+            (#{tag.recipeid}, #{tag.tagorder}, #{tag.tagname})
         </foreach>
     </insert>
 
-    <insert id="insertAttachments">
-        INSERT INTO attachment (fileorder, filename, fileuuid, fileext, recipeid)
+    <!-- 재료 일괄 삽입 -->
+    <insert id="insertIngredients" parameterType="java.util.List">
+        INSERT INTO ingredients (recipeid, ingorder, ingname, ingquantity, unit, exp)
         VALUES
-        <foreach collection="attachments" item="att" separator=",">
-            (#{att.fileorder}, #{att.filename}, #{att.fileuuid}, #{att.fileext}, #{recipeid})
+        <foreach collection="list" item="ing" separator=",">
+            (#{ing.recipeid}, #{ing.ingorder}, #{ing.ingname}, #{ing.ingquantity}, #{ing.unit}, #{ing.exp})
         </foreach>
     </insert>
-    
-    <insert id="insertIngredients">
-	    INSERT INTO ingredients (recipeid, ingorder, ingname, ingquantity, unit, exp)
-	    VALUES
-	    <foreach collection="ingredients" item="ing" separator=",">
-	        (#{recipeid}, #{ing.ingorder}, #{ing.ingname}, #{ing.ingquantity}, #{ing.unit}, #{ing.exp})
-	    </foreach>
-	</insert>
 
-    <insert id="insertSequences">
-        INSERT INTO recipesequence (recipeid, recipestep, explain, recipevidlink, ingactivate, toolactivate, fireactivate, tipactivate, ingexp, toolexp, fireexp, tipexp)
+    <!-- 순서 일괄 삽입 -->
+    <insert id="insertSequences" parameterType="java.util.List">
+        INSERT INTO recipesequence
+        (recipeid, recipestep, `explain`, recipevidlink, ingactivate, toolactivate, fireactivate, tipactivate, ingexp, toolexp, fireexp, tipexp)
         VALUES
-        <foreach collection="sequences" item="seq" separator=",">
-            (#{recipeid}, #{seq.recipestep}, #{seq.explain}, #{seq.recipevidlink},
+        <foreach collection="list" item="seq" separator=",">
+            (#{seq.recipeid}, #{seq.recipestep}, #{seq.explain}, #{seq.recipevidlink},
              #{seq.ingactivate}, #{seq.toolactivate}, #{seq.fireactivate}, #{seq.tipactivate},
              #{seq.ingexp}, #{seq.toolexp}, #{seq.fireexp}, #{seq.tipexp})
         </foreach>
     </insert>
 
+    <!-- 첨부파일 일괄 삽입 -->
+    <insert id="insertAttachments" parameterType="java.util.List">
+        INSERT INTO attachment (fileorder, filename, fileuuid, fileext, ismain, recipeid, recipestepid)
+        VALUES
+        <foreach collection="list" item="att" separator=",">
+            (#{att.fileorder}, #{att.filename}, #{att.fileuuid}, #{att.fileext}, #{att.ismain}, #{att.recipeid}, #{att.recipestepid})
+        </foreach>
+    </insert>
+
+    <!-- 전체 게시글 (간단) -->
     <select id="getAllPosts" resultType="com.recipetime.find.Model.Post">
-        SELECT * FROM recipepost WHERE recipedeactivate = 0 AND isprivate = 1
+        SELECT * FROM recipepost WHERE recipedeactivate = 0
     </select>
 
+    <!-- 상세조회: params: recipeid, currentUserId, isAdmin -->
     <select id="getPostById" resultType="com.recipetime.find.Model.Post">
-        SELECT *
-        FROM recipepost
-        WHERE recipeid = #{recipeid}
-          AND (
-              (#{isAdmin} = true AND recipedeactivate = 1)
-              OR (#{isAdmin} = false AND recipedeactivate = 0)
-          )
-          AND (
-              isprivate = 1
-              OR (isprivate = 0 AND userid = #{currentUserId})
-          )
-    </select>
-    
-    <update id="deactivatePost">
-	    UPDATE recipepost
-	    SET recipedeactivate = 1,
-	        isprivate = 1,
-	        recipedeactivatedate = NOW()
+	    SELECT *
+	    FROM recipepost
 	    WHERE recipeid = #{recipeid}
-	</update>
+	      AND (
+	            isprivate = 0
+	            OR userid = #{currentUserId}
+	            OR #{accessLevel} = 'manager'
+	          )
+	</select>
+
+    <update id="deactivatePost" parameterType="int">
+        UPDATE recipepost
+        SET recipedeactivate = 1,
+            isprivate = 1,
+            recipedeactivatedate = NOW()
+        WHERE recipeid = #{recipeid}
+    </update>
+
+    <!-- 카테고리: item / option -->
+    <select id="listCategoryItems" resultType="com.recipetime.find.Model.CategoryItem">
+        SELECT itemid, itemname FROM category_item ORDER BY itemid
+    </select>
+
+    <select id="listCategoryOptionsByItemId" parameterType="int" resultType="com.recipetime.find.Model.CategoryOption">
+        SELECT optionid, itemid, optionname
+        FROM category_option
+        WHERE itemid = #{itemid}
+        ORDER BY optionid
+    </select>
+
 </mapper>

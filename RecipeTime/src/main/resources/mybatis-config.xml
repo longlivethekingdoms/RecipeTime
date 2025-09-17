@@ -9,11 +9,13 @@
 	
 <typeAliases>
 <typeAlias type="com.recipetime.find.Model.Users" alias="user"/>
+<typeAlias type="com.recipetime.find.Model.UserLoginState" alias="userloginstate"/>
 <typeAlias type="com.recipetime.find.Model.Post" alias="post"/>
 <typeAlias type="com.recipetime.find.Model.PostSequence" alias="postsequence"/>
 <typeAlias type="com.recipetime.find.Model.Tag" alias="tag"/>
 <typeAlias type="com.recipetime.find.Model.Ingredients" alias="ingredient"/>
-<typeAlias type="com.recipetime.find.Model.CategoryType" alias="categorytype"/>
+<typeAlias type="com.recipetime.find.Model.CategoryItem" alias="categoryitem"/>
+<typeAlias type="com.recipetime.find.Model.CategoryOption" alias="categoryoption"/>
 <typeAlias type="com.recipetime.find.Model.Attachment" alias="attachment"/>
 </typeAliases>
 	
