@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.recipetime.find.Model.*;
+import com.recipetime.find.Service.CategoryService;
 import com.recipetime.find.Service.PostService;
 
 @Controller
@@ -24,6 +25,9 @@ public class RecipeWriteController {
 
     @Autowired
     private PostService postService;
+    
+    @Autowired
+    CategoryService categoryService;
 
     // application.properties에 upload.dir 설정해두면 주입받음
     @Value("${upload.dir:/tmp/uploads}")
@@ -32,9 +36,21 @@ public class RecipeWriteController {
     @GetMapping("/insert")
     public String insertForm(Model model) {
         // 카테고리 항목과 옵션을 보내서 JSP에서 드롭다운을 채움
-        List<CategoryItem> items = postService.listCategoryItems();
-        model.addAttribute("categoryItems", items);
-
+//        List<CategoryItem> items = postService.listCategoryItems();
+//        model.addAttribute("categoryItems", items);
+        
+    	// 종류 = 1
+        model.addAttribute("typeOptions", categoryService.getOptionsByItemId(1));
+        // 상황 = 2
+        model.addAttribute("situationOptions", categoryService.getOptionsByItemId(2));
+        // 방법 = 3
+        model.addAttribute("methodOptions", categoryService.getOptionsByItemId(3));
+        // 인원 = 4
+        model.addAttribute("peopleOptions", categoryService.getOptionsByItemId(4));
+        // 요리시간 = 5
+        model.addAttribute("timeOptions", categoryService.getOptionsByItemId(5));
+        // 난이도 = 6
+        model.addAttribute("difficultyOptions", categoryService.getOptionsByItemId(6));
         // 옵션은 JSP에서 AJAX로 불러도 되고 여기서 미리 불러서 전송할 수도 있음.
         // 여기서는 JSP에서 item별로 option을 ajax로 불러오는 것을 권장하지만,
         // 간단히는 모든 옵션을 한 번에 가져오는 API를 추가할 수도 있음.
