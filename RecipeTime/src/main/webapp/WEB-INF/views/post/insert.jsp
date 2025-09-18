@@ -81,6 +81,13 @@
             <label>대표 이미지</label><br>
             <input type="file" name="mainImage">
         </div>
+        
+        <!-- 추가 이미지 -->
+	    <div class="section">
+	        <label>이미지 추가</label><br>
+	        <div id="extraImages"></div>
+	        <button type="button" id="addExtraImage">이미지 추가</button>
+	    </div>
 
         <!-- 동영상 URL -->
         <div class="section">
@@ -119,67 +126,114 @@
     </form>
 
     <script>
+    
+	    // === 추가 이미지 input ===
+	    let extraImgIndex = 0;
+	    $("#addExtraImage").click(function() {
+	        $("#extraImages").append(
+	            `<div><input type="file" name="attachments[\${extraImgIndex}]" multiple>
+	            <button type="button" class="remove">삭제</button></div>`
+	        );
+	        extraImgIndex++;
+	    });
+	    
         // 태그 추가
-        $("#addTag").click(function() {
+        let tagIndex = 0;
+        $("#addTag").click(function(){
             $("#tagList").append(
-                '<div class="tag"><input type="text" name="recipetags[]" required> <button type="button" class="remove">삭제</button></div>'
+                `<div class="tag">
+                    <input type="text" name="tags[\${tagIndex}].tagname" placeholder="태그명" required>
+                    <button type="button" class="remove">삭제</button>
+                </div>`
             );
+            tagIndex++;
         });
 
         // 재료 추가
-        $("#addIngredient").click(function() {
-            $("#ingredientList").append(
-                '<div class="ingredient">' +
-                '재료명* <input type="text" name="ingredients[][name]" required>' +
-                ' 수량* <input type="text" name="ingredients[][amount]" required>' +
-                ' 단위* <input type="text" name="ingredients[][unit]" required>' +
-                ' 비고 <input type="text" name="ingredients[][note]">' +
-                ' <button type="button" class="remove">삭제</button>' +
-                '</div>'
-            );
-        });
+        let ingIndex = 0;
+		$("#addIngredient").click(function() {
+		    $("#ingredientList").append(
+		        `<div class="ingredient">
+		            <input type="text" name="ingredients[\${ingIndex}].ingname" placeholder="재료명" required />
+		            <input type="number" name="ingredients[\${ingIndex}].ingquantity" placeholder="수량" min="0" />
+		            <input type="text" name="ingredients[\${ingIndex}].unit" placeholder="단위 (예: g, ml)" />
+		            <input type="text" name="ingredients[\${ingIndex}].exp" placeholder="비고" />
+		            <button type="button" class="remove">삭제</button>
+		        </div>`
+		    );
+		    ingIndex++;
+		});
 
-        // 요리 순서 추가
-        let sequenceCount = 0;
-        $("#addSequence").click(function() {
-            sequenceCount++;
-            $("#sequenceList").append(
-                '<div class="sequence" data-seq="' + sequenceCount + '">' +
-                '<span class="sequence-number">' + sequenceCount + '.</span>' +
-                '<textarea name="sequences[' + sequenceCount + '][content]" required></textarea>' +
-                '<input type="file" name="sequences[' + sequenceCount + '][images]" multiple>' +
-                '<br>' +
-                '<label><input type="checkbox" class="toggle" data-target="ingredient"> 재료 </label>' +
-                '<div class="extra hidden ingredient">설명: <input type="text" name="sequences[' + sequenceCount + '][ingredientNote]"></div>' +
-                '<label><input type="checkbox" class="toggle" data-target="tool"> 도구 </label>' +
-                '<div class="extra hidden tool">설명: <input type="text" name="sequences[' + sequenceCount + '][toolNote]"></div>' +
-                '<label><input type="checkbox" class="toggle" data-target="fire"> 불 </label>' +
-                '<div class="extra hidden fire">설명: <input type="text" name="sequences[' + sequenceCount + '][fireNote]"></div>' +
-                '<label><input type="checkbox" class="toggle" data-target="tip"> 팁 </label>' +
-                '<div class="extra hidden tip">설명: <input type="text" name="sequences[' + sequenceCount + '][tipNote]"></div>' +
-                ' <button type="button" class="remove">삭제</button>' +
-                '</div>'
-            );
-        });
+	    // 요리 순서 추가 버튼
+	    let seqIndex = 0;
+	    $("#addSequence").click(function(){
+	        $("#sequenceList").append(
+	            `<div class="sequence">
+	                <span class="sequence-number">${seqIndex+1}.</span>
+	                <textarea name="sequences[\${seqIndex}].explain" placeholder="설명" required></textarea>
+	                <input type="file" name="sequences[\${seqIndex}].images" multiple>
+	                <div>
+	                    <label><input type="checkbox" class="toggle" data-target="ingredient"> 재료</label>
+	                    <div class="extra hidden ingredient">설명: <input type="text" name="sequences[\${seqIndex}].ingexp"></div>
+	
+	                    <label><input type="checkbox" class="toggle" data-target="tool"> 도구</label>
+	                    <div class="extra hidden tool">설명: <input type="text" name="sequences[\${seqIndex}].toolexp"></div>
+	
+	                    <label><input type="checkbox" class="toggle" data-target="fire"> 불</label>
+	                    <div class="extra hidden fire">설명: <input type="text" name="sequences[\${seqIndex}].fireexp"></div>
+	
+	                    <label><input type="checkbox" class="toggle" data-target="tip"> 팁</label>
+	                    <div class="extra hidden tip">설명: <input type="text" name="sequences[\${seqIndex}].tipexp"></div>
+	                </div>
+	                <button type="button" class="remove">삭제</button>
+	            </div>`
+	        );
+	        seqIndex++;
+	        reindexSequences();
+	    });
 
-        // 삭제 버튼
-        $(document).on("click", ".remove", function() {
-            $(this).parent().remove();
-            $("#sequenceList .sequence").each(function(index) {
-                $(this).find(".sequence-number").text((index + 1) + ".");
-            });
-        });
+	    // 삭제 버튼 이벤트
+	    $(document).on("click", ".remove", function() {
+	        $(this).parent().remove();
+	        reindexSequences();
+	    });
+	    
+	 // 순서 재정렬 (번호 + name 속성 동기화)
+	    function reindexSequences() {
+	        $("#sequenceList .sequence").each(function(index) {
+	            $(this).attr("data-seq", index + 1);
+	            $(this).find(".sequence-number").text((index + 1) + ".");
 
-        // 토글
-        $(document).on("change", ".toggle", function() {
-            let target = $(this).data("target");
-            let extra = $(this).closest(".sequence").find("." + target);
-            if ($(this).is(":checked")) {
-                extra.removeClass("hidden").find("input").attr("required", true);
-            } else {
-                extra.addClass("hidden").find("input").removeAttr("required");
-            }
-        });
+	            // textarea
+	            $(this).find("textarea").attr("name", "sequences[" + index + "].explain");
+
+	            // file input
+	            $(this).find("input[type='file']").attr("name", "sequences[" + index + "].images");
+
+	            // ingredient
+	            $(this).find(".ingredient input").attr("name", "sequences[" + index + "].ingredientNote");
+
+	            // tool
+	            $(this).find(".tool input").attr("name", "sequences[" + index + "].toolNote");
+
+	            // fire
+	            $(this).find(".fire input").attr("name", "sequences[" + index + "].fireNote");
+
+	            // tip
+	            $(this).find(".tip input").attr("name", "sequences[" + index + "].tipNote");
+	        });
+	    }
+
+	    // 토글 (재료/도구/불/팁)
+	    $(document).on("change", ".toggle", function() {
+	        let target = $(this).data("target");
+	        let extra = $(this).closest(".sequence").find("." + target);
+	        if ($(this).is(":checked")) {
+	            extra.removeClass("hidden").find("input").attr("required", true);
+	        } else {
+	            extra.addClass("hidden").find("input").removeAttr("required");
+	        }
+	    });
 
         function submitWithPrivacy(value) {
             document.getElementById("isprivate").value = value;

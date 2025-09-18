@@ -8,11 +8,11 @@
         INSERT INTO recipepost
         (recipetitle, recipecontent, recipeMainVidLink, recipewritedate, recipefixdate, recipeviews,
          ishotdisplay, isbestdisplay, isprivate, typeid, situationid, methodid, peopleid, timeid, difficultyid,
-         recipedeactivate, isreport, userid)
+         recipedeactivate, recipedeactivatedate, isreport, userid)
         VALUES
         (#{recipetitle}, #{recipecontent}, #{recipeMainVidLink}, NOW(), NULL, 0,
          #{ishotdisplay}, #{isbestdisplay}, #{isprivate}, #{typeid}, #{situationid}, #{methodid}, #{peopleid}, #{timeid}, #{difficultyid},
-         #{recipedeactivate}, #{isreport}, #{userid})
+         #{recipedeactivate}, NULL, #{isreport}, #{userid})
     </insert>
 
     <!-- 태그 리스트 일괄 삽입: parameter로 List<Tag> 전달 -->
