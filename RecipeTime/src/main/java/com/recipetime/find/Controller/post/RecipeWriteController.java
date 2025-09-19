@@ -94,7 +94,7 @@ public class RecipeWriteController {
             }
         }
 
-        // 파일 처리
+        // 파일 처리 여기서 chatgpt와 교환할 것
         List<Attachment> attList = new ArrayList<>();
         if (mainImage != null && !mainImage.isEmpty()) {
             attList.add(saveFileToAttachment(mainImage, true));

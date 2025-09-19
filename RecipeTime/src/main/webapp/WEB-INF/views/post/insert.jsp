@@ -77,17 +77,16 @@
         </div>
 
         <!-- 대표 이미지 -->
-        <div class="section">
-            <label>대표 이미지</label><br>
-            <input type="file" name="mainImage">
-        </div>
-        
-        <!-- 추가 이미지 -->
-	    <div class="section">
-	        <label>이미지 추가</label><br>
-	        <div id="extraImages"></div>
-	        <button type="button" id="addExtraImage">이미지 추가</button>
-	    </div>
+		<div class="form-group">
+		    <label for="mainImage">대표 이미지</label>
+		    <input type="file" id="mainImage" name="mainImage" accept="image/*">
+		</div>
+		
+		<!-- 추가 이미지 -->
+		<div class="form-group">
+		    <label for="attachments">추가 이미지</label>
+		    <input type="file" id="attachments" name="attachments" multiple accept="image/*">
+		</div>
 
         <!-- 동영상 URL -->
         <div class="section">
