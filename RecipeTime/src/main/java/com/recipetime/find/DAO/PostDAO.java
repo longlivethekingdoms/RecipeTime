@@ -15,6 +15,7 @@ public interface PostDAO {
 	void insertPost(Post post);
     void insertTags(List<Tag> tags);
     void insertIngredients(List<Ingredients> ingredients);
+    void insertSequence(PostSequence seq);
     void insertSequences(List<PostSequence> sequences);
     void insertAttachments(List<Attachment> attachments);
 

@@ -3,7 +3,7 @@ package com.recipetime.find.Model;
 import java.util.List;
 
 public class PostSequence {
-	private int recipestepid;
+    private int recipestepid;
     private int recipeid;
     private int recipestep;
     private String explain;
@@ -21,117 +21,46 @@ public class PostSequence {
 
     private List<Attachment> attachments; // 단계별 이미지/영상
 
-    // getter / setter
-    
-    public int getRecipestepid() {
-		return recipestepid;
-	}
+    // getters / setters
+    public int getRecipestepid() { return recipestepid; }
+    public void setRecipestepid(int recipestepid) { this.recipestepid = recipestepid; }
 
-	public void setRecipestepid(int recipestepid) {
-		this.recipestepid = recipestepid;
-	}
+    public int getRecipeid() { return recipeid; }
+    public void setRecipeid(int recipeid) { this.recipeid = recipeid; }
 
-	public int getRecipeid() {
-		return recipeid;
-	}
+    public int getRecipestep() { return recipestep; }
+    public void setRecipestep(int recipestep) { this.recipestep = recipestep; }
 
-	public void setRecipeid(int recipeid) {
-		this.recipeid = recipeid;
-	}
+    public String getExplain() { return explain; }
+    public void setExplain(String explain) { this.explain = explain; }
 
-	public int getRecipestep() {
-		return recipestep;
-	}
+    public String getRecipevidlink() { return recipevidlink; }
+    public void setRecipevidlink(String recipevidlink) { this.recipevidlink = recipevidlink; }
 
-	public void setRecipestep(int recipestep) {
-		this.recipestep = recipestep;
-	}
+    public int getIngactivate() { return ingactivate; }
+    public void setIngactivate(int ingactivate) { this.ingactivate = ingactivate; }
 
-	public String getExplain() {
-		return explain;
-	}
+    public int getToolactivate() { return toolactivate; }
+    public void setToolactivate(int toolactivate) { this.toolactivate = toolactivate; }
 
-	public void setExplain(String explain) {
-		this.explain = explain;
-	}
+    public int getFireactivate() { return fireactivate; }
+    public void setFireactivate(int fireactivate) { this.fireactivate = fireactivate; }
 
-	public String getRecipevidlink() {
-		return recipevidlink;
-	}
+    public int getTipactivate() { return tipactivate; }
+    public void setTipactivate(int tipactivate) { this.tipactivate = tipactivate; }
 
-	public void setRecipevidlink(String recipevidlink) {
-		this.recipevidlink = recipevidlink;
-	}
+    public String getIngexp() { return ingexp; }
+    public void setIngexp(String ingexp) { this.ingexp = ingexp; }
 
-	public int getIngactivate() {
-		return ingactivate;
-	}
+    public String getToolexp() { return toolexp; }
+    public void setToolexp(String toolexp) { this.toolexp = toolexp; }
 
-	public void setIngactivate(int ingactivate) {
-		this.ingactivate = ingactivate;
-	}
+    public String getFireexp() { return fireexp; }
+    public void setFireexp(String fireexp) { this.fireexp = fireexp; }
 
-	public int getToolactivate() {
-		return toolactivate;
-	}
+    public String getTipexp() { return tipexp; }
+    public void setTipexp(String tipexp) { this.tipexp = tipexp; }
 
-	public void setToolactivate(int toolactivate) {
-		this.toolactivate = toolactivate;
-	}
-
-	public int getFireactivate() {
-		return fireactivate;
-	}
-
-	public void setFireactivate(int fireactivate) {
-		this.fireactivate = fireactivate;
-	}
-
-	public int getTipactivate() {
-		return tipactivate;
-	}
-
-	public void setTipactivate(int tipactivate) {
-		this.tipactivate = tipactivate;
-	}
-
-	public String getIngexp() {
-		return ingexp;
-	}
-
-	public void setIngexp(String ingexp) {
-		this.ingexp = ingexp;
-	}
-
-	public String getToolexp() {
-		return toolexp;
-	}
-
-	public void setToolexp(String toolexp) {
-		this.toolexp = toolexp;
-	}
-
-	public String getFireexp() {
-		return fireexp;
-	}
-
-	public void setFireexp(String fireexp) {
-		this.fireexp = fireexp;
-	}
-
-	public String getTipexp() {
-		return tipexp;
-	}
-
-	public void setTipexp(String tipexp) {
-		this.tipexp = tipexp;
-	}
-
-	public List<Attachment> getAttachments() {
-		return attachments;
-	}
-
-	public void setAttachments(List<Attachment> attachments) {
-		this.attachments = attachments;
-	}
+    public List<Attachment> getAttachments() { return attachments; }
+    public void setAttachments(List<Attachment> attachments) { this.attachments = attachments; }
 }

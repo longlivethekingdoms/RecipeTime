@@ -1,5 +1,6 @@
 package com.recipetime.find.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,48 +21,57 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void insertPost(Post post) {
-        // 1) 게시글 본문 insert (mapper에서 keyProperty="recipeid"로 생성키 받음)
+        // 1) recipepost insert -> post.recipeid 채워짐 (useGeneratedKeys in mapper)
         postDAO.insertPost(post);
+        int recipeId = post.getRecipeid();
 
-        // 2) 태그 insert (mapper는 리스트를 받아 처리)
+        // 2) tags (batch)
         if (post.getTags() != null && !post.getTags().isEmpty()) {
-            // 태그에 recipeid 설정
-            int order = 1;
             for (Tag t : post.getTags()) {
-                t.setRecipeid(post.getRecipeid());
-                t.setTagorder(order++);
+                t.setRecipeid(recipeId);
             }
             postDAO.insertTags(post.getTags());
         }
 
-        // 3) 재료 insert
+        // 3) ingredients (batch)
         if (post.getIngredients() != null && !post.getIngredients().isEmpty()) {
-            int idx = 1;
             for (Ingredients ing : post.getIngredients()) {
-                ing.setRecipeid(post.getRecipeid());
-                ing.setIngorder(idx++);
+                ing.setRecipeid(recipeId);
             }
             postDAO.insertIngredients(post.getIngredients());
         }
 
-        // 4) 순서 insert
+        // 4) sequences: insert each individually to get generated recipestepid
+        List<Attachment> attachmentsToInsert = new ArrayList<>();
         if (post.getSequences() != null && !post.getSequences().isEmpty()) {
-            int seqNo = 1;
-            for (PostSequence s : post.getSequences()) {
-                s.setRecipeid(post.getRecipeid());
-                s.setRecipestep(seqNo++);
+            for (PostSequence seq : post.getSequences()) {
+                seq.setRecipeid(recipeId);
+                postDAO.insertSequence(seq); // useGeneratedKeys -> seq.recipestepid set
+                int stepId = seq.getRecipestepid();
+
+                // if this sequence had attachments (controller already created Attachment objs)
+                if (seq.getAttachments() != null && !seq.getAttachments().isEmpty()) {
+                    for (Attachment a : seq.getAttachments()) {
+                        a.setRecipestepid(stepId);
+                        a.setRecipeid(recipeId); // also set recipeid for row
+                        attachmentsToInsert.add(a);
+                    }
+                }
             }
-            postDAO.insertSequences(post.getSequences());
         }
 
-        // 5) 첨부파일 insert
+        // 5) top-level attachments (post.getAttachments())
         if (post.getAttachments() != null && !post.getAttachments().isEmpty()) {
-            int forder = 1;
             for (Attachment a : post.getAttachments()) {
-                a.setRecipeid(post.getRecipeid());
-                a.setFileorder(forder++);
+                a.setRecipeid(recipeId); // recipe-level attachments
+                // recipestepid remains null
+                attachmentsToInsert.add(a);
             }
-            postDAO.insertAttachments(post.getAttachments());
+        }
+
+        // 6) insert all gathered attachments in batch
+        if (!attachmentsToInsert.isEmpty()) {
+            postDAO.insertAttachments(attachmentsToInsert);
         }
     }
 
@@ -75,7 +85,7 @@ public class PostServiceImpl implements PostService {
         Map<String,Object> params = new HashMap<>();
         params.put("recipeid", recipeid);
         params.put("currentUserId", currentUserId);
-        params.put("isAdmin", accessLevel);
+        params.put("accessLevel", accessLevel);
         return postDAO.getPostById(params);
     }
 
@@ -94,4 +104,16 @@ public class PostServiceImpl implements PostService {
     public List<CategoryOption> listCategoryOptionsByItemId(int itemid) {
         return postDAO.listCategoryOptionsByItemId(itemid);
     }
+
+	@Override
+	public void insertSequence(PostSequence seq) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void insertAttachments(List<Attachment> attList) {
+		// TODO Auto-generated method stub
+		
+	}
 }

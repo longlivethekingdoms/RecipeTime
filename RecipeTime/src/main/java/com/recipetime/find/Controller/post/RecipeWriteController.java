@@ -1,19 +1,19 @@
 package com.recipetime.find.Controller.post;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.recipetime.find.Model.*;
 import com.recipetime.find.Service.CategoryService;
@@ -25,16 +25,14 @@ public class RecipeWriteController {
 
     @Autowired
     private PostService postService;
-
+    
     @Autowired
     private CategoryService categoryService;
 
     @Value("${upload.dir:/tmp/uploads}")
     private String uploadDir;
 
-    /**
-     * ±Û¾²±â Æû
-     */
+    // ë ˆì‹œí”¼ ì‘ì„± í¼(GET)
     @GetMapping("/insert")
     public String insertForm(Model model) {
         model.addAttribute("typeOptions", categoryService.getOptionsByItemId(1));
@@ -43,102 +41,72 @@ public class RecipeWriteController {
         model.addAttribute("peopleOptions", categoryService.getOptionsByItemId(4));
         model.addAttribute("timeOptions", categoryService.getOptionsByItemId(5));
         model.addAttribute("difficultyOptions", categoryService.getOptionsByItemId(6));
-
         return "post/insert";
     }
 
-    /**
-     * ±Û ÀúÀå
-     */
+    // ë ˆì‹œí”¼ ë“±ë¡ ì²˜ë¦¬(POST)
     @PostMapping("/insert")
     public String insertPost(
-            @ModelAttribute Post post,                              // ÀÚµ¿ ¹ÙÀÎµù
-            @RequestParam(value="mainImage", required=false) MultipartFile mainImage,
-            @RequestParam(value="attachments", required=false) List<MultipartFile> files,
-            HttpSession session
-    ) throws IOException {
+            @ModelAttribute Post post,
+            @RequestParam("mainImage") MultipartFile mainImage,
+            @RequestParam(value="attachments", required=false) MultipartFile[] attachments,
+            HttpSession session,
+            RedirectAttributes ra) {
 
-        // ·Î±×ÀÎ Ã¼Å©
-        String currentUserId = (String) session.getAttribute("loginUserId");
-        if (currentUserId == null) {
-            return "redirect:/login/login";
+        // ë¡œê·¸ì¸ ì²´í¬
+        Users loginUser = (Users) session.getAttribute("loginUser");
+        if (loginUser == null) return "redirect:/login/login";
+        post.setUserid(loginUser.getUserid());
+
+        // ì‘ì„±ì¼ ê¸°ë³¸ê°’
+        if(post.getRecipewritedate() == null) post.setRecipewritedate(LocalDate.now());
+
+        // ì¬ë£Œ ìˆ˜ëŸ‰ ê¸°ë³¸ê°’
+        if(post.getIngredients() != null) {
+            for(Ingredients ing : post.getIngredients()) {
+                if(ing.getIngquantity() == null) ing.setIngquantity(0);
+            }
         }
-        post.setUserid(currentUserId);
 
-        // ³¯Â¥ ¹× ±âº»°ª
-        post.setRecipewritedate(LocalDate.now());
-        post.setRecipedeactivate(0);
+        // íƒœê·¸ ìˆœì„œ
+        if(post.getTags() != null) {
+            for(int i=0; i<post.getTags().size(); i++)
+                post.getTags().get(i).setTagorder(i+1);
+        }
 
-        // Àç·á ¼ö·® ±âº»°ª Ã³¸®
-        if (post.getIngredients() != null) {
-            for (Ingredients ing : post.getIngredients()) {
-                if (ing.getIngquantity() == null) {
-                    ing.setIngquantity(0);
+        // ì‹œí€€ìŠ¤ ìˆœì„œ
+        if(post.getSequences() != null) {
+            for(int i=0; i<post.getSequences().size(); i++)
+                post.getSequences().get(i).setRecipestep(i+1);
+        }
+
+        // attachments ì´ˆê¸°í™”
+        if(post.getAttachments() == null) post.setAttachments(new ArrayList<>());
+
+        // ëŒ€í‘œ ì´ë¯¸ì§€ ì²˜ë¦¬
+        if(mainImage != null && !mainImage.isEmpty()) {
+            Attachment mainAtt = new Attachment();
+            mainAtt.setIsmain(1);
+            mainAtt.setFilename(mainImage.getOriginalFilename());
+            mainAtt.setFileuuid(UUID.randomUUID().toString());
+            // TODO: ì„œë²„ ì €ì¥
+            post.getAttachments().add(mainAtt);
+        }
+
+        // ì¶”ê°€ ì´ë¯¸ì§€ ì²˜ë¦¬
+        if(attachments != null) {
+            for(MultipartFile file : attachments) {
+                if(file != null && !file.isEmpty()) {
+                    Attachment att = new Attachment();
+                    att.setIsmain(0);
+                    att.setFilename(file.getOriginalFilename());
+                    att.setFileuuid(UUID.randomUUID().toString());
+                    post.getAttachments().add(att);
                 }
             }
         }
 
-        // ÅÂ±× Ã³¸®: ¼ø¼­ ºÎ¿©
-        if (post.getTags() != null) {
-            int order = 1;
-            for (Tag t : post.getTags()) {
-                t.setTagorder(order++);
-            }
-        }
-
-        // ¿ä¸® ¼ø¼­: step ¹øÈ£ ºÎ¿©
-        if (post.getSequences() != null) {
-            int step = 1;
-            for (PostSequence ps : post.getSequences()) {
-                ps.setRecipestep(step++);
-            }
-        }
-
-        // ÆÄÀÏ Ã³¸® ¿©±â¼­ chatgpt¿Í ±³È¯ÇÒ °Í
-        List<Attachment> attList = new ArrayList<>();
-        if (mainImage != null && !mainImage.isEmpty()) {
-            attList.add(saveFileToAttachment(mainImage, true));
-        }
-        if (files != null) {
-            for (MultipartFile mf : files) {
-                if (mf != null && !mf.isEmpty()) {
-                    attList.add(saveFileToAttachment(mf, false));
-                }
-            }
-        }
-        post.setAttachments(attList);
-
-        // DB ÀúÀå
         postService.insertPost(post);
-
-        return "redirect:/"; //post/list·Î º¯È¯ÇÒ °Í
-    }
-
-    /**
-     * ÆÄÀÏ ÀúÀå À¯Æ¿
-     */
-    private Attachment saveFileToAttachment(MultipartFile mf, boolean isMain) throws IOException {
-        File dir = new File(uploadDir);
-        if (!dir.exists()) dir.mkdirs();
-
-        String original = mf.getOriginalFilename();
-        String ext = "";
-        if (original != null && original.contains(".")) {
-            ext = original.substring(original.lastIndexOf('.') + 1);
-        }
-
-        String uuid = java.util.UUID.randomUUID().toString().replace("-", "");
-        String saveName = uuid + (ext.isEmpty() ? "" : ("." + ext));
-
-        File out = new File(dir, saveName);
-        mf.transferTo(out);
-
-        Attachment att = new Attachment();
-        att.setFilename(original);
-        att.setFileuuid(saveName);
-        att.setFileext(ext);
-        att.setIsmain(isMain ? 1 : 0);
-
-        return att;
+        return "redirect:/";
     }
 }

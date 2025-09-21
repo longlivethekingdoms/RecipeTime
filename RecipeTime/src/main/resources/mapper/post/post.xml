@@ -44,6 +44,12 @@
              #{seq.ingexp}, #{seq.toolexp}, #{seq.fireexp}, #{seq.tipexp})
         </foreach>
     </insert>
+    
+     <!-- insert single sequence (useGeneratedKeys to obtain recipestepid) -->
+	  <insert id="insertSequence" parameterType="com.recipetime.find.Model.PostSequence" useGeneratedKeys="true" keyProperty="recipestepid">
+	    INSERT INTO recipesequence (recipeid, recipestep, `explain`, recipevidlink, ingactivate, toolactivate, fireactivate, tipactivate, ingexp, toolexp, fireexp, tipexp)
+	    VALUES (#{recipeid}, #{recipestep}, #{explain}, #{recipevidlink}, #{ingactivate}, #{toolactivate}, #{fireactivate}, #{tipactivate}, #{ingexp}, #{toolexp}, #{fireexp}, #{tipexp})
+	  </insert>
 
     <!-- 첨부파일 일괄 삽입 -->
     <insert id="insertAttachments" parameterType="java.util.List">

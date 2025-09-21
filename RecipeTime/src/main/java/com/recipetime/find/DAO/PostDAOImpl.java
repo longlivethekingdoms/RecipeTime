@@ -40,6 +40,12 @@ public class PostDAOImpl implements PostDAO {
 		if(ingredients == null || ingredients.isEmpty()) return;
         sqlSession.insert(namespace + "insertIngredients", ingredients);		
 	}
+	
+	@Override
+    public void insertSequence(PostSequence seq) {
+        sqlSession.insert(namespace + "insertSequence", seq);
+    }
+
 
 	@Override
     public void insertSequences(List<PostSequence> sequences) {

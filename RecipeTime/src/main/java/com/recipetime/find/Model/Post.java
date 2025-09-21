@@ -15,7 +15,7 @@ public class Post {
     private LocalDate recipewritedate;
     private LocalDate recipefixdate;
     private Integer recipeviews;
-    private int ishotdisplay;     // TINYINT(1) -> int
+    private int ishotdisplay;
     private int isbestdisplay;
     private int isprivate;
     private int typeid;
@@ -27,15 +27,14 @@ public class Post {
     private int recipedeactivate;
     private LocalDate recipedeactivatedate;
     private int isreport;
-    private String userid; // FK
+    private String userid;
 
-    // 연관 리스트
     private List<PostSequence> sequences;
     private List<Ingredients> ingredients;
     private List<Attachment> attachments;
     private List<Tag> tags;
 
-    // getters / setters (생략하지 않고 실제로는 모두 추가)
+    // getters / setters
     public int getRecipeid() { return recipeid; }
     public void setRecipeid(int recipeid) { this.recipeid = recipeid; }
 
