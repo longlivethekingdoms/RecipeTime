@@ -2,6 +2,8 @@ package com.recipetime.find.Service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.recipetime.find.Model.*;
 
 public interface PostService {

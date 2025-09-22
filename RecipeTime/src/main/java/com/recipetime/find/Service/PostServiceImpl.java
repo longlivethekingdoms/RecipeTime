@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.recipetime.find.DAO.PostDAO;
 import com.recipetime.find.Model.*;
@@ -52,8 +53,8 @@ public class PostServiceImpl implements PostService {
                 // if this sequence had attachments (controller already created Attachment objs)
                 if (seq.getAttachments() != null && !seq.getAttachments().isEmpty()) {
                     for (Attachment a : seq.getAttachments()) {
-                        a.setRecipestepid(stepId);
                         a.setRecipeid(recipeId); // also set recipeid for row
+                        a.setRecipestepid(stepId);
                         attachmentsToInsert.add(a);
                     }
                 }

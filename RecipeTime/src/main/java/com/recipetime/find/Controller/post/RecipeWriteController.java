@@ -47,13 +47,11 @@ public class RecipeWriteController {
     // 포스트 올리기
     @PostMapping("/insert")
     public String insertPost(
-            @ModelAttribute Post post,
+            Post post,
             @RequestParam("mainImage") MultipartFile mainImage,
             @RequestParam(value="uploadFiles", required=false) MultipartFile[] uploadFiles,
             HttpSession session,
-            RedirectAttributes ra) {
-    		System.out.println(mainImage);
-    		System.out.println(uploadFiles);
+            RedirectAttributes ra) throws Exception {
         // 로그인 상태 체크
         Users loginUser = (Users) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/login/login";
@@ -108,6 +106,7 @@ public class RecipeWriteController {
         }
 
         postService.insertPost(post);
+        
         return "redirect:/";
     }
 }

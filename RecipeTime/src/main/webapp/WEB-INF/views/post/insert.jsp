@@ -133,7 +133,7 @@ $(function(){
         if(file && file.type.startsWith("image/")){
             let reader = new FileReader();
             reader.onload = function(ev){
-                \$("#mainPreview").html(`
+                $("#mainPreview").html(`
                     <div class="preview-item">
                         <img src="\${ev.target.result}" width="200">
                         <button type="button" class="remove-main">삭제</button>
@@ -158,7 +158,7 @@ $(function(){
             if(file.type.startsWith("image/")){
                 let reader = new FileReader();
                 reader.onload = function(ev){
-                    \$("#extraPreview").append(`
+                    $("#extraPreview").append(`
                         <div class="preview-item" data-idx="${idx}">
                             <img src="\${ev.target.result}" width="120" style="margin:5px;">
                             <button type="button" class="remove-extra">삭제</button>
@@ -218,22 +218,61 @@ $("#addSequence").click(function() {
     var html =
         '<div class="sequence" data-seq="' + i + '">' +
             '<span class="sequence-number">' + (i+1) + '.</span>' +
-            '<textarea name="sequences[' + i + '].content" placeholder="설명" required></textarea>' +
-            '<input type="file" name="sequences[' + i + '].images" multiple>' +
+            '<textarea name="sequences[' + i + '].explain" placeholder="설명" required></textarea>' +
+            '<input type="file" class="seq-image" name="sequences[' + i + '].images" multiple>' +
+            '<div class="seq-preview"></div>' +   <!-- ★ 미리보기 영역 추가 -->
             '<br>' +
             '<label><input type="checkbox" class="toggle" data-target="ingredient"> 재료 </label>' +
-            '<div class="extra ingredient">설명: <input type="text" name="sequences[' + i + '].ingredientNote"></div>' +
+            '<div class="extra ingredient">설명: <input type="text" name="sequences[' + i + '].ingexp"></div>' +
             '<label><input type="checkbox" class="toggle" data-target="tool"> 도구 </label>' +
-            '<div class="extra tool">설명: <input type="text" name="sequences[' + i + '].toolNote"></div>' +
+            '<div class="extra tool">설명: <input type="text" name="sequences[' + i + '].toolexp"></div>' +
             '<label><input type="checkbox" class="toggle" data-target="fire"> 불</label>' +
-            '<div class="extra fire">설명: <input type="text" name="sequences[' + i + '].fireNote"></div>' +
+            '<div class="extra fire">설명: <input type="text" name="sequences[' + i + '].fireexp"></div>' +
             '<label><input type="checkbox" class="toggle" data-target="tip"> 팁</label>' +
-            '<div class="extra tip">설명: <input type="text" name="sequences[' + i + '].tipNote"></div>' +
+            '<div class="extra tip">설명: <input type="text" name="sequences[' + i + '].tipexp"></div>' +
             ' <button type="button" class="remove">삭제</button>' +
         '</div>';
     $("#sequenceList").append(html);
     
     $("#sequenceList .sequence:last .extra").hide();
+});
+
+//시퀀스 이미지 미리보기
+$(document).on("change", ".seq-image", function(e){
+    let container = $(this).closest(".sequence");
+    let preview = container.find(".seq-preview");
+    preview.empty();
+
+    let files = e.target.files;
+    Array.from(files).forEach((file, idx) => {
+        if(file.type.startsWith("image/")){
+            let reader = new FileReader();
+            reader.onload = function(ev){
+                preview.append(`
+                    <div class="preview-item" data-idx="\${idx}">
+                        <img src="\${ev.target.result}" width="120" style="margin:5px;">
+                        <button type="button" class="remove-seq-img">삭제</button>
+                    </div>
+                `);
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+});
+
+//시퀀스 이미지 삭제
+$(document).on("click", ".remove-seq-img", function(){
+    let parent = $(this).closest(".sequence");
+    let idx = $(this).parent().data("idx");
+    let input = parent.find(".seq-image")[0];
+
+    let dt = new DataTransfer();
+    Array.from(input.files).forEach((file, i) => {
+        if(i !== idx) dt.items.add(file);
+    });
+    input.files = dt.files;
+
+    $(this).parent().remove();
 });
 
 // 삭제 버튼 클릭 시
