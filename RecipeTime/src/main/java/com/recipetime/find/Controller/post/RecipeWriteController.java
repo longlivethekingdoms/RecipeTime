@@ -44,7 +44,7 @@ public class RecipeWriteController {
         return "post/insert";
     }
 
-    // �젅�떆�뵾 �벑濡� 泥섎━(POST)
+    // 포스트 올리기
     @PostMapping("/insert")
     public String insertPost(
             @ModelAttribute Post post,
@@ -54,37 +54,37 @@ public class RecipeWriteController {
             RedirectAttributes ra) {
     		System.out.println(mainImage);
     		System.out.println(uploadFiles);
-        // 濡쒓렇�씤 泥댄겕
+        // 로그인 상태 체크
         Users loginUser = (Users) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/login/login";
         post.setUserid(loginUser.getUserid());
 
-        // �옉�꽦�씪 湲곕낯媛�
+        // 날짜 상태 체크
         if(post.getRecipewritedate() == null) post.setRecipewritedate(LocalDate.now());
 
-        // �옱猷� �닔�웾 湲곕낯媛�
+        // 재료 순서 넣기
         if(post.getIngredients() != null) {
             for(Ingredients ing : post.getIngredients()) {
                 if(ing.getIngquantity() == null) ing.setIngquantity(0);
             }
         }
 
-        // �깭洹� �닚�꽌
+        // 태그 순서 넣기
         if(post.getTags() != null) {
             for(int i=0; i<post.getTags().size(); i++)
                 post.getTags().get(i).setTagorder(i+1);
         }
 
-        // �떆���뒪 �닚�꽌
+        // 시퀀스 넣기
         if(post.getSequences() != null) {
             for(int i=0; i<post.getSequences().size(); i++)
                 post.getSequences().get(i).setRecipestep(i+1);
         }
 
-        // attachments 珥덇린�솕
+        // attachments 추가
         if(post.getAttachments() == null) post.setAttachments(new ArrayList<>());
 
-        // ���몴 �씠誘몄� 泥섎━
+        // 메인 이미지 추가
         if(mainImage != null && !mainImage.isEmpty()) {
             Attachment mainAtt = new Attachment();
             mainAtt.setIsmain(1);
@@ -94,7 +94,7 @@ public class RecipeWriteController {
             post.getAttachments().add(mainAtt);
         }
 
-        // 異붽� �씠誘몄� 泥섎━
+        // 추가 이미지 추가
         if(uploadFiles != null) {
             for(MultipartFile file : uploadFiles) {
                 if(file != null && !file.isEmpty()) {
