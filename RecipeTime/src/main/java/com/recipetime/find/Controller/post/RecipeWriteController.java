@@ -32,7 +32,7 @@ public class RecipeWriteController {
     @Value("${upload.dir:/tmp/uploads}")
     private String uploadDir;
 
-    // 레시피 작성 폼(GET)
+    // �젅�떆�뵾 �옉�꽦 �뤌(GET)
     @GetMapping("/insert")
     public String insertForm(Model model) {
         model.addAttribute("typeOptions", categoryService.getOptionsByItemId(1));
@@ -44,58 +44,59 @@ public class RecipeWriteController {
         return "post/insert";
     }
 
-    // 레시피 등록 처리(POST)
+    // �젅�떆�뵾 �벑濡� 泥섎━(POST)
     @PostMapping("/insert")
     public String insertPost(
             @ModelAttribute Post post,
             @RequestParam("mainImage") MultipartFile mainImage,
-            @RequestParam(value="attachments", required=false) MultipartFile[] attachments,
+            @RequestParam(value="uploadFiles", required=false) MultipartFile[] uploadFiles,
             HttpSession session,
             RedirectAttributes ra) {
-
-        // 로그인 체크
+    		System.out.println(mainImage);
+    		System.out.println(uploadFiles);
+        // 濡쒓렇�씤 泥댄겕
         Users loginUser = (Users) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/login/login";
         post.setUserid(loginUser.getUserid());
 
-        // 작성일 기본값
+        // �옉�꽦�씪 湲곕낯媛�
         if(post.getRecipewritedate() == null) post.setRecipewritedate(LocalDate.now());
 
-        // 재료 수량 기본값
+        // �옱猷� �닔�웾 湲곕낯媛�
         if(post.getIngredients() != null) {
             for(Ingredients ing : post.getIngredients()) {
                 if(ing.getIngquantity() == null) ing.setIngquantity(0);
             }
         }
 
-        // 태그 순서
+        // �깭洹� �닚�꽌
         if(post.getTags() != null) {
             for(int i=0; i<post.getTags().size(); i++)
                 post.getTags().get(i).setTagorder(i+1);
         }
 
-        // 시퀀스 순서
+        // �떆���뒪 �닚�꽌
         if(post.getSequences() != null) {
             for(int i=0; i<post.getSequences().size(); i++)
                 post.getSequences().get(i).setRecipestep(i+1);
         }
 
-        // attachments 초기화
+        // attachments 珥덇린�솕
         if(post.getAttachments() == null) post.setAttachments(new ArrayList<>());
 
-        // 대표 이미지 처리
+        // ���몴 �씠誘몄� 泥섎━
         if(mainImage != null && !mainImage.isEmpty()) {
             Attachment mainAtt = new Attachment();
             mainAtt.setIsmain(1);
             mainAtt.setFilename(mainImage.getOriginalFilename());
             mainAtt.setFileuuid(UUID.randomUUID().toString());
-            // TODO: 서버 저장
+            // TODO: �꽌踰� ���옣
             post.getAttachments().add(mainAtt);
         }
 
-        // 추가 이미지 처리
-        if(attachments != null) {
-            for(MultipartFile file : attachments) {
+        // 異붽� �씠誘몄� 泥섎━
+        if(uploadFiles != null) {
+            for(MultipartFile file : uploadFiles) {
                 if(file != null && !file.isEmpty()) {
                     Attachment att = new Attachment();
                     att.setIsmain(0);
