@@ -56,6 +56,7 @@ public class PostDAOImpl implements PostDAO {
     @Override
     public void insertAttachments(List<Attachment> attachments) {
         if(attachments == null || attachments.isEmpty()) return;
+        System.out.println("여기야");
         sqlSession.insert(namespace + "insertAttachments", attachments);
     }
 
@@ -83,4 +84,11 @@ public class PostDAOImpl implements PostDAO {
     public List<CategoryOption> listCategoryOptionsByItemId(int itemid) {
         return sqlSession.selectList(namespace + "listCategoryOptionsByItemId", itemid);
     }
+
+	@Override
+	public void insertseqAttachments(List<Attachment> seqattachments) {
+		if(seqattachments == null || seqattachments.isEmpty()) return;
+		System.out.println("여기야");
+		sqlSession.insert(namespace + "insertseqAttachments", seqattachments);
+	}
 }

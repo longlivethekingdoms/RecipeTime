@@ -53,10 +53,19 @@
 
     <!-- 첨부파일 일괄 삽입 -->
     <insert id="insertAttachments" parameterType="java.util.List">
-        INSERT INTO attachment (fileorder, filename, fileuuid, fileext, ismain, recipeid, recipestepid)
+        INSERT INTO attachment (fileorder, filename, fileuuid, fileext, ismain, recipeid)
         VALUES
         <foreach collection="list" item="att" separator=",">
-            (#{att.fileorder}, #{att.filename}, #{att.fileuuid}, #{att.fileext}, #{att.ismain}, #{att.recipeid}, #{att.recipestepid})
+            (#{att.fileorder}, #{att.filename}, #{att.fileuuid}, #{att.fileext}, #{att.ismain}, #{att.recipeid})
+        </foreach>
+    </insert>
+    
+    <!-- 시퀀스 일괄 삽입 -->
+    <insert id="insertseqAttachments" parameterType="java.util.List">
+        INSERT INTO attachment (fileorder, filename, fileuuid, fileext, ismain, recipestepid)
+        VALUES
+        <foreach collection="list" item="att" separator=",">
+            (#{att.fileorder}, #{att.filename}, #{att.fileuuid}, #{att.fileext}, #{att.ismain}, #{att.recipestepid})
         </foreach>
     </insert>
 

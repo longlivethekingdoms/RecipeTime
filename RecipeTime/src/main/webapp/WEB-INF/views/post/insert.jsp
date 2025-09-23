@@ -219,7 +219,8 @@ $("#addSequence").click(function() {
         '<div class="sequence" data-seq="' + i + '">' +
             '<span class="sequence-number">' + (i+1) + '.</span>' +
             '<textarea name="sequences[' + i + '].explain" placeholder="설명" required></textarea>' +
-            '<input type="file" class="seq-image" name="sequences[' + i + '].images" multiple>' +
+            '<input type="file" class="seq-image" name="sequenceImages[' + i + ']" multiple>' +
+            '<div class="section"><label>레시피 동영상 URL</label><br><input type="url" name="recipevidlink"></div>' + <!-- 비디오링크 -->
             '<div class="seq-preview"></div>' +   <!-- ★ 미리보기 영역 추가 -->
             '<br>' +
             '<label><input type="checkbox" class="toggle" data-target="ingredient"> 재료 </label>' +

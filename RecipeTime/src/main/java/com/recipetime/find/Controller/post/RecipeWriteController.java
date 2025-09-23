@@ -1,10 +1,13 @@
 package com.recipetime.find.Controller.post;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.recipetime.find.Model.*;
@@ -50,7 +54,9 @@ public class RecipeWriteController {
             Post post,
             @RequestParam("mainImage") MultipartFile mainImage,
             @RequestParam(value="uploadFiles", required=false) MultipartFile[] uploadFiles,
+            @RequestParam Map<String, MultipartFile[]> sequenceImages,
             HttpSession session,
+            HttpServletRequest request,
             RedirectAttributes ra) throws Exception {
         // 로그인 상태 체크
         Users loginUser = (Users) session.getAttribute("loginUser");
@@ -84,11 +90,24 @@ public class RecipeWriteController {
 
         // 메인 이미지 추가
         if(mainImage != null && !mainImage.isEmpty()) {
+//            Attachment mainAtt = new Attachment();
+//            mainAtt.setIsmain(1);
+//            mainAtt.setFilename(mainImage.getOriginalFilename());
+//            mainAtt.setFileuuid(UUID.randomUUID().toString());
+//            // TODO: �꽌踰� ���옣
+//            post.getAttachments().add(mainAtt);
+        	String uuid = UUID.randomUUID().toString();
+            String originalName = mainImage.getOriginalFilename();
+            String ext = originalName.substring(originalName.lastIndexOf(".") + 1);
+
+            File dest = new File(uploadDir, uuid + "." + ext);
+            mainImage.transferTo(dest);
+
             Attachment mainAtt = new Attachment();
             mainAtt.setIsmain(1);
-            mainAtt.setFilename(mainImage.getOriginalFilename());
-            mainAtt.setFileuuid(UUID.randomUUID().toString());
-            // TODO: �꽌踰� ���옣
+            mainAtt.setFilename(originalName);
+            mainAtt.setFileuuid(uuid);
+            mainAtt.setFileext(ext);
             post.getAttachments().add(mainAtt);
         }
 
@@ -96,15 +115,59 @@ public class RecipeWriteController {
         if(uploadFiles != null) {
             for(MultipartFile file : uploadFiles) {
                 if(file != null && !file.isEmpty()) {
+//                    Attachment att = new Attachment();
+//                    att.setIsmain(0);
+//                    att.setFilename(file.getOriginalFilename());
+//                    att.setFileuuid(UUID.randomUUID().toString());
+//                    post.getAttachments().add(att);
+                	String uuid = UUID.randomUUID().toString();
+                	String originalName = file.getOriginalFilename();
+                	String ext = originalName.substring(originalName.lastIndexOf(".")+1);
+                	
+                	// 파일 저장할 경로 설정
+                    File dest = new File(uploadDir, uuid + "." + ext);
+                    file.transferTo(dest); // 파일 전송
+
+                    // Attachment 객체 생성
                     Attachment att = new Attachment();
-                    att.setIsmain(0);
-                    att.setFilename(file.getOriginalFilename());
-                    att.setFileuuid(UUID.randomUUID().toString());
+                    att.setIsmain(0); // 추가 이미지이므로 main flag는 0
+                    att.setFilename(originalName);
+                    att.setFileuuid(uuid);
+                    att.setFileext(ext);
+                    
+                    System.out.println("추가 이미지");
+                    // 포스트에 추가 이미지 추가
                     post.getAttachments().add(att);
                 }
             }
-        }
+        }        
 
+        // 시퀀스 이미지 처리
+        if (post.getSequences() != null) {
+            for (int i = 0; i < post.getSequences().size(); i++) {
+                PostSequence seq = post.getSequences().get(i);
+
+                String paramName = "sequenceImages[" + i + "]";
+                MultipartFile[] seqFiles = ((MultipartHttpServletRequest) request).getFiles(paramName).toArray(new MultipartFile[0]);
+                System.out.println("두번?");
+                if (seqFiles != null && seqFiles.length > 0) {
+                    List<Attachment> seqAtts = new ArrayList<>();
+                    for (MultipartFile file : seqFiles) {
+                        if (!file.isEmpty()) {
+                            Attachment att = new Attachment();
+                            att.setFilename(file.getOriginalFilename());
+                            att.setFileuuid(UUID.randomUUID().toString());
+                            seqAtts.add(att);
+                        }
+                        
+                    }
+                    System.out.println("시퀀스 이미지");
+                    
+                    seq.setAttachments(seqAtts);
+                }
+            }
+        }
+        
         postService.insertPost(post);
         
         return "redirect:/";

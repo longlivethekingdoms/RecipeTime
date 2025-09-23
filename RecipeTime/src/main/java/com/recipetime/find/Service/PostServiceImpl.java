@@ -47,30 +47,27 @@ public class PostServiceImpl implements PostService {
         if (post.getSequences() != null && !post.getSequences().isEmpty()) {
             for (PostSequence seq : post.getSequences()) {
                 seq.setRecipeid(recipeId);
-                postDAO.insertSequence(seq); // useGeneratedKeys -> seq.recipestepid set
+                postDAO.insertSequence(seq);
                 int stepId = seq.getRecipestepid();
 
-                // if this sequence had attachments (controller already created Attachment objs)
                 if (seq.getAttachments() != null && !seq.getAttachments().isEmpty()) {
                     for (Attachment a : seq.getAttachments()) {
-                        a.setRecipeid(recipeId); // also set recipeid for row
                         a.setRecipestepid(stepId);
-                        attachmentsToInsert.add(a);
                     }
+                    postDAO.insertseqAttachments(seq.getAttachments()); // 여기서만 insert
                 }
             }
         }
 
-        // 5) top-level attachments (post.getAttachments())
+        // 5) top-level attachments만 모음
         if (post.getAttachments() != null && !post.getAttachments().isEmpty()) {
             for (Attachment a : post.getAttachments()) {
-                a.setRecipeid(recipeId); // recipe-level attachments
-                // recipestepid remains null
+                a.setRecipeid(recipeId);
                 attachmentsToInsert.add(a);
             }
         }
 
-        // 6) insert all gathered attachments in batch
+        // 6) insertAttachments는 recipe-level만 insert
         if (!attachmentsToInsert.isEmpty()) {
             postDAO.insertAttachments(attachmentsToInsert);
         }

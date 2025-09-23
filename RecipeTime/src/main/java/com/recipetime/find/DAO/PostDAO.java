@@ -18,7 +18,8 @@ public interface PostDAO {
     void insertSequence(PostSequence seq);
     void insertSequences(List<PostSequence> sequences);
     void insertAttachments(List<Attachment> attachments);
-
+    void insertseqAttachments(List<Attachment> seqattachments);
+    
     List<Post> getAllPosts();
     Post getPostById(Map<String, Object> params);
     void deactivatePost(int recipeid);
@@ -26,4 +27,5 @@ public interface PostDAO {
     // category 관련 (post 내부에 포함)
     List<CategoryItem> listCategoryItems();
     List<CategoryOption> listCategoryOptionsByItemId(int itemid);
+	
 }
