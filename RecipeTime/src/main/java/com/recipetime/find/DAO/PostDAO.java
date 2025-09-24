@@ -21,6 +21,11 @@ public interface PostDAO {
     void insertseqAttachments(List<Attachment> seqattachments);
     
     List<Post> getAllPosts();
+    List<Tag> getTagsByRecipeId(int recipeid);
+    List<Map<String, Object>> getCategoryItems();
+    List<Map<String, Object>> getCategoryOptionsByItem(int itemid);
+    int getRecipeCount(List<Integer> categoryOptions);
+    List<Post> getRecipeList(List<Integer> categoryOptions, int offset, int size);
     Post getPostById(Map<String, Object> params);
     void deactivatePost(int recipeid);
 

@@ -86,11 +86,12 @@
 	    <div id="extraPreview"></div>
 	</div>
 
-    <!-- 레시피 동영상 URL -->
-    <div class="section">
-        <label>레시피 동영상 URL</label><br>
-        <input type="url" name="recipeMainVidLink">
-    </div>
+    <label for="recipeMainVidLink">동영상 링크</label>
+	<input type="text" id="recipeMainVidLink" name="recipeMainVidLink" placeholder="유튜브 링크 입력">
+	
+	<div id="videoPreview" style="margin-top: 15px; display: none;">
+	    <iframe id="videoFrame" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+	</div>
 
     <!-- 태그 -->
     <div class="section">
@@ -187,6 +188,31 @@ $(function(){
 
 });
 
+document.getElementById("recipeMainVidLink").addEventListener("input", function () {
+    const url = this.value;
+    let videoId = null;
+
+    // 1) https://www.youtube.com/watch?v=VIDEO_ID
+    const match1 = url.match(/v=([^&]+)/);
+    if (match1) videoId = match1[1];
+
+    // 2) https://youtu.be/VIDEO_ID
+    const match2 = url.match(/youtu\.be\/([^?]+)/);
+    if (match2) videoId = match2[1];
+    
+ 	// 3) https://www.youtube.com/shorts/VIDEO_ID
+    const match3 = url.match(/youtube\.com\/shorts\/([^?]+)/);
+    if (match3) videoId = match3[1];
+
+    if (videoId) {
+        const embedUrl = "https://www.youtube.com/embed/" + videoId;
+        document.getElementById("videoFrame").src = embedUrl;
+        document.getElementById("videoPreview").style.display = "block";
+    } else {
+        document.getElementById("videoPreview").style.display = "none";
+    }
+});
+
 // 태그 추가
 $("#addTag").click(function() {
     $("#tagList").append(`
@@ -220,7 +246,12 @@ $("#addSequence").click(function() {
             '<span class="sequence-number">' + (i+1) + '.</span>' +
             '<textarea name="sequences[' + i + '].explain" placeholder="설명" required></textarea>' +
             '<input type="file" class="seq-image" name="sequenceImages[' + i + ']" multiple>' +
-            '<div class="section"><label>레시피 동영상 URL</label><br><input type="url" name="recipevidlink"></div>' + <!-- 비디오링크 -->
+            '<div class="section"><label>레시피 동영상 링크</label>' +
+            '<br>' +
+            '<input type="text" class="recipevidlink" name="sequences['+ i +'].recipevidlink" placeholder="유튜브 링크 입력"></div>' + <!-- 비디오링크 -->
+            '<div class="videoPreview" style="margin-top: 15px; display: none;">' +
+            '<iframe class="videoFrame" width="560" height="315" frameborder="0" allowfullscreen></iframe>' +
+            '</div>' +
             '<div class="seq-preview"></div>' +   <!-- ★ 미리보기 영역 추가 -->
             '<br>' +
             '<label><input type="checkbox" class="toggle" data-target="ingredient"> 재료 </label>' +
@@ -287,6 +318,37 @@ $(document).on("click", ".remove", function() {
     }
 });
 
+//동영상 링크 입력 시 미리보기 (이벤트 위임)
+$(document).on("input", ".recipevidlink", function () {
+    const url = $(this).val();
+    let videoId = null;
+
+    // 1) https://www.youtube.com/watch?v=VIDEO_ID
+    const match1 = url.match(/v=([^&]+)/);
+    if (match1) videoId = match1[1];
+
+    // 2) https://youtu.be/VIDEO_ID
+    const match2 = url.match(/youtu\.be\/([^?]+)/);
+    if (match2) videoId = match2[1];
+    
+ 	// 3) https://www.youtube.com/shorts/VIDEO_ID
+    const match3 = url.match(/youtube\.com\/shorts\/([^?]+)/);
+    if (match3) videoId = match3[1];
+
+    const container = $(this).closest(".sequence");
+    const preview = container.find(".videoPreview");
+    const frame = container.find(".videoFrame");
+
+    if (videoId) {
+        const embedUrl = "https://www.youtube.com/embed/" + videoId;
+        frame.attr("src", embedUrl);
+        preview.show();
+    } else {
+        frame.attr("src", "");
+        preview.hide();
+    }
+});
+
 // 시퀀스 재정렬
 function reindexSequences(){
     $("#sequenceList .sequence").each(function(index){
@@ -334,5 +396,6 @@ function submitWithPrivacy(value){
     }
 }
 </script>
+<jsp:include page="/WEB-INF/views/template/footer.jsp"/>
 </body>
 </html>

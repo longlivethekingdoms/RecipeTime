@@ -170,6 +170,6 @@ public class RecipeWriteController {
         
         postService.insertPost(post);
         
-        return "redirect:/";
+        return "redirect:/post/list";
     }
 }

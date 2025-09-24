@@ -66,6 +66,35 @@ public class PostDAOImpl implements PostDAO {
     }
 
     @Override
+    public List<Tag> getTagsByRecipeId(int recipeid) {
+        return sqlSession.selectList(namespace + "getTagsByRecipeId", recipeid);
+    }
+
+    @Override
+    public List<Map<String, Object>> getCategoryItems() {
+        return sqlSession.selectList(namespace + "getCategoryItems");
+    }
+
+    @Override
+    public List<Map<String, Object>> getCategoryOptionsByItem(int itemid) {
+        return sqlSession.selectList(namespace + "getCategoryOptionsByItem", itemid);
+    }
+    
+    @Override
+    public int getRecipeCount(List<Integer> categoryOptions) {
+        return sqlSession.selectOne(namespace + "getRecipeCount", categoryOptions);
+    }
+
+    @Override
+    public List<Post> getRecipeList(List<Integer> categoryOptions, int offset, int size) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("categoryOptions", categoryOptions);
+        params.put("offset", offset);
+        params.put("size", size);
+        return sqlSession.selectList(namespace + "getRecipeList", params);
+    }
+    
+    @Override
     public Post getPostById(Map<String, Object> params) {
         return sqlSession.selectOne(namespace + "getPostById", params);
     }
@@ -88,7 +117,6 @@ public class PostDAOImpl implements PostDAO {
 	@Override
 	public void insertseqAttachments(List<Attachment> seqattachments) {
 		if(seqattachments == null || seqattachments.isEmpty()) return;
-		System.out.println("¿©±â¾ß");
 		sqlSession.insert(namespace + "insertseqAttachments", seqattachments);
 	}
 }

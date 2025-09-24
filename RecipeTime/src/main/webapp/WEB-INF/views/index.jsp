@@ -11,7 +11,11 @@
 	<jsp:include page="/WEB-INF/views/template/header.jsp"/>
 	
 	<div class="main-content">
-		
+		<ul>
+			<li><b><a href="<c:url value='/' />">홈</a></b></li>
+			<li><a href="<c:url value='/post/list' />">분류</a></li>
+			<li><a href="<c:url value='/announcement/list' />">공지사항</a></li>
+		</ul>
 	</div>
 	
 	<jsp:include page="/WEB-INF/views/template/footer.jsp"/>

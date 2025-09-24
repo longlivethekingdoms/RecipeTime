@@ -73,6 +73,99 @@
     <select id="getAllPosts" resultType="com.recipetime.find.Model.Post">
         SELECT * FROM recipepost WHERE recipedeactivate = 0
     </select>
+	
+	<!-- 태그 불러오기 -->
+	<select id="getTagsByRecipeId" parameterType="int" resultType="com.recipetime.find.Model.Tag">
+	    SELECT recipeid, tagorder, tagname
+	    FROM recipetag
+	    WHERE recipeid = #{recipeid}
+	    ORDER BY tagorder ASC
+	</select>
+	
+	<!-- 카테고리 아이템 목록 불러오기 -->
+	<select id="getCategoryItems" resultType="map">
+	    SELECT itemid, itemname
+	    FROM category_item
+	</select>
+	
+	<!-- 카테고리 옵션 목록 불러오기 -->
+	<select id="getCategoryOptionsByItem" parameterType="int" resultType="map">
+	    SELECT optionid, optionname
+	    FROM category_option
+	    WHERE itemid = #{itemid}
+	</select>
+	
+	<select id="getRecipeCount" resultType="int" parameterType="list">
+	    SELECT COUNT(*)
+	    FROM recipepost r
+	    <where>
+	        <if test="categoryOptions != null and categoryOptions.size() > 0">
+	            AND (
+	                r.typeid IN
+	                <foreach collection="categoryOptions" item="opt" open="(" separator="," close=")">
+	                    #{opt}
+	                </foreach>
+	                OR r.situationid IN
+	                <foreach collection="categoryOptions" item="opt" open="(" separator="," close=")">
+	                    #{opt}
+	                </foreach>
+	                OR r.methodid IN
+	                <foreach collection="categoryOptions" item="opt" open="(" separator="," close=")">
+	                    #{opt}
+	                </foreach>
+	                OR r.peopleid IN
+	                <foreach collection="categoryOptions" item="opt" open="(" separator="," close=")">
+	                    #{opt}
+	                </foreach>
+	                OR r.timeid IN
+	                <foreach collection="categoryOptions" item="opt" open="(" separator="," close=")">
+	                    #{opt}
+	                </foreach>
+	                OR r.difficultyid IN
+	                <foreach collection="categoryOptions" item="opt" open="(" separator="," close=")">
+	                    #{opt}
+	                </foreach>
+	            )
+	        </if>
+	    </where>
+	</select>
+
+	<select id="getRecipeList" resultType="com.recipetime.find.Model.Post" parameterType="map">
+	    SELECT *
+	    FROM recipepost r
+	    <where>
+	        <if test="categoryOptions != null and categoryOptions.size() > 0">
+	            AND (
+	                r.typeid IN
+	                <foreach collection="categoryOptions" item="opt" open="(" separator="," close=")">
+	                    #{opt}
+	                </foreach>
+	                OR r.situationid IN
+	                <foreach collection="categoryOptions" item="opt" open="(" separator="," close=")">
+	                    #{opt}
+	                </foreach>
+	                OR r.methodid IN
+	                <foreach collection="categoryOptions" item="opt" open="(" separator="," close=")">
+	                    #{opt}
+	                </foreach>
+	                OR r.peopleid IN
+	                <foreach collection="categoryOptions" item="opt" open="(" separator="," close=")">
+	                    #{opt}
+	                </foreach>
+	                OR r.timeid IN
+	                <foreach collection="categoryOptions" item="opt" open="(" separator="," close=")">
+	                    #{opt}
+	                </foreach>
+	                OR r.difficultyid IN
+	                <foreach collection="categoryOptions" item="opt" open="(" separator="," close=")">
+	                    #{opt}
+	                </foreach>
+	            )
+	        </if>
+	    </where>
+	    ORDER BY recipewritedate DESC
+	    LIMIT #{size} OFFSET #{offset}
+	</select>
 
     <!-- 상세조회: params: recipeid, currentUserId, isAdmin -->
     <select id="getPostById" resultType="com.recipetime.find.Model.Post">
