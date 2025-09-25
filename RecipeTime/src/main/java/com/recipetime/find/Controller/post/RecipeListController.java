@@ -33,6 +33,8 @@ public class RecipeListController {
 		
 		model.addAttribute("recipeList", postlist);
 		
+		System.out.println(postlist.get(1).getRecipewritedate());
+		
 		return "/post/list";
 
 	}

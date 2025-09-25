@@ -56,17 +56,11 @@
         <c:forEach var="post" items="${recipeList}">
             <div class="col">
                 <div class="card">
-                    <img src="${post.attachments[1]}" class="card-img-top" alt="레시피 이미지">
+                    <img src="${post.attachments.get(1)}" class="card-img-top" alt="레시피 이미지">
                     <div class="card-body">
                         <h5 class="card-title">${post.recipetitle}</h5>
                         <p class="card-text">
-                            작성일: <fmt:formatDate value="${post.recipewritedate}" pattern="yyyy-MM-dd"/>
-                        </p>
-                        <p class="card-text">
-                            태그:
-                            <c:forEach var="tag" items="${post.tags}">
-                                <span class="badge bg-secondary">${tag.tagname}</span>
-                            </c:forEach>
+                            작성일: ${post.recipewritedate}
                         </p>
                     </div>
                 </div>
