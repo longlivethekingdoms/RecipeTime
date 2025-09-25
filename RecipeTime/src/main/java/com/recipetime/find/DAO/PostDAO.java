@@ -10,6 +10,7 @@ import com.recipetime.find.Model.Ingredients;
 import com.recipetime.find.Model.Post;
 import com.recipetime.find.Model.PostSequence;
 import com.recipetime.find.Model.Tag;
+import com.recipetime.find.pager.Pager;
 
 public interface PostDAO {
 	void insertPost(Post post);
@@ -21,16 +22,14 @@ public interface PostDAO {
     void insertseqAttachments(List<Attachment> seqattachments);
     
     List<Post> getAllPosts();
-    List<Tag> getTagsByRecipeId(int recipeid);
-    List<Map<String, Object>> getCategoryItems();
-    List<Map<String, Object>> getCategoryOptionsByItem(int itemid);
-    int getRecipeCount(List<Integer> categoryOptions);
-    List<Post> getRecipeList(List<Integer> categoryOptions, int offset, int size);
     Post getPostById(Map<String, Object> params);
     void deactivatePost(int recipeid);
 
     // category 관련 (post 내부에 포함)
     List<CategoryItem> listCategoryItems();
     List<CategoryOption> listCategoryOptionsByItemId(int itemid);
+    
+	int posttotal(Pager pager);
+	List<Post> postlist(Pager pager);
 	
 }

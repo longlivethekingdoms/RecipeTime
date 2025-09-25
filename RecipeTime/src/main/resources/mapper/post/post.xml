@@ -188,8 +188,21 @@
     </update>
 
     <!-- 카테고리: item / option -->
-    <select id="listCategoryItems" resultType="com.recipetime.find.Model.CategoryItem">
-        SELECT itemid, itemname FROM category_item ORDER BY itemid
+    <resultMap type="com.recipetime.find.Model.CategoryItem" id="itemMap">
+   	<id column="itemid" property="itemid" />
+   	<result column="itemname" property="itemname" />
+   	<result column="itemparam" property="itemparam" />
+   	<collection property="optionList" ofType="com.recipetime.find.Model.CategoryOption">
+   	<id column="optionid" property="optionid" />
+   	<result column="optionname" property="optionname" />
+   	<result column="itemid" property="itemid" />
+   	</collection>
+    </resultMap>
+    
+    <select id="listCategoryItems" resultMap="itemMap">
+        SELECT i.itemid, i.itemname, i.itemparam, o.itemid, o.optionid, o.optionname
+        FROM category_item i LEFT OUTER JOIN category_option o on i.itemid = o.itemid
+        ORDER BY i.itemid
     </select>
 
     <select id="listCategoryOptionsByItemId" parameterType="int" resultType="com.recipetime.find.Model.CategoryOption">
@@ -197,6 +210,40 @@
         FROM category_option
         WHERE itemid = #{itemid}
         ORDER BY optionid
+    </select>
+ 
+    
+    <sql id="search">
+    	<where>
+    		<if test="keyword!=null and keyword!=''">
+    			AND recipetitle LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+    			OR t.tagname LIKE CONCAT('%', #{keyword}, '%')
+    		</if>
+    		<if test="typeid!=0">
+    			AND typeid=#{typeid}
+    		</if>
+    		<if test="situationid!=0">
+    			AND situationid=#{situationid}
+    		</if>
+    		<if test="methodid!=0">
+    			AND methodid=#{methodid}
+    		</if>
+    		<if test="peopleid!=0">
+    			AND peopleid=#{peopleid}
+    		</if>
+    		<if test="timeid!=0">
+    			AND timeid=#{timeid}
+    		</if>
+    		<if test="difficultyid!=0">
+    			AND difficultyid=#{difficultyid}
+    		</if>
+    	</where>   	
+    </sql>
+    
+    <select id="postlist" resultType="com.recipetime.find.Model.Post">
+    	SELECT *
+    	FROM recipepost p LEFT OUTER JOIN recipetag t on p.recipeid = t.recipeid
+    	<include refid="search"></include> 
     </select>
 
 </mapper>

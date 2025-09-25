@@ -104,6 +104,7 @@ public class RecipeWriteController {
             mainImage.transferTo(dest);
 
             Attachment mainAtt = new Attachment();
+            mainAtt.setFileorder(0);
             mainAtt.setIsmain(1);
             mainAtt.setFilename(originalName);
             mainAtt.setFileuuid(uuid);
@@ -171,5 +172,24 @@ public class RecipeWriteController {
         postService.insertPost(post);
         
         return "redirect:/post/list";
+    }
+    
+    @GetMapping("/dummy")
+    String dummy(Post post,
+    		HttpSession session) {
+    	Users loginUser = (Users) session.getAttribute("loginUser");
+        if (loginUser == null) return "redirect:/login/login";
+        post.setUserid(loginUser.getUserid());
+    	postService.dummy(loginUser);
+    	
+    	return "redirect:/post/list";
+    }
+    
+    @GetMapping("/init")
+    String init() {
+    	postService.init();
+    	
+    	
+    	return "redirect:/post/list";
     }
 }

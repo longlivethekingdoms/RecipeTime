@@ -15,6 +15,7 @@ import com.recipetime.find.Model.Ingredients;
 import com.recipetime.find.Model.Post;
 import com.recipetime.find.Model.PostSequence;
 import com.recipetime.find.Model.Tag;
+import com.recipetime.find.pager.Pager;
 
 @Repository
 public class PostDAOImpl implements PostDAO {
@@ -64,35 +65,6 @@ public class PostDAOImpl implements PostDAO {
     public List<Post> getAllPosts() {
         return sqlSession.selectList(namespace + "getAllPosts");
     }
-
-    @Override
-    public List<Tag> getTagsByRecipeId(int recipeid) {
-        return sqlSession.selectList(namespace + "getTagsByRecipeId", recipeid);
-    }
-
-    @Override
-    public List<Map<String, Object>> getCategoryItems() {
-        return sqlSession.selectList(namespace + "getCategoryItems");
-    }
-
-    @Override
-    public List<Map<String, Object>> getCategoryOptionsByItem(int itemid) {
-        return sqlSession.selectList(namespace + "getCategoryOptionsByItem", itemid);
-    }
-    
-    @Override
-    public int getRecipeCount(List<Integer> categoryOptions) {
-        return sqlSession.selectOne(namespace + "getRecipeCount", categoryOptions);
-    }
-
-    @Override
-    public List<Post> getRecipeList(List<Integer> categoryOptions, int offset, int size) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("categoryOptions", categoryOptions);
-        params.put("offset", offset);
-        params.put("size", size);
-        return sqlSession.selectList(namespace + "getRecipeList", params);
-    }
     
     @Override
     public Post getPostById(Map<String, Object> params) {
@@ -118,5 +90,15 @@ public class PostDAOImpl implements PostDAO {
 	public void insertseqAttachments(List<Attachment> seqattachments) {
 		if(seqattachments == null || seqattachments.isEmpty()) return;
 		sqlSession.insert(namespace + "insertseqAttachments", seqattachments);
+	}
+
+	@Override
+	public int posttotal(Pager pager) {
+		return sqlSession.selectOne(namespace + "posttotal", pager);
+	}
+
+	@Override
+	public List<Post> postlist(Pager pager) {
+		return sqlSession.selectList(namespace + "postlist", pager);
 	}
 }

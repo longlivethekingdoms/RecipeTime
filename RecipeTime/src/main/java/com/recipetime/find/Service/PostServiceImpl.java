@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.recipetime.find.DAO.PostDAO;
 import com.recipetime.find.Model.*;
+import com.recipetime.find.pager.Pager;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -79,31 +82,6 @@ public class PostServiceImpl implements PostService {
 	    }	
 
 	    @Override
-	    public List<Tag> getTagsByRecipeId(int recipeid) {
-	        return postDAO.getTagsByRecipeId(recipeid);
-	    }
-
-	    @Override
-	    public List<Map<String, Object>> getCategoryItems() {
-	        return postDAO.getCategoryItems();
-	    }
-
-	    @Override
-	    public List<Map<String, Object>> getCategoryOptionsByItem(int itemid) {
-	        return postDAO.getCategoryOptionsByItem(itemid);
-	    }
-	    
-	    @Override
-	    public int getRecipeCount(List<Integer> categoryOptions) {
-	        return postDAO.getRecipeCount(categoryOptions);
-	    }
-
-	    @Override
-	    public List<Post> getRecipeList(List<Integer> categoryOptions, int offset, int size) {
-	        return postDAO.getRecipeList(categoryOptions, offset, size);
-	    }
-
-	    @Override
 	    public Post getPostById(int recipeid, String currentUserId, String accessLevel) {
 	        Map<String,Object> params = new HashMap<>();
 	        params.put("recipeid", recipeid);
@@ -139,4 +117,40 @@ public class PostServiceImpl implements PostService {
 			// TODO Auto-generated method stub
 			
 		}
+		
+		@Override
+		public List<Post> postlist(Pager pager) {
+			//int total = postDAO.posttotal(pager);
+			
+			//pager.setTotal(total);
+			
+			return postDAO.postlist(pager);
+		}
+
+		@Override
+		@Transactional
+		public void dummy(Users users) {
+			// TODO Auto-generated method stub
+			for(int i=0; i < 100; i++) {
+				Post item = new Post();
+				
+				item.setUserid(users.getUserid());
+				item.setRecipetitle("°Ô½Ã±Û¸í " + i);
+				item.setRecipecontent("¾îÂ¼±¸ÀúÂ¼±¸ " + i);
+				item.setTypeid(1);
+				item.setSituationid(5);
+				item.setMethodid(9);
+				item.setPeopleid(13);
+				item.setTimeid(17);
+				item.setDifficultyid(21);
+				
+				postDAO.insertPost(item);
+			}
+		}
+		
+		@Override
+		public void init() {
+			
+		}
+		
 }
