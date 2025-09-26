@@ -38,7 +38,7 @@
     <div>
         ${item.itemname}
         <!-- 전체 옵션, name을 다른 옵션들과 동일하게 설정 -->
-        <input type="radio" name="${item.itemparam}" value="0"> 전체
+        <input type="radio" name="${item.itemparam}" value="0" checked> 전체
         <c:forEach var="option" items="${item.optionList}">
             <label>
                 <input type="radio" name="${item.itemparam}" value="${option.optionid}">
