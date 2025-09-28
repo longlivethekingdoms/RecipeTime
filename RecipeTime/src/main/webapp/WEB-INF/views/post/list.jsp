@@ -54,21 +54,25 @@
     <!-- ✅ 레시피 앨범 그리드 -->
     <div class="row row-cols-1 row-cols-md-4 g-5">
         <c:forEach var="post" items="${recipeList}">
-            <div class="col">
-                <div class="card">
-                    <img src="${post.attachments.get(1)}" class="card-img-top" alt="레시피 이미지">
-                    <div class="card-body">
-                        <h5 class="card-title">${post.recipetitle}</h5>
-                        <p class="card-text">
-                            작성일: ${post.recipewritedate}
-                        </p>
-                    </div>
-                </div>
-            </div>
+        	<a href="detail/${post.recipeid}">
+	            <div class="col">
+	                <div class="card">
+	                    <img src="${post.attachments.get(1)}" class="card-img-top" alt="레시피 이미지">
+	                    <div class="card-body">
+	                        <h5 class="card-title">${post.recipetitle}</h5>
+	                        <p class="card-text">
+	                            작성일: ${post.recipewritedate}
+	                        </p>
+	                    </div>
+	                </div>
+	            </div>
+            </a>
         </c:forEach>
     </div>
     
     <!-- ✅ 페이지네이션 -->
+	<div>
+	</div>
 	
 	<div>
 		<div><a href="dummy">대량 등록</a></div>
