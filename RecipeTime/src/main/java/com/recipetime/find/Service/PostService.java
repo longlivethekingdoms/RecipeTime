@@ -25,4 +25,6 @@ public interface PostService {
 	
 	void dummy(Users loginUser);
 	void init();
+	
+	Post getPostDetail(int recipeid);
 }

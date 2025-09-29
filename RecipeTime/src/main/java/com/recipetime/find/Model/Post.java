@@ -28,6 +28,13 @@ public class Post {
     private LocalDate recipedeactivatedate;
     private int isreport;
     private String userid;
+    
+    private String typename;
+    private String situationname;
+    private String methodname;
+    private String peoplename;
+    private String timename;
+    private String difficultyname;
 
     private List<PostSequence> sequences;
     private List<Ingredients> ingredients;
@@ -94,8 +101,45 @@ public class Post {
 
     public String getUserid() { return userid; }
     public void setUserid(String userid) { this.userid = userid; }
-
-    public List<PostSequence> getSequences() { return sequences; }
+    
+    public String getTypename() {
+		return typename;
+	}
+	public void setTypename(String typename) {
+		this.typename = typename;
+	}
+	public String getSituationname() {
+		return situationname;
+	}
+	public void setSituationname(String situationname) {
+		this.situationname = situationname;
+	}
+	public String getMethodname() {
+		return methodname;
+	}
+	public void setMethodname(String methodname) {
+		this.methodname = methodname;
+	}
+	public String getPeoplename() {
+		return peoplename;
+	}
+	public void setPeoplename(String peoplename) {
+		this.peoplename = peoplename;
+	}
+	public String getTimename() {
+		return timename;
+	}
+	public void setTimename(String timename) {
+		this.timename = timename;
+	}
+	public String getDifficultyname() {
+		return difficultyname;
+	}
+	public void setDifficultyname(String difficultyname) {
+		this.difficultyname = difficultyname;
+	}
+	
+	public List<PostSequence> getSequences() { return sequences; }
     public void setSequences(List<PostSequence> sequences) { this.sequences = sequences; }
 
     public List<Ingredients> getIngredients() { return ingredients; }

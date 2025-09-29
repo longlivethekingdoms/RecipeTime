@@ -74,14 +74,6 @@
         SELECT * FROM recipepost WHERE recipedeactivate = 0
     </select>
 	
-	<!-- 태그 불러오기 -->
-	<select id="getTagsByRecipeId" parameterType="int" resultType="com.recipetime.find.Model.Tag">
-	    SELECT recipeid, tagorder, tagname
-	    FROM recipetag
-	    WHERE recipeid = #{recipeid}
-	    ORDER BY tagorder ASC
-	</select>
-	
 	<!-- 카테고리 아이템 목록 불러오기 -->
 	<select id="getCategoryItems" resultType="map">
 	    SELECT itemid, itemname
@@ -245,5 +237,116 @@
     	FROM recipepost p LEFT OUTER JOIN recipetag t on p.recipeid = t.recipeid
     	<include refid="search"></include> 
     </select>
+    
+    <!-- 글 상세 (대표이미지, 첨부, 태그, 재료, 순서, 순서별 첨부 포함) -->
+	<select id="getPostDetail" parameterType="int" resultMap="PostDetailMap">
+	    SELECT p.*,
+	           t.optionname AS typename,
+	           s.optionname AS situationname,
+	           m.optionname AS methodname,
+	           pe.optionname AS peoplename,
+	           ti.optionname AS timename,
+	           d.optionname AS difficultyname
+	    FROM recipepost p
+	    LEFT JOIN category_option t  ON p.typeid = t.optionid
+	    LEFT JOIN category_option s  ON p.situationid = s.optionid
+	    LEFT JOIN category_option m  ON p.methodid = m.optionid
+	    LEFT JOIN category_option pe ON p.peopleid = pe.optionid
+	    LEFT JOIN category_option ti ON p.timeid = ti.optionid
+	    LEFT JOIN category_option d  ON p.difficultyid = d.optionid
+	    WHERE p.recipeid = #{recipeid}
+	</select>
+	
+	<resultMap id="PostDetailMap" type="com.recipetime.find.Model.Post">
+	    <id property="recipeid" column="recipeid"/>
+	    <result property="recipetitle" column="recipetitle"/>
+	    <result property="recipecontent" column="recipecontent"/>
+	    <result property="recipeMainVidLink" column="recipeMainVidLink"/>
+	    <result property="recipewritedate" column="recipewritedate"/>
+	    <result property="recipeviews" column="recipeviews"/>
+	    <result property="userid" column="userid"/>
+	
+	    <!-- 대표 이미지 -->
+	    <association property="mainImage" javaType="com.recipetime.find.Model.Attachment"
+	                 select="getMainImage" column="recipeid"/>
+	    <!-- 첨부 이미지 -->
+	    <collection property="attachments" ofType="com.recipetime.find.Model.Attachment"
+	                select="getAttachmentsByRecipeId" column="recipeid"/>
+	    <!-- 태그 -->
+	    <collection property="tags" ofType="com.recipetime.find.Model.Tag"
+	                select="getTagsByRecipeId" column="recipeid"/>
+	    <!-- 재료 -->
+	    <collection property="ingredients" ofType="com.recipetime.find.Model.Ingredients"
+	                select="getIngredientsByRecipeId" column="recipeid"/>
+	    <!-- 순서 -->
+	    <collection property="sequences" ofType="com.recipetime.find.Model.PostSequence"
+	                select="getSequencesByRecipeId" column="recipeid"/>
+	</resultMap>
+	
+	<!-- 대표 이미지 -->
+	<select id="getMainImage" parameterType="int" resultType="com.recipetime.find.Model.Attachment">
+	    SELECT *
+	    FROM attachment
+	    WHERE recipeid = #{recipeid} AND ismain = 1
+	    LIMIT 1
+	</select>
+	
+	<!-- 첨부 이미지 -->
+	<select id="getAttachmentsByRecipeId" parameterType="int" resultType="com.recipetime.find.Model.Attachment">
+	    SELECT *
+	    FROM attachment
+	    WHERE recipeid = #{recipeid} AND (ismain IS NULL OR ismain = 0)
+	    ORDER BY fileorder
+	</select>
+	
+	<!-- 태그 -->
+	<select id="getTagsByRecipeId" parameterType="int" resultType="com.recipetime.find.Model.Tag">
+	    SELECT *
+	    FROM recipetag
+	    WHERE recipeid = #{recipeid}
+	    ORDER BY tagorder ASC
+	</select>
+	
+	<!-- 재료 -->
+	<select id="getIngredientsByRecipeId" parameterType="int" resultType="com.recipetime.find.Model.Ingredients">
+	    SELECT *
+	    FROM ingredients
+	    WHERE recipeid = #{recipeid}
+	    ORDER BY ingorder
+	</select>
+	
+	<!-- 순서 -->
+	<select id="getSequencesByRecipeId" parameterType="int" resultMap="SequenceMap">
+	    SELECT *
+	    FROM recipesequence
+	    WHERE recipeid = #{recipeid}
+	    ORDER BY recipestep
+	</select>
+	
+	<resultMap id="SequenceMap" type="com.recipetime.find.Model.PostSequence">
+	    <id property="recipestepid" column="recipestepid"/>
+	    <result property="recipestep" column="recipestep"/>
+	    <result property="explain" column="explain"/>
+	    <result property="recipevidlink" column="recipevidlink"/>
+	    <result property="ingexp" column="ingexp"/>
+	    <result property="toolexp" column="toolexp"/>
+	    <result property="fireexp" column="fireexp"/>
+	    <result property="tipexp" column="tipexp"/>
+	    <result property="ingactivate" column="ingactivate"/>
+	    <result property="toolactivate" column="toolactivate"/>
+	    <result property="fireactivate" column="fireactivate"/>
+	    <result property="tipactivate" column="tipactivate"/>
+	
+	    <!-- 순서별 첨부 이미지 -->
+	    <collection property="attachments" ofType="com.recipetime.find.Model.Attachment"
+	                select="getStepAttachments" column="recipestepid"/>
+	</resultMap>
+	
+	<select id="getStepAttachments" parameterType="int" resultType="com.recipetime.find.Model.Attachment">
+	    SELECT *
+	    FROM attachment
+	    WHERE recipestepid = #{recipestepid}
+	    ORDER BY fileorder
+	</select>
 
 </mapper>

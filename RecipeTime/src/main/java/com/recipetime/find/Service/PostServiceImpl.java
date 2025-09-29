@@ -39,8 +39,10 @@ public class PostServiceImpl implements PostService {
 
 	        // 3) ingredients (batch)
 	        if (post.getIngredients() != null && !post.getIngredients().isEmpty()) {
-	            for (Ingredients ing : post.getIngredients()) {
+	            for (int i = 0; i < post.getIngredients().size(); i++) {
+	                Ingredients ing = post.getIngredients().get(i);
 	                ing.setRecipeid(recipeId);
+	                ing.setIngorder(i + 1); // 반드시 순서 지정
 	            }
 	            postDAO.insertIngredients(post.getIngredients());
 	        }
@@ -152,5 +154,12 @@ public class PostServiceImpl implements PostService {
 		public void init() {
 			
 		}
+
+		@Override
+	    public Post getPostDetail(int recipeid) {
+			
+	        return postDAO.getPostDetail(recipeid);
+	        
+	    }
 		
 }

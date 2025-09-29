@@ -27,6 +27,7 @@ public class PostDAOImpl implements PostDAO {
     
 	@Override
 	public void insertPost(Post post) {
+		System.out.println("여기서 몇 번?");
 		sqlSession.insert(namespace + "insertPost", post);
 	}
 
@@ -100,5 +101,10 @@ public class PostDAOImpl implements PostDAO {
 	@Override
 	public List<Post> postlist(Pager pager) {
 		return sqlSession.selectList(namespace + "postlist", pager);
+	}
+	
+	@Override
+	public Post getPostDetail(int recipeid) {
+	    return sqlSession.selectOne(namespace + "getPostDetail", recipeid);
 	}
 }
