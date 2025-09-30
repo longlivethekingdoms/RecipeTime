@@ -39,6 +39,7 @@ public class Post {
     private List<PostSequence> sequences;
     private List<Ingredients> ingredients;
     private List<Attachment> attachments;
+    private Attachment mainImage;
     private List<Tag> tags;
 
     // getters / setters
@@ -148,6 +149,9 @@ public class Post {
     public List<Attachment> getAttachments() { return attachments; }
     public void setAttachments(List<Attachment> attachments) { this.attachments = attachments; }
 
+    public Attachment getMainImage() { return mainImage; }
+    public void setMainImage(Attachment mainImage) { this.mainImage = mainImage; }
+    
     public List<Tag> getTags() { return tags; }
     public void setTags(List<Tag> tags) { this.tags = tags; }
 }
