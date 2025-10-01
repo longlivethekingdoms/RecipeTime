@@ -9,10 +9,10 @@ public class PostSequence {
     private String explain;
     private String recipevidlink;
 
-    private int ingactivate;
-    private int toolactivate;
-    private int fireactivate;
-    private int tipactivate;
+    private int ingactivate = 0;
+    private int toolactivate = 0;
+    private int fireactivate = 0;
+    private int tipactivate = 0;
 
     private String ingexp;
     private String toolexp;

@@ -238,29 +238,29 @@ $("#addIngredient").click(function() {
     ingIndex++;
 });
 
-//시퀀스 추가
+//시퀀스 추가 시 체크박스 상태를 확인하고 처리
 $("#addSequence").click(function() {
     var i = $("#sequenceList .sequence").length; // 현재 개수 기반
     var html =
         '<div class="sequence" data-seq="' + i + '">' +
-            '<span class="sequence-number">' + (i+1) + '.</span>' +
+            '<span class="sequence-number">' + (i + 1) + '.</span>' +
             '<textarea name="sequences[' + i + '].explain" placeholder="설명" required></textarea>' +
             '<input type="file" class="seq-image" name="sequenceImages[' + i + ']" multiple>' +
             '<div class="section"><label>레시피 동영상 링크</label>' +
             '<br>' +
-            '<input type="text" class="recipevidlink" name="sequences['+ i +'].recipevidlink" placeholder="유튜브 링크 입력"></div>' + <!-- 비디오링크 -->
+            '<input type="text" class="recipevidlink" name="sequences[' + i + '].recipevidlink" placeholder="유튜브 링크 입력"></div>' + 
             '<div class="videoPreview" style="margin-top: 15px; display: none;">' +
             '<iframe class="videoFrame" width="560" height="315" frameborder="0" allowfullscreen></iframe>' +
             '</div>' +
-            '<div class="seq-preview"></div>' +   <!-- ★ 미리보기 영역 추가 -->
+            '<div class="seq-preview"></div>' +  
             '<br>' +
-            '<label><input type="checkbox" class="toggle" data-target="ingredient"> 재료 </label>' +
+            '<label><input type="checkbox" class="toggle" data-target="ingredient" name="sequences[' + i + '].ingactivate" value="1"> 재료 </label>' +
             '<div class="extra ingredient">설명: <input type="text" name="sequences[' + i + '].ingexp"></div>' +
-            '<label><input type="checkbox" class="toggle" data-target="tool"> 도구 </label>' +
+            '<label><input type="checkbox" class="toggle" data-target="tool" name="sequences[' + i + '].toolactivate" value="1"> 도구 </label>' +
             '<div class="extra tool">설명: <input type="text" name="sequences[' + i + '].toolexp"></div>' +
-            '<label><input type="checkbox" class="toggle" data-target="fire"> 불</label>' +
+            '<label><input type="checkbox" class="toggle" data-target="fire" name="sequences[' + i + '].fireactivate" value="1"> 불</label>' +
             '<div class="extra fire">설명: <input type="text" name="sequences[' + i + '].fireexp"></div>' +
-            '<label><input type="checkbox" class="toggle" data-target="tip"> 팁</label>' +
+            '<label><input type="checkbox" class="toggle" data-target="tip" name="sequences[' + i + '].tipactivate" value="1"> 팁</label>' +
             '<div class="extra tip">설명: <input type="text" name="sequences[' + i + '].tipexp"></div>' +
             ' <button type="button" class="remove">삭제</button>' +
         '</div>';
@@ -373,6 +373,21 @@ $(document).on("change", ".toggle", function() {
         extra.hide();
     }
 });
+
+// 모든 체크박스를 확인하고, 체크되지 않은 것은 0으로 설정
+$("#postForm .toggle").each(function(){
+    if (!$(this).is(":checked")) {
+        var name = $(this).attr("name");
+        // value가 없을 때 0으로 설정
+        if (!$(this).val()) {
+            $(this).val("0");
+        }
+    }
+});
+
+if(valid){
+    $("#postForm").submit();
+}
 
 // 삭제 버튼
 $(document).on("click", ".remove", function() { $(this).parent().remove(); });

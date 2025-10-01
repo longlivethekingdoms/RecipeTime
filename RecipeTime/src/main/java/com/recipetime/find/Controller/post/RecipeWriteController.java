@@ -48,7 +48,6 @@ public class RecipeWriteController {
         return "post/insert";
     }
 
-    // 포스트 올리기
     @PostMapping("/insert")
     public String insertPost(
             Post post,
@@ -58,48 +57,32 @@ public class RecipeWriteController {
             HttpSession session,
             HttpServletRequest request,
             RedirectAttributes ra) throws Exception {
-        // 로그인 상태 체크
+
         Users loginUser = (Users) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/login/login";
         post.setUserid(loginUser.getUserid());
 
-        // 날짜 상태 체크
         if(post.getRecipewritedate() == null) post.setRecipewritedate(LocalDate.now());
 
-        // 재료 순서 넣기
-        if(post.getIngredients() != null) {
-            for(Ingredients ing : post.getIngredients()) {
+        if(post.getIngredients() != null)
+            for(Ingredients ing : post.getIngredients())
                 if(ing.getIngquantity() == null) ing.setIngquantity(0);
-            }
-        }
 
-        // 태그 순서 넣기
-        if(post.getTags() != null) {
-            for(int i=0; i<post.getTags().size(); i++)
+        if(post.getTags() != null)
+            for(int i=0;i<post.getTags().size();i++)
                 post.getTags().get(i).setTagorder(i+1);
-        }
 
-        // 시퀀스 넣기
-        if(post.getSequences() != null) {
-            for(int i=0; i<post.getSequences().size(); i++)
+        if(post.getSequences() != null)
+            for(int i=0;i<post.getSequences().size();i++)
                 post.getSequences().get(i).setRecipestep(i+1);
-        }
 
-        // attachments 추가
         if(post.getAttachments() == null) post.setAttachments(new ArrayList<>());
 
-        // 메인 이미지 추가
+     // mainImage 처리
         if(mainImage != null && !mainImage.isEmpty()) {
-//            Attachment mainAtt = new Attachment();
-//            mainAtt.setIsmain(1);
-//            mainAtt.setFilename(mainImage.getOriginalFilename());
-//            mainAtt.setFileuuid(UUID.randomUUID().toString());
-//            // TODO: �꽌踰� ���옣
-//            post.getAttachments().add(mainAtt);
-        	String uuid = UUID.randomUUID().toString();
+            String uuid = UUID.randomUUID().toString();
             String originalName = mainImage.getOriginalFilename();
-            String ext = originalName.substring(originalName.lastIndexOf(".") + 1);
-
+            String ext = originalName.substring(originalName.lastIndexOf(".")+1);
             File dest = new File(uploadDir, uuid + "." + ext);
             mainImage.transferTo(dest);
 
@@ -111,37 +94,24 @@ public class RecipeWriteController {
             mainAtt.setFileext(ext);
             post.getAttachments().add(mainAtt);
         }
-
-        // 추가 이미지 추가
-        if(uploadFiles != null) {
-            for(MultipartFile file : uploadFiles) {
-                if(file != null && !file.isEmpty()) {
-//                    Attachment att = new Attachment();
-//                    att.setIsmain(0);
-//                    att.setFilename(file.getOriginalFilename());
-//                    att.setFileuuid(UUID.randomUUID().toString());
-//                    post.getAttachments().add(att);
-                	String uuid = UUID.randomUUID().toString();
-                	String originalName = file.getOriginalFilename();
-                	String ext = originalName.substring(originalName.lastIndexOf(".")+1);
-                	
-                	// 파일 저장할 경로 설정
+        
+        // ✅ 추가 이미지 처리
+        if(uploadFiles != null)
+            for(MultipartFile file : uploadFiles)
+                if(file != null && !file.isEmpty()){
+                    String uuid = UUID.randomUUID().toString();
+                    String originalName = file.getOriginalFilename();
+                    String ext = originalName.substring(originalName.lastIndexOf(".")+1);
                     File dest = new File(uploadDir, uuid + "." + ext);
-                    file.transferTo(dest); // 파일 전송
+                    file.transferTo(dest);
 
-                    // Attachment 객체 생성
                     Attachment att = new Attachment();
-                    att.setIsmain(0); // 추가 이미지이므로 main flag는 0
+                    att.setIsmain(0);
                     att.setFilename(originalName);
                     att.setFileuuid(uuid);
                     att.setFileext(ext);
-                    
-                    System.out.println("추가 이미지");
-                    // 포스트에 추가 이미지 추가
                     post.getAttachments().add(att);
-                }
-            }
-        }        
+                }      
 
         // 시퀀스 이미지 처리
         if (post.getSequences() != null) {

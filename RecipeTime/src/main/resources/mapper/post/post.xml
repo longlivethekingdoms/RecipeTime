@@ -266,9 +266,6 @@
 	    <result property="recipeviews" column="recipeviews"/>
 	    <result property="userid" column="userid"/>
 	
-	    <!-- 대표 이미지 -->
-	    <association property="mainImage" javaType="com.recipetime.find.Model.Attachment"
-	                 select="getMainImage" column="recipeid"/>
 	    <!-- 첨부 이미지 -->
 	    <collection property="attachments" ofType="com.recipetime.find.Model.Attachment"
 	                select="getAttachmentsByRecipeId" column="recipeid"/>

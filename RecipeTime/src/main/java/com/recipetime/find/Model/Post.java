@@ -1,9 +1,11 @@
 package com.recipetime.find.Model;
 
+import java.beans.Transient;
 import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -39,7 +41,6 @@ public class Post {
     private List<PostSequence> sequences;
     private List<Ingredients> ingredients;
     private List<Attachment> attachments;
-    private Attachment mainImage;
     private List<Tag> tags;
 
     // getters / setters
@@ -148,9 +149,6 @@ public class Post {
 
     public List<Attachment> getAttachments() { return attachments; }
     public void setAttachments(List<Attachment> attachments) { this.attachments = attachments; }
-
-    public Attachment getMainImage() { return mainImage; }
-    public void setMainImage(Attachment mainImage) { this.mainImage = mainImage; }
     
     public List<Tag> getTags() { return tags; }
     public void setTags(List<Tag> tags) { this.tags = tags; }

@@ -14,7 +14,6 @@
     <p>작성자: ${post.userid} | 작성일: ${post.recipewritedate} | 조회수: ${post.recipeviews}</p>
 	
 	<!-- 카테고리 / 장르 -->
-	<h2>${post.recipetitle}</h2>
 
 	<!-- 카테고리 영역 -->
 	<div>
@@ -27,7 +26,8 @@
 	</div>
 
     <!-- 대표 이미지 -->
-    <c:forEach var="img" items="${post.attachments}">
+   	<c:forEach var="img" items="${post.attachments}">
+    <p>ismain: ${img.ismain} / fileuuid: ${img.fileuuid}</p>
     <c:if test="${img.ismain == 1}">
         <div class="mb-3">
             <img src="/upload/${img.fileuuid}.${img.fileext}" class="img-fluid rounded">
@@ -36,12 +36,14 @@
 	</c:forEach>
 
     <!-- 첨부 이미지 -->
-    <c:if test="${not empty post.attachments}">
+    <c:if test="${not empty post.attachments }">
         <div class="row mb-4">
             <c:forEach var="att" items="${post.attachments}">
+            	<c:if test="${att.ismain == 0}">
                 <div class="col-md-3 mb-3">
                     <img src="/upload/${att.fileuuid}.${att.fileext}" class="img-fluid rounded">
                 </div>
+                </c:if>
             </c:forEach>
         </div>
     </c:if>
