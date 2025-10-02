@@ -31,7 +31,7 @@ public class RecipeListController {
 		
 		List<Post> postlist = service.postlist(recipesearchpager);
 		
-		model.addAttribute("recipeList", postlist);
+		model.addAttribute("recipeList", postlist);		
 		
 		return "/post/list";
 

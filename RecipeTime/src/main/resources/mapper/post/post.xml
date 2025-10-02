@@ -155,10 +155,19 @@
 	            )
 	        </if>
 	
+	        <!-- 비공개 게시글 처리: 작성자 + 관리자만 -->
+	        <if test="currentUserId != null">
+	            AND (r.isprivate = 0 OR r.userid = #{currentUserId} OR #{accessLevel} = 'manager')
+	        </if>
+	        <if test="currentUserId == null">
+	            AND r.isprivate = 0
+	        </if>
+	
 	        <!-- 비활성 게시글 처리: 관리자만 -->
 	        <if test="accessLevel != 'manager'">
 	            AND r.recipedeactivate = 0
 	        </if>
+	        
 	    </where>
 	    ORDER BY recipewritedate DESC
 	    LIMIT #{size} OFFSET #{offset}
