@@ -42,6 +42,7 @@ public class Post {
     private List<Ingredients> ingredients;
     private List<Attachment> attachments;
     private List<Tag> tags;
+    private Attachment mainattachment;
 
     // getters / setters
     public int getRecipeid() { return recipeid; }
@@ -152,4 +153,13 @@ public class Post {
     
     public List<Tag> getTags() { return tags; }
     public void setTags(List<Tag> tags) { this.tags = tags; }
+    
+	public Attachment getMainattachment() {
+		return mainattachment;
+	}
+	public void setMainattachment(Attachment mainattachment) {
+		this.mainattachment = mainattachment;
+	}
+    
+    
 }

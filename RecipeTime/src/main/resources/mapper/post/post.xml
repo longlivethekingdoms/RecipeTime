@@ -17,10 +17,10 @@
 
     <!-- 태그 리스트 일괄 삽입: parameter로 List<Tag> 전달 -->
     <insert id="insertTags" parameterType="java.util.List">
-        INSERT INTO recipetag (recipeid, tagorder, tagname)
+        INSERT INTO recipetag (recipeid, tagname)
         VALUES
         <foreach collection="list" item="tag" separator=",">
-            (#{tag.recipeid}, #{tag.tagorder}, #{tag.tagname})
+            (#{tag.recipeid}, #{tag.tagname})
         </foreach>
     </insert>
 
@@ -154,6 +154,11 @@
 	                </foreach>
 	            )
 	        </if>
+	
+	        <!-- 비활성 게시글 처리: 관리자만 -->
+	        <if test="accessLevel != 'manager'">
+	            AND r.recipedeactivate = 0
+	        </if>
 	    </where>
 	    ORDER BY recipewritedate DESC
 	    LIMIT #{size} OFFSET #{offset}
@@ -232,9 +237,26 @@
     	</where>   	
     </sql>
     
-    <select id="postlist" resultType="com.recipetime.find.Model.Post">
-    	SELECT *
-    	FROM recipepost p LEFT OUTER JOIN recipetag t on p.recipeid = t.recipeid
+    <resultMap type="com.recipetime.find.Model.Post" id="posttagmap">
+    <id property="recipeid" column="recipeid"/>
+    <result property="recipetitle" column="recipetitle"/>
+    <result property="recipewritedate" column="recipewritedate"/>
+    <result property="recipefixdate" column="recipefixdate"/>
+    <result property="recipeviews" column="recipeviews"/>
+    <association property="mainattachment">
+    <id property="attachmentid" column="attachmentid"/>
+    <result property="fileuuid" column="fileuuid"/>
+    <result property="fileext" column="fileext"/>
+    </association>
+    <collection property="tags" ofType="com.recipetime.find.Model.Tag">
+    	<id property="tagid" column="tagid"/>
+    </collection>
+    </resultMap>
+    <select id="postlist" resultMap="posttagmap">
+    	SELECT p.*, a.*, t.*
+    	FROM recipepost p 
+    	LEFT OUTER JOIN attachment a on p.recipeid = a.recipeid and a.ismain = 1
+    	LEFT OUTER JOIN recipetag t on p.recipeid = t.recipeid
     	<include refid="search"></include> 
     </select>
     
@@ -292,7 +314,7 @@
 	<select id="getAttachmentsByRecipeId" parameterType="int" resultType="com.recipetime.find.Model.Attachment">
 	    SELECT *
 	    FROM attachment
-	    WHERE recipeid = #{recipeid} AND (ismain IS NULL OR ismain = 0)
+	    WHERE recipeid = #{recipeid}
 	    ORDER BY fileorder
 	</select>
 	
@@ -301,7 +323,7 @@
 	    SELECT *
 	    FROM recipetag
 	    WHERE recipeid = #{recipeid}
-	    ORDER BY tagorder ASC
+	    ORDER BY tagid ASC
 	</select>
 	
 	<!-- 재료 -->

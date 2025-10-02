@@ -2,6 +2,8 @@ package com.recipetime.find.Model;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class PostSequence {
     private int recipestepid;
     private int recipeid;
@@ -21,6 +23,8 @@ public class PostSequence {
 
     private List<Attachment> attachments; // 단계별 이미지/영상
 
+    private List<MultipartFile> images;
+    
     // getters / setters
     public int getRecipestepid() { return recipestepid; }
     public void setRecipestepid(int recipestepid) { this.recipestepid = recipestepid; }
@@ -63,4 +67,13 @@ public class PostSequence {
 
     public List<Attachment> getAttachments() { return attachments; }
     public void setAttachments(List<Attachment> attachments) { this.attachments = attachments; }
+    
+	public List<MultipartFile> getImages() {
+		return images;
+	}
+	public void setImages(List<MultipartFile> images) {
+		this.images = images;
+	}
+    
+    
 }

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,13 +28,12 @@
 
     <!-- 대표 이미지 -->
    	<c:forEach var="img" items="${post.attachments}">
-    <p>ismain: ${img.ismain} / fileuuid: ${img.fileuuid}</p>
-    <c:if test="${img.ismain == 1}">
-        <div class="mb-3">
-            <img src="/upload/${img.fileuuid}.${img.fileext}" class="img-fluid rounded">
-        </div>
-    </c:if>
-	</c:forEach>
+   		<c:if test="${img.ismain == 1}"> 
+   			<div class="mb-3"> 
+   				<img src="/upload/${img.fileuuid}.${img.fileext}" class="img-fluid rounded"> 
+   			</div> 
+   		</c:if> 
+   	</c:forEach>
 
     <!-- 첨부 이미지 -->
     <c:if test="${not empty post.attachments }">
@@ -50,9 +50,22 @@
 
     <!-- 동영상 -->
     <c:if test="${not empty post.recipeMainVidLink}">
-        <div class="ratio ratio-16x9 mb-3">
-            <iframe src="https://www.youtube.com/embed/${post.recipeMainVidLink}" allowfullscreen></iframe>
-        </div>
+        <c:set var="youtubeUrl" value="${post.recipeMainVidLink}" />
+		<c:choose>
+		    <c:when test="${fn:contains(youtubeUrl, 'watch?v=')}">
+		        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'v=')}" />
+		    </c:when>
+		    <c:when test="${fn:contains(youtubeUrl, 'youtu.be/')}">
+		        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'youtu.be/')}" />
+		    </c:when>
+		    <c:when test="${fn:contains(youtubeUrl, 'shorts/')}">
+		        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'shorts/')}" />
+		    </c:when>
+		</c:choose>
+		
+		<div class="ratio ratio-16x9 mb-3">
+		    <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+		</div>
     </c:if>
 
     <!-- 본문 -->
@@ -84,8 +97,32 @@
 
             <!-- 순서별 동영상 -->
             <c:if test="${not empty seq.recipevidlink}">
-                <div class="ratio ratio-16x9 my-2">
-                    <iframe src="https://www.youtube.com/embed/${seq.recipevidlink}" allowfullscreen></iframe>
+                <c:set var="youtubeUrl" value="${post.recipeMainVidLink}" />
+				<c:choose>
+				    <c:when test="${fn:contains(youtubeUrl, 'watch?v=')}">
+				        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'v=')}" />
+				    </c:when>
+				    <c:when test="${fn:contains(youtubeUrl, 'youtu.be/')}">
+				        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'youtu.be/')}" />
+				    </c:when>
+				    <c:when test="${fn:contains(youtubeUrl, 'shorts/')}">
+				        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'shorts/')}" />
+				    </c:when>
+				</c:choose>
+				
+				<div class="ratio ratio-16x9 mb-3">
+				    <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+				</div>
+            </c:if>
+            
+            <!-- 순서별 첨부 이미지 -->
+            <c:if test="${not empty seq.attachments}">
+                <div class="row">
+                    <c:forEach var="satt" items="${seq.attachments}">
+                        <div class="col-md-3 mb-2">
+                            <img src="/upload/${satt.fileuuid}.${satt.fileext}" class="img-fluid rounded">
+                        </div>
+                    </c:forEach>
                 </div>
             </c:if>
 
@@ -103,16 +140,7 @@
                 <p><b>추가 팁:</b> ${seq.tipexp}</p>
             </c:if>
 
-            <!-- 순서별 첨부 이미지 -->
-            <c:if test="${not empty seq.attachments}">
-                <div class="row">
-                    <c:forEach var="satt" items="${seq.attachments}">
-                        <div class="col-md-3 mb-2">
-                            <img src="/upload/${satt.fileuuid}.${satt.fileext}" class="img-fluid rounded">
-                        </div>
-                    </c:forEach>
-                </div>
-            </c:if>
+            
         </div>
     </c:forEach>
 

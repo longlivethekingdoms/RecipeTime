@@ -53,7 +53,8 @@ public class RecipeWriteController {
             Post post,
             @RequestParam("mainImage") MultipartFile mainImage,
             @RequestParam(value="uploadFiles", required=false) MultipartFile[] uploadFiles,
-            @RequestParam Map<String, MultipartFile[]> sequenceImages,
+            //@RequestParam Map<String, MultipartFile[]> sequenceImages,
+            //@RequestParam("sequenceImages") List<List<MultipartFile>> sequenceImages,
             HttpSession session,
             HttpServletRequest request,
             RedirectAttributes ra) throws Exception {
@@ -67,10 +68,6 @@ public class RecipeWriteController {
         if(post.getIngredients() != null)
             for(Ingredients ing : post.getIngredients())
                 if(ing.getIngquantity() == null) ing.setIngquantity(0);
-
-        if(post.getTags() != null)
-            for(int i=0;i<post.getTags().size();i++)
-                post.getTags().get(i).setTagorder(i+1);
 
         if(post.getSequences() != null)
             for(int i=0;i<post.getSequences().size();i++)
@@ -118,16 +115,23 @@ public class RecipeWriteController {
             for (int i = 0; i < post.getSequences().size(); i++) {
                 PostSequence seq = post.getSequences().get(i);
 
-                String paramName = "sequenceImages[" + i + "]";
-                MultipartFile[] seqFiles = ((MultipartHttpServletRequest) request).getFiles(paramName).toArray(new MultipartFile[0]);
-                System.out.println("두번?");
-                if (seqFiles != null && seqFiles.length > 0) {
+                //String paramName = "sequences[" + i + "]";
+                //MultipartFile[] seqFiles = ((MultipartHttpServletRequest) request).getFiles(paramName).toArray(new MultipartFile[0]);
+                List<MultipartFile> seqFiles = seq.getImages();
+                if (seqFiles != null && seqFiles.size() > 0) {
                     List<Attachment> seqAtts = new ArrayList<>();
                     for (MultipartFile file : seqFiles) {
                         if (!file.isEmpty()) {
+                        	String uuid = UUID.randomUUID().toString();
+                            String originalName = file.getOriginalFilename();
+                            String ext = originalName.substring(originalName.lastIndexOf(".")+1);
+                            File dest = new File(uploadDir, uuid + "." + ext);
+                            file.transferTo(dest);
+                            
                             Attachment att = new Attachment();
                             att.setFilename(file.getOriginalFilename());
-                            att.setFileuuid(UUID.randomUUID().toString());
+                            att.setFileuuid(uuid);
+                            att.setFileext(ext);
                             seqAtts.add(att);
                         }
                         

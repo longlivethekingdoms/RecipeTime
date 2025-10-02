@@ -2,7 +2,7 @@ package com.recipetime.find.Model;
 
 public class Tag {
 	private int recipeid;
-    private int tagorder;
+    private int tagid;
     private String tagname;
     
 	public int getRecipeid() {
@@ -11,11 +11,11 @@ public class Tag {
 	public void setRecipeid(int recipeid) {
 		this.recipeid = recipeid;
 	}
-	public int getTagorder() {
-		return tagorder;
+	public int getTagid() {
+		return tagid;
 	}
-	public void setTagorder(int tagorder) {
-		this.tagorder = tagorder;
+	public void setTagid(int tagid) {
+		this.tagid = tagid;
 	}
 	public String getTagname() {
 		return tagname;

@@ -245,7 +245,7 @@ $("#addSequence").click(function() {
         '<div class="sequence" data-seq="' + i + '">' +
             '<span class="sequence-number">' + (i + 1) + '.</span>' +
             '<textarea name="sequences[' + i + '].explain" placeholder="설명" required></textarea>' +
-            '<input type="file" class="seq-image" name="sequenceImages[' + i + ']" multiple>' +
+            '<input type="file" class="seq-image" name="sequences[' + i + '].images" multiple>' +
             '<div class="section"><label>레시피 동영상 링크</label>' +
             '<br>' +
             '<input type="text" class="recipevidlink" name="sequences[' + i + '].recipevidlink" placeholder="유튜브 링크 입력"></div>' + 
