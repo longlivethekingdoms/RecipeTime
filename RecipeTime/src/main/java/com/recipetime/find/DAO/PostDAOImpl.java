@@ -58,7 +58,6 @@ public class PostDAOImpl implements PostDAO {
     @Override
     public void insertAttachments(List<Attachment> attachments) {
         if(attachments == null || attachments.isEmpty()) return;
-        System.out.println("¿©±â¾ß");
         sqlSession.insert(namespace + "insertAttachments", attachments);
     }
 

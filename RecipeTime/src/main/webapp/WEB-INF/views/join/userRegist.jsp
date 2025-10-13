@@ -54,6 +54,13 @@
         <button type="button" id="checkNickname">중복확인</button>
         <span id="nicknameMessage" class="error"></span>
     </div>
+    
+    <!-- 이름 -->
+    <div class="form-group">
+    	<label for="username">이름</label>
+    	<input type="text" id="username" name="username" value="${users.username}" required />
+    	<span id="usernameMessage" class="error"></span>
+    </div>
 
     <!-- 이메일 -->
     <div class="form-group">
