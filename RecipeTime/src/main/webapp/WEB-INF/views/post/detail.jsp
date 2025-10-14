@@ -145,7 +145,7 @@
     </c:forEach>
     
     <!-- 게시글 수정/삭제 버튼: 작성자 및 관리자만 표시 -->
-	<c:if test="${post.userid == loginUserId or accessLevel == 'manager'}">
+	<c:if test="${post.userid == loginUserId or accesslevel == 'manager'}">
 	    <div class="mt-3 mb-4">
 	        <!-- 수정 버튼 -->
 	        <a href="/post/edit?recipeid=${post.recipeid}" class="btn btn-primary">수정</a>

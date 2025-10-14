@@ -91,6 +91,11 @@ public class PostServiceImpl implements PostService {
 	        params.put("accessLevel", accessLevel);
 	        return postDAO.getPostById(params);
 	    }
+	    
+	    @Override
+	    public void updatePost(Post post) {
+	        postDAO.updatePost(post);
+	    }
 
 	    @Override
 	    @Transactional

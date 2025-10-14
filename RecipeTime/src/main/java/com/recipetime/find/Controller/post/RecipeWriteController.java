@@ -148,7 +148,89 @@ public class RecipeWriteController {
         return "redirect:/post/list";
     }
     
+    //20251014 아래부터
     
+    // ✅ 레시피 수정 폼(GET)
+    @GetMapping("/edit/{recipeid}")
+    public String editForm(@PathVariable("recipeid") int recipeid, Model model, HttpSession session) {
+        Users loginUser = (Users) session.getAttribute("loginUser");
+        String loginUserId = null;
+        String accessLevel = null;
+        if (loginUser != null) {
+            loginUserId = loginUser.getUserid();
+            accessLevel = loginUser.getAccesslevel(); // 너의 Users에는 getAccesslevel()
+        }
+
+        Post post = postService.getPostById(recipeid, loginUserId, accessLevel);
+        if (post == null) {
+            // 접근 불가 혹은 존재하지 않음
+            return "redirect:/post/detail/" + recipeid;
+        }
+
+        // 카테고리 옵션들 추가 (insertForm에서 하던 것과 동일)
+        model.addAttribute("post", post);
+        model.addAttribute("typeOptions", categoryService.getOptionsByItemId(1));
+        model.addAttribute("situationOptions", categoryService.getOptionsByItemId(2));
+        model.addAttribute("methodOptions", categoryService.getOptionsByItemId(3));
+        model.addAttribute("peopleOptions", categoryService.getOptionsByItemId(4));
+        model.addAttribute("timeOptions", categoryService.getOptionsByItemId(5));
+        model.addAttribute("difficultyOptions", categoryService.getOptionsByItemId(6));
+        return "post/edit"; // 너는 edit JSP를 새로 만들어야 함 (insert와 유사)
+    }
+    
+ // 수정 처리(POST)
+    @PostMapping("/edit/{recipeid}")
+    public String editPost(@PathVariable("recipeid") int recipeid,
+                           Post post,
+                           @RequestParam(value = "mainImage", required = false) MultipartFile mainImage,
+                           @RequestParam(value = "uploadFiles", required = false) MultipartFile[] uploadFiles,
+                           HttpSession session) throws Exception {
+
+        Users loginUser = (Users) session.getAttribute("loginUser");
+        String loginUserId = null;
+        String accessLevel = null;
+        if (loginUser != null) {
+            loginUserId = loginUser.getUserid();
+            accessLevel = loginUser.getAccesslevel();
+        }
+
+        // 권한 체크: 작성자 또는 manager만 수정 가능
+        Post original = postService.getPostById(recipeid, loginUserId, accessLevel);
+        if (original == null) {
+            return "redirect:/post/detail/" + recipeid;
+        }
+
+        // 여기에 mainImage / uploadFiles 처리 로직(너의 insertPost와 동일한 방식으로 적용)
+        // -> 너가 원하면 기존 insertPost의 이미지 처리 코드를 그대로 복붙해서 파일 저장, Attachment 세팅 후 post에 넣어줘
+
+        post.setRecipeid(recipeid);
+        post.setUserid(original.getUserid()); // 작성자 유지
+        postService.updatePost(post); // service에 updatePost가 있어야 함 (아래에 샘플 포함) 만들어야함.
+        return "redirect:/post/detail/" + recipeid;
+    }
+    
+    // 비활성화(삭제) 처리
+    @PostMapping("/deactivate/{recipeid}")
+    public String deactivatePost(@PathVariable("recipeid") int recipeid, HttpSession session) {
+        Users loginUser = (Users) session.getAttribute("loginUser");
+        String loginUserId = null;
+        String accessLevel = null;
+        if (loginUser != null) {
+            loginUserId = loginUser.getUserid();
+            accessLevel = loginUser.getAccesslevel();
+        }
+
+        Post post = postService.getPostById(recipeid, loginUserId, accessLevel);
+        if (post == null) {
+            return "redirect:/post/detail/" + recipeid;
+        }
+
+        // 이제 실제 비활성화: service 호출
+        postService.deactivatePost(recipeid);
+        return "redirect:/post/list";
+    }
+    
+    //2025-10-14 위까지
     
     @GetMapping("/dummy")
     String dummy(Post post,

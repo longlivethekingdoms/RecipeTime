@@ -170,6 +170,19 @@
 	            OR #{accessLevel} = 'manager'
 	          )
 	</select>
+	
+	<update id="updatePost" parameterType="com.recipetime.find.Model.Post">
+	    UPDATE recipepost
+	    SET 
+	        recipetitle = #{recipetitle},
+	        recipecontent = #{recipecontent},
+	        recipeMainVidLink = #{recipeMainVidLink},
+	        recipefixdate = NOW(),
+	        isprivate = #{isprivate},
+	        ishotdisplay = #{ishotdisplay},
+	        isbestdisplay = #{isbestdisplay}
+	    WHERE recipeid = #{recipeid}
+	</update>
 
     <update id="deactivatePost" parameterType="int">
         UPDATE recipepost

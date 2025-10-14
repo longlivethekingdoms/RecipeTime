@@ -70,6 +70,11 @@ public class PostDAOImpl implements PostDAO {
     public Post getPostById(Map<String, Object> params) {
         return sqlSession.selectOne(namespace + "getPostById", params);
     }
+    
+    @Override
+    public void updatePost(Post post) {
+        sqlSession.update("postMapper.updatePost", post);
+    }
 
     @Override
     public void deactivatePost(int recipeid) {

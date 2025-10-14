@@ -23,6 +23,7 @@ public interface PostDAO {
     
     List<Post> getAllPosts();
     Post getPostById(Map<String, Object> params);
+    void updatePost(Post post);
     void deactivatePost(int recipeid);
 
     // category 관련 (post 내부에 포함)
