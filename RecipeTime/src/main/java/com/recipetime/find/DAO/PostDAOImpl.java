@@ -103,7 +103,7 @@ public class PostDAOImpl implements PostDAO {
 	}
 	
 	@Override
-	public Post getPostDetail(int recipeid) {
-	    return sqlSession.selectOne(namespace + "getPostDetail", recipeid);
+	public Post getPostDetail(Map<String, Object> paramMap) {
+	    return sqlSession.selectOne(namespace + "getPostDetail", paramMap);
 	}
 }

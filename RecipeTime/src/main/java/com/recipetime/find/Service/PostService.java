@@ -26,5 +26,5 @@ public interface PostService {
 	void dummy(Users loginUser);
 	void init();
 	
-	Post getPostDetail(int recipeid);
+	Post getPostDetail(Map<String, Object> paramMap);
 }

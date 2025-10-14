@@ -32,6 +32,6 @@ public interface PostDAO {
 	int posttotal(Pager pager);
 	List<Post> postlist(Pager pager);
 	
-	Post getPostDetail(int recipeid);
+	Post getPostDetail(Map<String, Object> paramMap);
 	
 }

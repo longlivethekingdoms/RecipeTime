@@ -148,6 +148,8 @@ public class RecipeWriteController {
         return "redirect:/post/list";
     }
     
+    
+    
     @GetMapping("/dummy")
     String dummy(Post post,
     		HttpSession session) {

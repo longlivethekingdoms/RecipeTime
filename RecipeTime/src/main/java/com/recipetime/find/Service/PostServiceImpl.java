@@ -156,9 +156,9 @@ public class PostServiceImpl implements PostService {
 		}
 
 		@Override
-	    public Post getPostDetail(int recipeid) {
+	    public Post getPostDetail(Map<String, Object> paramMap) {
 			
-	        return postDAO.getPostDetail(recipeid);
+	        return postDAO.getPostDetail(paramMap);
 	        
 	    }
 		
