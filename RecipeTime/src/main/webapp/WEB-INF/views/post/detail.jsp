@@ -148,10 +148,10 @@
 	<c:if test="${post.userid == loginUserId or accesslevel == 'manager'}">
 	    <div class="mt-3 mb-4">
 	        <!-- 수정 버튼 -->
-	        <a href="/post/edit?recipeid=${post.recipeid}" class="btn btn-primary">수정</a>
+	        <a href="/post/edit/${post.recipeid}" class="btn btn-primary">수정</a>
 	
 	        <!-- 삭제(비활성화) 버튼 -->
-	        <form action="/post/deactivate" method="post" style="display:inline;">
+	        <form action="/post/deactivate/${post.recipeid}" method="post" style="display:inline;">
 	            <input type="hidden" name="recipeid" value="${post.recipeid}" />
 	            <button type="submit" class="btn btn-danger" onclick="return confirm('정말 게시글을 비활성화하시겠습니까?');">삭제</button>
 	        </form>

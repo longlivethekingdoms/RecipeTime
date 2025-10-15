@@ -28,17 +28,20 @@ public class RecipeDetailController {
     public String detail(@PathVariable("recipeid") int recipeid, Model model, HttpSession session) {
     	// 세션에서 로그인한 사용자 정보 가져오기
         Users loginUser = (Users) session.getAttribute("loginUser");
-        model.addAttribute("loginUserId", loginUser.getUserid());
-        model.addAttribute("accesslevel", loginUser.getAccesslevel());
         
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("recipeid", recipeid);
 
-        // 로그인 안 한 경우 (게스트)
         if (loginUser == null) {
+            // 게스트일 때
+            model.addAttribute("loginUserId", null);
+            model.addAttribute("accesslevel", "guest");
             paramMap.put("loginUserId", null);
             paramMap.put("accessLevel", "guest");
         } else {
+            // 로그인 상태일 때
+            model.addAttribute("loginUserId", loginUser.getUserid());
+            model.addAttribute("accesslevel", loginUser.getAccesslevel());
             paramMap.put("loginUserId", loginUser.getUserid());
             paramMap.put("accessLevel", loginUser.getAccesslevel());
         }
