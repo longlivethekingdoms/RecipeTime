@@ -154,20 +154,26 @@ public class RecipeWriteController {
     @GetMapping("/edit/{recipeid}")
     public String editForm(@PathVariable("recipeid") int recipeid, Model model, HttpSession session) {
         Users loginUser = (Users) session.getAttribute("loginUser");
-        String loginUserId = null;
-        String accessLevel = null;
-        if (loginUser != null) {
-            loginUserId = loginUser.getUserid();
-            accessLevel = loginUser.getAccesslevel(); // 너의 Users에는 getAccesslevel()
+
+        // 로그인 안 된 경우 → 로그인 페이지로
+        if (loginUser == null) {
+            return "redirect:/login/login";
         }
+
+        String loginUserId = loginUser.getUserid();
+        String accessLevel = loginUser.getAccesslevel();
 
         Post post = postService.getPostById(recipeid, loginUserId, accessLevel);
         if (post == null) {
-            // 접근 불가 혹은 존재하지 않음
             return "redirect:/post/detail/" + recipeid;
         }
 
-        // 카테고리 옵션들 추가 (insertForm에서 하던 것과 동일)
+        // 🔒 권한 체크 (작성자 또는 관리자만 허용)
+        if (!loginUserId.equals(post.getUserid()) && !"manager".equalsIgnoreCase(accessLevel)) {
+            return "redirect:/post/detail/" + recipeid + "?error=forbidden";
+        }
+
+        // 카테고리 옵션들 추가
         model.addAttribute("post", post);
         model.addAttribute("typeOptions", categoryService.getOptionsByItemId(1));
         model.addAttribute("situationOptions", categoryService.getOptionsByItemId(2));
@@ -175,7 +181,8 @@ public class RecipeWriteController {
         model.addAttribute("peopleOptions", categoryService.getOptionsByItemId(4));
         model.addAttribute("timeOptions", categoryService.getOptionsByItemId(5));
         model.addAttribute("difficultyOptions", categoryService.getOptionsByItemId(6));
-        return "post/edit"; // 너는 edit JSP를 새로 만들어야 함 (insert와 유사)
+
+        return "post/edit";
     }
     
  // 수정 처리(POST)
