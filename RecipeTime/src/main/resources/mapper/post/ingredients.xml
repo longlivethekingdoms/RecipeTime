@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ingredientsMapper">
+
+	<insert id="insertIngredients">
+		INSERT INTO ingredients (recipeid, ingname, ingquantity, unit, exp)
+		VALUES
+			VALUES (#{recipeid}, #{ingname}, #{ingquantity}, #{unit}, #{exp})
+	</insert>
+	
+	<update id="updateIngredients">
+		UPDATE ingredients
+			SET ingname = #{ingname},
+				ingquantity = #{ingquantity},
+				unit = #{unit},
+				exp = #{exp}
+			WHERE ingorder = #{ingorder}
+	</update>
+	
+	<delete id="deleteIngredients">
+		DELETE FROM ingredients
+		WHERE ingorder = #{ingorder}
+	</delete>
+</mapper>

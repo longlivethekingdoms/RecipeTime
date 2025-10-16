@@ -26,10 +26,10 @@
 
     <!-- 재료 일괄 삽입 -->
     <insert id="insertIngredients" parameterType="java.util.List">
-        INSERT INTO ingredients (recipeid, ingorder, ingname, ingquantity, unit, exp)
+        INSERT INTO ingredients (recipeid, ingname, ingquantity, unit, exp)
         VALUES
         <foreach collection="list" item="ing" separator=",">
-            (#{ing.recipeid}, #{ing.ingorder}, #{ing.ingname}, #{ing.ingquantity}, #{ing.unit}, #{ing.exp})
+            (#{ing.recipeid}, #{ing.ingname}, #{ing.ingquantity}, #{ing.unit}, #{ing.exp})
         </foreach>
     </insert>
 
@@ -176,11 +176,11 @@
 	    SET 
 	        recipetitle = #{recipetitle},
 	        recipecontent = #{recipecontent},
-	        recipeMainVidLink = #{recipeMainVidLink},
+<!-- 	        recipeMainVidLink = #{recipeMainVidLink}, -->
 	        recipefixdate = NOW(),
-	        isprivate = #{isprivate},
-	        ishotdisplay = #{ishotdisplay},
-	        isbestdisplay = #{isbestdisplay}
+	        isprivate = #{isprivate}
+<!-- 	        ishotdisplay = #{ishotdisplay}, -->
+<!-- 	        isbestdisplay = #{isbestdisplay} -->
 	    WHERE recipeid = #{recipeid}
 	</update>
 

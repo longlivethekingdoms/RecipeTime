@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tagMapper">
+
+	<insert id="insertTag">	
+		INSERT INTO recipetag (recipeid, tagname)
+        VALUES
+            (#{recipeid}, #{tagname})
+	</insert>
+	
+	<update id="updateTag">
+		 UPDATE recipetag
+	        SET tagname = #{tagname}
+	        WHERE tagid = #{tagid}
+	</update>
+	
+	<delete id="deleteTag">
+		DELETE FROM recipetag
+		WHERE tagid = #{tagid}
+	</delete>
+</mapper>

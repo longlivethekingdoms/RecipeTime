@@ -215,28 +215,50 @@ document.getElementById("recipeMainVidLink").addEventListener("input", function 
 
 // 태그 추가
 $("#addTag").click(function() {
+	var i = $("#tagList .tag").length;
     $("#tagList").append(`
         <div class="tag">
-            <input type="text" name="tags[\${tagIndex}].tagname" placeholder="태그명" required>
+            <input type="text" name="tags[\${i}].tagname" placeholder="태그명" required>
             <button type="button" class="remove">삭제</button>
         </div>
     `);
-    tagIndex++;
+    //tagIndex++;
 });
+
+function reindexTags(){
+    $("#tagList .tag").each(function(index){
+        $(this).find("[name]").each(function(){
+            var name = $(this).attr("name");
+            name = name.replace(/tags\[\d+\]/, "tags[" + index + "]");
+            $(this).attr("name", name);
+        });
+    });
+}
 
 // 재료 추가
 $("#addIngredient").click(function() {
-    $("#ingredientList").append(`
+	 var i = $("#ingredientList .ingredient").length; 
+	$("#ingredientList").append(`
         <div class="ingredient">
-            <input type="text" name="ingredients[\${ingIndex}].ingname" placeholder="재료명" required>
-            <input type="number" name="ingredients[\${ingIndex}].ingquantity" placeholder="수량" min="0" required>
-            <input type="text" name="ingredients[\${ingIndex}].unit" placeholder="단위" required>
-            <input type="text" name="ingredients[\${ingIndex}].exp" placeholder="비고">
+            <input type="text" name="ingredients[\${i}].ingname" placeholder="재료명" required>
+            <input type="number" name="ingredients[\${i}].ingquantity" placeholder="수량" min="0" required>
+            <input type="text" name="ingredients[\${i}].unit" placeholder="단위" required>
+            <input type="text" name="ingredients[\${i}].exp" placeholder="비고">
             <button type="button" class="remove">삭제</button>
         </div>
     `);
-    ingIndex++;
+    //ingIndex++;
 });
+
+function reindexIngredients(){
+    $("#ingredientList .ingredient").each(function(index){
+        $(this).find("[name]").each(function(){
+            var name = $(this).attr("name");
+            name = name.replace(/ingredients\[\d+\]/, "ingredients[" + index + "]");
+            $(this).attr("name", name);
+        });
+    });
+}
 
 //시퀀스 추가 시 체크박스 상태를 확인하고 처리
 $("#addSequence").click(function() {
@@ -310,11 +332,16 @@ $(document).on("click", ".remove-seq-img", function(){
 // 삭제 버튼 클릭 시
 $(document).on("click", ".remove", function() {
     var parent = $(this).closest("div");
+    parent.remove();
+    
     if (parent.hasClass("sequence")) {
-        parent.remove();
         reindexSequences(); // 시퀀스 전용 재정렬
-    } else {
-        parent.remove();
+    }
+    else if(parent.hasClass("tag")){
+    	reindexTags();
+    }
+    else if(parent.hasClass("ingredient")){
+    	reindexIngredients();
     }
 });
 

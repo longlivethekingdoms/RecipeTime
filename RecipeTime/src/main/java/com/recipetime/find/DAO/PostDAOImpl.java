@@ -27,7 +27,6 @@ public class PostDAOImpl implements PostDAO {
     
 	@Override
 	public void insertPost(Post post) {
-		System.out.println("여기서 몇 번?");
 		sqlSession.insert(namespace + "insertPost", post);
 	}
 

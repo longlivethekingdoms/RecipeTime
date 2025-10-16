@@ -3,6 +3,7 @@ package com.recipetime.find.Controller.post;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -154,22 +155,25 @@ public class RecipeWriteController {
     @GetMapping("/edit/{recipeid}")
     public String editForm(@PathVariable("recipeid") int recipeid, Model model, HttpSession session) {
         Users loginUser = (Users) session.getAttribute("loginUser");
-
-        // 로그인 안 된 경우 → 로그인 페이지로
+        
+     // 🔒 로그인 안 된 경우 바로 로그인 페이지로 리다이렉트
         if (loginUser == null) {
-            return "redirect:/login/login";
+            return "redirect:/login/login?redirect=/post/edit/" + recipeid;
         }
 
-        String loginUserId = loginUser.getUserid();
-        String accessLevel = loginUser.getAccesslevel();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("recipeid", recipeid);
+        paramMap.put("loginUserId", loginUser.getUserid());
+        paramMap.put("accessLevel", loginUser.getAccesslevel());
 
-        Post post = postService.getPostById(recipeid, loginUserId, accessLevel);
+        Post post = postService.getPostDetail(paramMap);
         if (post == null) {
             return "redirect:/post/detail/" + recipeid;
         }
 
-        // 🔒 권한 체크 (작성자 또는 관리자만 허용)
-        if (!loginUserId.equals(post.getUserid()) && !"manager".equalsIgnoreCase(accessLevel)) {
+        // 🔒 작성자 또는 관리자만 접근 가능
+        if (!loginUser.getUserid().equals(post.getUserid()) &&
+            !"manager".equalsIgnoreCase(loginUser.getAccesslevel())) {
             return "redirect:/post/detail/" + recipeid + "?error=forbidden";
         }
 
@@ -200,9 +204,23 @@ public class RecipeWriteController {
             loginUserId = loginUser.getUserid();
             accessLevel = loginUser.getAccesslevel();
         }
-
+        
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("recipeid", recipeid);
+        
+        if (loginUser == null) {
+            // 게스트일 때
+            paramMap.put("loginUserId", null);
+            paramMap.put("accessLevel", "guest");
+        } else {
+            // 로그인 상태일 때
+            paramMap.put("loginUserId", loginUser.getUserid());
+            paramMap.put("accessLevel", loginUser.getAccesslevel());
+        }
+        
         // 권한 체크: 작성자 또는 manager만 수정 가능
-        Post original = postService.getPostById(recipeid, loginUserId, accessLevel);
+        Post original = postService.getPostDetail(paramMap);
+        //Post original = postService.getPostById(recipeid, loginUserId, accessLevel);
         if (original == null) {
             return "redirect:/post/detail/" + recipeid;
         }
@@ -212,7 +230,7 @@ public class RecipeWriteController {
 
         post.setRecipeid(recipeid);
         post.setUserid(original.getUserid()); // 작성자 유지
-        postService.updatePost(post); // service에 updatePost가 있어야 함 (아래에 샘플 포함) 만들어야함.
+        postService.updatePost(post, original); // service에 updatePost가 있어야 함 (아래에 샘플 포함) 만들어야함.
         return "redirect:/post/detail/" + recipeid;
     }
     

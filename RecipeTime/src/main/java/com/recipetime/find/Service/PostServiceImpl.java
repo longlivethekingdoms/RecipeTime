@@ -2,6 +2,7 @@ package com.recipetime.find.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.recipetime.find.DAO.IngredientDAO;
 import com.recipetime.find.DAO.PostDAO;
+import com.recipetime.find.DAO.TagDAO;
 import com.recipetime.find.Model.*;
 import com.recipetime.find.pager.Pager;
 
@@ -21,7 +24,13 @@ public class PostServiceImpl implements PostService {
 
 	 @Autowired
 	    private PostDAO postDAO;
-
+	 
+	 @Autowired
+	 	private TagDAO tagDAO;
+	 
+	 @Autowired
+	 	private IngredientDAO ingredientDAO;
+	 
 	    @Override
 	    @Transactional
 	    public void insertPost(Post post) {
@@ -42,7 +51,7 @@ public class PostServiceImpl implements PostService {
 	            for (int i = 0; i < post.getIngredients().size(); i++) {
 	                Ingredients ing = post.getIngredients().get(i);
 	                ing.setRecipeid(recipeId);
-	                ing.setIngorder(i + 1); // 반드시 순서 지정
+	                //ing.setIngorder(i + 1); // 반드시 순서 지정
 	            }
 	            postDAO.insertIngredients(post.getIngredients());
 	        }
@@ -92,9 +101,49 @@ public class PostServiceImpl implements PostService {
 	        return postDAO.getPostById(params);
 	    }
 	    
+	    @Transactional
 	    @Override
-	    public void updatePost(Post post) {
+	    public void updatePost(Post post, Post original) {
 	        postDAO.updatePost(post);
+	        List<Tag> taglist = post.getTags();
+	        List<Tag> originalTagList = original.getTags();
+	        for (Tag tag : taglist) {
+				tag.setRecipeid(post.getRecipeid());
+	        	if(tag.getTagid() > 0) {
+					tagDAO.updateTag(tag);
+				}
+				else
+				{
+					tagDAO.insertTag(tag);
+				}
+			}
+	        
+	        for(Tag tag : originalTagList) {
+				int tagid = tag.getTagid();
+	        	if(taglist.stream().noneMatch(t->t.getTagid()==tagid)) {
+	        		tagDAO.deleteTag(tag);
+	        	}
+	        }
+	        
+	        List<Ingredients> ingredientslist = post.getIngredients();
+	        List<Ingredients> originalIngList = original.getIngredients();
+	        for(Ingredients ingredients : ingredientslist) {
+	        	ingredients.setRecipeid(post.getRecipeid());
+	        	if(ingredients.getIngorder() > 0) {
+	        		ingredientDAO.updateIngredient(ingredients);
+	        	}
+	        	else
+	        	{
+	        		ingredientDAO.insertIngredient(ingredients);
+	        	}
+	        }
+	        
+	        for(Ingredients ingredients : originalIngList) {
+	        	int ingorder = ingredients.getIngorder();
+	        	if(ingredientslist.stream().noneMatch(t->t.getIngorder()==ingorder)) {
+	        		ingredientDAO.deleteIngredient(ingredients);
+	        	}
+	        }
 	    }
 
 	    @Override

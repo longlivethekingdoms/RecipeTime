@@ -85,7 +85,7 @@
     <h4>재료</h4>
     <ul>
         <c:forEach var="ing" items="${post.ingredients}">
-            <li>${ing.ingname} - ${ing.ingquantity} ${ing.unit} (${ing.exp})</li>
+            <li>재료명 : ${ing.ingname} | 개수 : ${ing.ingquantity} | 단위 : ${ing.unit} | 비고 : (${ing.exp})</li>
         </c:forEach>
     </ul>
 

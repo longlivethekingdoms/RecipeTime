@@ -13,7 +13,7 @@ public interface PostService {
     List<Post> getAllPosts();
     
     Post getPostById(int recipeid, String currentUserId, String accessLevel);
-    void updatePost(Post post);
+    void updatePost(Post post, Post original);
     void deactivatePost(int recipeid);
 
     List<CategoryItem> listCategoryItems();

@@ -23,6 +23,8 @@
 	<mapper resource="mapper/users/users.xml"/>
 	<mapper resource="mapper/post/post.xml"/>
 	<mapper resource="mapper/post/category.xml"/>
+	<mapper resource="mapper/post/tag.xml"/>
+	<mapper resource="mapper/post/ingredients.xml"/>
 </mappers>
 
 </configuration>
