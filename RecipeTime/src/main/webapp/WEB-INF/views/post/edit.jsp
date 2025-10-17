@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -110,13 +111,29 @@
 	    <div id="extraPreview"></div>
 	    
 	</div>
-
-    <label for="recipeMainVidLink">동영상 링크</label>
-	<input type="text" id="recipeMainVidLink" name="recipeMainVidLink" value="${post.recipeMainVidLink}" placeholder="유튜브 링크 입력">
 	
-	<div id="videoPreview" style="margin-top: 15px; display: none;">
-	    <iframe id="videoFrame" src="https://www.youtube.com/embed/${videoId}" width="560" height="315" frameborder="0" allowfullscreen></iframe>
-	</div>
+	<!-- 동영상 -->
+    <c:if test="${not empty post.recipeMainVidLink}">
+        <c:set var="youtubeUrl" value="${post.recipeMainVidLink}" />
+		<c:choose>
+		    <c:when test="${fn:contains(youtubeUrl, 'watch?v=')}">
+		        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'v=')}" />
+		    </c:when>
+		    <c:when test="${fn:contains(youtubeUrl, 'youtu.be/')}">
+		        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'youtu.be/')}" />
+		    </c:when>
+		    <c:when test="${fn:contains(youtubeUrl, 'shorts/')}">
+		        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'shorts/')}" />
+		    </c:when>
+		</c:choose>
+		<label for="recipeMainVidLink">동영상 링크</label>
+		<input type="text" id="recipeMainVidLink" name="recipeMainVidLink" value="${post.recipeMainVidLink}" placeholder="유튜브 링크 입력">
+		
+		<div id="videoPreview" style="margin-top: 15px; display: none;">
+		    <iframe id="videoFrame" src="https://www.youtube.com/embed/${videoId}" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+		</div>
+    
+    </c:if>
     
     <div class="section">
         <label>태그</label>
