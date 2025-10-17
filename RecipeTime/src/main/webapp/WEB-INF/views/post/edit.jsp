@@ -115,7 +115,7 @@
 	<input type="text" id="recipeMainVidLink" name="recipeMainVidLink" value="${post.recipeMainVidLink}" placeholder="유튜브 링크 입력">
 	
 	<div id="videoPreview" style="margin-top: 15px; display: none;">
-	    <iframe id="videoFrame" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+	    <iframe id="videoFrame" src="https://www.youtube.com/embed/${videoId}" width="560" height="315" frameborder="0" allowfullscreen></iframe>
 	</div>
     
     <div class="section">
