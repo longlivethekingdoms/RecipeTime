@@ -5,7 +5,6 @@
 
 	<insert id="insertIngredients">
 		INSERT INTO ingredients (recipeid, ingname, ingquantity, unit, exp)
-		VALUES
 			VALUES (#{recipeid}, #{ingname}, #{ingquantity}, #{unit}, #{exp})
 	</insert>
 	

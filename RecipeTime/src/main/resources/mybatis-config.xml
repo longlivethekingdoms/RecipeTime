@@ -25,6 +25,7 @@
 	<mapper resource="mapper/post/category.xml"/>
 	<mapper resource="mapper/post/tag.xml"/>
 	<mapper resource="mapper/post/ingredients.xml"/>
+	<mapper resource="mapper/post/attachment.xml"/>
 </mappers>
 
 </configuration>
