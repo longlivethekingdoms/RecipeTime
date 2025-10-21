@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.recipetime.find.DAO.AttachmentDAO;
 import com.recipetime.find.DAO.IngredientDAO;
 import com.recipetime.find.DAO.PostDAO;
 import com.recipetime.find.DAO.TagDAO;
@@ -31,9 +30,6 @@ public class PostServiceImpl implements PostService {
 	 
 	 @Autowired
 	 	private IngredientDAO ingredientDAO;
-	 
-	 @Autowired
-	 	private AttachmentDAO attachmentDAO;
 	 
 	    @Override
 	    @Transactional
@@ -148,17 +144,6 @@ public class PostServiceImpl implements PostService {
 	        		ingredientDAO.deleteIngredient(ingredients);
 	        	}
 	        }
-	        
-	        List<Attachment> attachmentlist = post.getAttachments();
-	        List<Attachment> originalattachmentlist = original.getAttachments();
-	        
-//	        for(Attachment attachment : attachmentlist) {
-//	        	if(attachment.getIsmain() == 1) {
-//	        		System.out.println("메인 이미지");
-//	        	}else {
-//	        		System.out.println("추가 이미지");
-//	        	}
-//	        }
 	    }
 
 	    @Override

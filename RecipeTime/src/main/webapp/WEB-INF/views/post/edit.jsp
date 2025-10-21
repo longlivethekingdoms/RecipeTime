@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
@@ -109,10 +109,11 @@
     	</c:if>
 	    
 	    <div id="extraPreview"></div>
+	    
 	</div>
 	
 	<!-- 동영상 -->
-    <c:if test="${not empty post.recipeMainVidLink}">
+
         <c:set var="youtubeUrl" value="${post.recipeMainVidLink}" />
 		<c:choose>
 		    <c:when test="${fn:contains(youtubeUrl, 'watch?v=')}">
@@ -131,8 +132,7 @@
 		<div id="videoPreview" style="margin-top: 15px; display: none;">
 		    <iframe id="videoFrame" src="https://www.youtube.com/embed/${videoId}" width="560" height="315" frameborder="0" allowfullscreen></iframe>
 		</div>
-    
-    </c:if>
+
     
     <div class="section">
         <label>태그</label>
