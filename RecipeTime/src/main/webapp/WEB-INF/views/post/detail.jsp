@@ -150,11 +150,18 @@
 	        <!-- 수정 버튼 -->
 	        <a href="/post/edit/${post.recipeid}" class="btn btn-primary">수정</a>
 	
+			<c:if test="${post.recipedeactivate == 0}">
 	        <!-- 삭제(비활성화) 버튼 -->
 	        <form action="/post/deactivate/${post.recipeid}" method="post" style="display:inline;">
 	            <input type="hidden" name="recipeid" value="${post.recipeid}" />
 	            <button type="submit" class="btn btn-danger" onclick="return confirm('정말 게시글을 비활성화하시겠습니까?');">삭제</button>
 	        </form>
+	       	</c:if>
+	        <c:if test="${post.recipedeactivate == 1}">
+	        <form action="/post/activate/${post.recipeid}" method="post" style="display:inline;">
+	        	<input type="hidden" name="recipeid" value="${post.recipeid}" />
+	        	<button type="submit" class="btn btn-primary" onclick="return confirm('게시글을 복구하시겠습니까?');">복구</button>
+	        </c:if>
 	    </div>
 	</c:if>
 

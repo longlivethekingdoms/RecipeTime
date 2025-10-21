@@ -255,6 +255,26 @@ public class RecipeWriteController {
         return "redirect:/post/list";
     }
     
+    @PostMapping("/activate/{recipeid}")
+    public String activatePost(@PathVariable("recipeid") int recipeid, HttpSession session) {
+    	Users loginUser = (Users) session.getAttribute("loginUser");
+    	String loginUserId = null;
+    	String accessLevel = null;
+    	if (loginUser != null) {
+    		loginUserId = loginUser.getUserid();
+    		accessLevel = loginUser.getAccesslevel();
+    	}
+    	
+    	Post post = postService.getPostById(recipeid, loginUserId, accessLevel);
+    	if(post == null) {
+    		return "redirect:/post/detail/" + recipeid;
+    	}
+    	
+    	//
+    	postService.activatePost(recipeid);
+    	return "redirect:/post/detail/"+recipeid;
+    }
+    
     //2025-10-14 위까지
     
     @GetMapping("/dummy")

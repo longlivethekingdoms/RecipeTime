@@ -191,6 +191,14 @@
             recipedeactivatedate = NOW()
         WHERE recipeid = #{recipeid}
     </update>
+    
+    <update id="activatePost" parameterType="int">
+    	UPDATE recipepost
+    	SET recipedeactivate = 0,
+    		isprivate = 1,
+    		recipedeactivatedate = NULL
+    	WHERE recipeid = #{recipeid}
+    </update>
 
     <!-- 카테고리: item / option -->
     <resultMap type="com.recipetime.find.Model.CategoryItem" id="itemMap">

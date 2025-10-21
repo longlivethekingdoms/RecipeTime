@@ -79,6 +79,11 @@ public class PostDAOImpl implements PostDAO {
     public void deactivatePost(int recipeid) {
         sqlSession.update(namespace + "deactivatePost", recipeid);
     }
+    
+    @Override
+    public void activatePost(int recipeid) {
+    	sqlSession.update(namespace + "activatePost", recipeid);
+    }
 
     @Override
     public List<CategoryItem> listCategoryItems() {

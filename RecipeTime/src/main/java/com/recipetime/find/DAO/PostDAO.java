@@ -25,6 +25,7 @@ public interface PostDAO {
     Post getPostById(Map<String, Object> params);
     void updatePost(Post post);
     void deactivatePost(int recipeid);
+	void activatePost(int recipeid);
 
     // category 관련 (post 내부에 포함)
     List<CategoryItem> listCategoryItems();
@@ -34,5 +35,6 @@ public interface PostDAO {
 	List<Post> postlist(Pager pager);
 	
 	Post getPostDetail(Map<String, Object> paramMap);
+
 	
 }

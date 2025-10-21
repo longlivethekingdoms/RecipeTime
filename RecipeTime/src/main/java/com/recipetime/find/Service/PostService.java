@@ -15,6 +15,7 @@ public interface PostService {
     Post getPostById(int recipeid, String currentUserId, String accessLevel);
     void updatePost(Post post, Post original);
     void deactivatePost(int recipeid);
+    void activatePost(int recipeid);
 
     List<CategoryItem> listCategoryItems();
     List<CategoryOption> listCategoryOptionsByItemId(int itemid);
@@ -28,4 +29,5 @@ public interface PostService {
 	void init();
 	
 	Post getPostDetail(Map<String, Object> paramMap);
+	
 }
