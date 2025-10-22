@@ -227,7 +227,9 @@ public class RecipeWriteController {
 
         // 여기에 mainImage / uploadFiles 처리 로직(너의 insertPost와 동일한 방식으로 적용)
         // -> 너가 원하면 기존 insertPost의 이미지 처리 코드를 그대로 복붙해서 파일 저장, Attachment 세팅 후 post에 넣어줘
-
+        System.out.println(mainImage);
+        System.out.println(uploadFiles);
+        
         post.setRecipeid(recipeid);
         post.setUserid(original.getUserid()); // 작성자 유지
         postService.updatePost(post, original); // service에 updatePost가 있어야 함 (아래에 샘플 포함) 만들어야함.

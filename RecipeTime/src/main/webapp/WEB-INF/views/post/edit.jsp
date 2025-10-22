@@ -129,8 +129,8 @@
 		<label for="recipeMainVidLink">동영상 링크</label>
 		<input type="text" id="recipeMainVidLink" name="recipeMainVidLink" value="${post.recipeMainVidLink}" placeholder="유튜브 링크 입력">
 		
-		<div id="videoPreview" style="margin-top: 15px; display: none;">
-		    <iframe id="videoFrame" src="https://www.youtube.com/embed/${videoId}" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+		<div id="videoPreview" style="margin-top: 15px; display: block;">
+		    <iframe id="videoFrame" src="" width="560" height="315" frameborder="0" allowfullscreen></iframe>
 		</div>
 
     
@@ -185,7 +185,9 @@
 let tagIndex=0, ingIndex=0, seqIndex=0;
 
 $(function(){
-
+	var url = $("#recipeMainVidLink").val();
+    youtube(url);
+	
     // 대표 이미지 미리보기
     $("#mainImage").on("change", function(e){
         let file = e.target.files[0];
@@ -248,7 +250,7 @@ $(function(){
 });
 
 document.getElementById("recipeMainVidLink").addEventListener("input", function () {
-    const url = this.value;
+    var url = this.value;
     let videoId = null;
 
     // 1) https://www.youtube.com/watch?v=VIDEO_ID
@@ -407,6 +409,9 @@ $(document).on("click", ".remove", function() {
 //동영상 링크 입력 시 미리보기 (이벤트 위임)
 $(document).on("input", ".recipevidlink", function () {
     const url = $(this).val();
+    
+    youtube(url);
+    /*
     let videoId = null;
 
     // 1) https://www.youtube.com/watch?v=VIDEO_ID
@@ -433,7 +438,35 @@ $(document).on("input", ".recipevidlink", function () {
         frame.attr("src", "");
         preview.hide();
     }
+    */
 });
+
+function youtube(url){
+	let videoId = null;
+	// 1) https://www.youtube.com/watch?v=VIDEO_ID
+    const match1 = url.match(/v=([^&]+)/);
+    if (match1) videoId = match1[1];
+
+    // 2) https://youtu.be/VIDEO_ID
+    const match2 = url.match(/youtu\.be\/([^?]+)/);
+    if (match2) videoId = match2[1];
+    
+ 	// 3) https://www.youtube.com/shorts/VIDEO_ID
+    const match3 = url.match(/youtube\.com\/shorts\/([^?]+)/);
+    if (match3) videoId = match3[1];
+
+    const container = $(this).closest(".sequence");
+    const preview = container.find(".videoPreview");
+    const frame = container.find(".videoFrame");
+	
+    if (videoId) {
+        const embedUrl = "https://youtube.com/embed/" + videoId;
+        document.getElementById("videoFrame").src = embedUrl;
+        document.getElementById("videoPreview").style.display = "block";
+    } else {
+    	document.getElementById("videoPreview").style.display = "none";
+    }
+}
 
 // 시퀀스 재정렬
 function reindexSequences(){
@@ -470,11 +503,11 @@ $("#postForm .toggle").each(function(){
         }
     }
 });
-
+/*
 if(valid){
     $("#postForm").submit();
 }
-
+*/
 // 삭제 버튼
 $(document).on("click", ".remove", function() { $(this).parent().remove(); });
 

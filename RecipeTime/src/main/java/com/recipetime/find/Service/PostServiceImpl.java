@@ -144,6 +144,24 @@ public class PostServiceImpl implements PostService {
 	        		ingredientDAO.deleteIngredient(ingredients);
 	        	}
 	        }
+	        
+	        List<Attachment> attachmentslist = post.getAttachments();
+	        List<Attachment> originalAttList = original.getAttachments();
+	        
+	        System.out.println(originalAttList);
+	        
+	        if(attachmentslist != null) {
+	        		        
+	        for(Attachment attachments : attachmentslist) {
+//	        	if(attachments.getIsmain() == 0) {
+//	        		System.out.println("?");
+//	        	}
+//	        	else {
+//	        		System.out.println("!");
+//	        	}
+//	        
+	        }
+	        }
 	    }
 
 	    @Override

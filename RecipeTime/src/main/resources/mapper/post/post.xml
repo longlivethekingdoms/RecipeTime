@@ -176,7 +176,7 @@
 	    SET 
 	        recipetitle = #{recipetitle},
 	        recipecontent = #{recipecontent},
-<!-- 	        recipeMainVidLink = #{recipeMainVidLink}, -->
+	        recipeMainVidLink = #{recipeMainVidLink},
 	        recipefixdate = NOW(),
 	        isprivate = #{isprivate}
 <!-- 	        ishotdisplay = #{ishotdisplay}, -->

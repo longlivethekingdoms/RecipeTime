@@ -207,6 +207,7 @@ document.getElementById("recipeMainVidLink").addEventListener("input", function 
     if (videoId) {
         const embedUrl = "https://www.youtube.com/embed/" + videoId;
         document.getElementById("videoFrame").src = embedUrl;
+        console.log(document.getElementById("videoFrame").src);
         document.getElementById("videoPreview").style.display = "block";
     } else {
         document.getElementById("videoPreview").style.display = "none";
