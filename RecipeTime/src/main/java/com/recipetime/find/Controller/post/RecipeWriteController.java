@@ -74,7 +74,7 @@ public class RecipeWriteController {
             for(int i=0;i<post.getSequences().size();i++)
                 post.getSequences().get(i).setRecipestep(i+1);
 
-        if(post.getAttachments() == null) post.setAttachments(new ArrayList<>());
+        if(post.getAttachments() == null) post.setAttachments(new ArrayList<Attachment>());
 
      // mainImage 처리
         if(mainImage != null && !mainImage.isEmpty()) {
@@ -227,12 +227,52 @@ public class RecipeWriteController {
 
         // 여기에 mainImage / uploadFiles 처리 로직(너의 insertPost와 동일한 방식으로 적용)
         // -> 너가 원하면 기존 insertPost의 이미지 처리 코드를 그대로 복붙해서 파일 저장, Attachment 세팅 후 post에 넣어줘
+        if(post.getAttachments() == null) post.setAttachments(new ArrayList<Attachment>());
+
+        // mainImage 처리
+           if(mainImage != null && !mainImage.isEmpty()) {
+               String uuid = UUID.randomUUID().toString();
+               String originalName = mainImage.getOriginalFilename();
+               String ext = originalName.substring(originalName.lastIndexOf(".")+1);
+               File dest = new File(uploadDir, uuid + "." + ext);
+               mainImage.transferTo(dest);
+
+               Attachment mainAtt = new Attachment();
+               mainAtt.setFileorder(0);
+               mainAtt.setIsmain(1);
+               mainAtt.setFilename(originalName);
+               mainAtt.setFileuuid(uuid);
+               mainAtt.setFileext(ext);
+               mainAtt.setRecipeid(recipeid);
+               post.getAttachments().add(mainAtt);
+           }
+           
+           // ✅ 추가 이미지 처리
+           if(uploadFiles != null)
+               for(MultipartFile file : uploadFiles)
+                   if(file != null && !file.isEmpty()){
+                       String uuid = UUID.randomUUID().toString();
+                       String originalName = file.getOriginalFilename();
+                       String ext = originalName.substring(originalName.lastIndexOf(".")+1);
+                       File dest = new File(uploadDir, uuid + "." + ext);
+                       file.transferTo(dest);
+
+                       Attachment att = new Attachment();
+                       att.setIsmain(0);
+                       att.setFilename(originalName);
+                       att.setFileuuid(uuid);
+                       att.setFileext(ext);
+                       att.setRecipeid(recipeid);
+                       post.getAttachments().add(att);
+                   }      
+
         System.out.println(mainImage);
         System.out.println(uploadFiles);
         
         post.setRecipeid(recipeid);
         post.setUserid(original.getUserid()); // 작성자 유지
         postService.updatePost(post, original); // service에 updatePost가 있어야 함 (아래에 샘플 포함) 만들어야함.
+        
         return "redirect:/post/detail/" + recipeid;
     }
     

@@ -9,7 +9,7 @@ import com.recipetime.find.Model.Attachment;
 @Repository
 public class AttachmentDAOImpl implements AttachmentDAO {
 	
-	private static final String namespace = "attachmentMapper";
+	private static final String namespace = "attachmentMapper.";
 	
 	@Autowired
 	private SqlSession sqlSession;

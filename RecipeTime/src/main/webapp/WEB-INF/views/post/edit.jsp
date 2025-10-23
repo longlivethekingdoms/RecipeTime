@@ -79,10 +79,11 @@
 	    <label>대표 이미지 *</label>
 	    <input type="file" id="mainImage" name="mainImage" accept="image/*">
 	    <div id="mainPreview">
-	 	<c:forEach var="img" items="${post.attachments}">
+	 	<c:forEach var="img" items="${post.attachments}" varStatus="stat">
    		<c:if test="${img.ismain == 1}">
    			<div class="preview-item">
-                <img src="/upload/${img.fileuuid}.${img.fileext}" width="200">
+                <input type="hidden" name="attachments[${stat.index}].attachmentid" value="${img.attachmentid}">
+                <img src="/upload/${img.fileuuid}.${img.fileext}" width="200">      
                 <button type="button" class="remove-main">삭제</button>
             </div> 
    		</c:if> 
@@ -95,11 +96,12 @@
 	<div class="section">
 	    <label>추가 이미지</label>
 	    <input type="file" id="uploadFiles" name="uploadFiles" multiple accept="image/*">
-	    <c:if test="${not empty post.attachments }">
+	    <c:if test="${not empty post.attachments}">
         <div class="row mb-4">
-            <c:forEach var="att" items="${post.attachments}">
+            <c:forEach var="att" items="${post.attachments}" varStatus="stat">
             	<c:if test="${att.ismain == 0}">
                 <div class="col-md-3 mb-3">
+                    <input type="hidden" name="attachments[${stat.index}].attachmentid" value="${att.attachmentid}">
                     <img src="/upload/${att.fileuuid}.${att.fileext}" class="img-fluid rounded" width="200">
                     <button type="button" class="remove-extra">삭제</button>
                 </div>
@@ -165,13 +167,93 @@
         </div>
         <button type="button" id="addIngredient">재료 추가</button>
     </div>
-
-    <!-- 요리 순서 -->
+            
+    <!-- 요리 순서 -->    
     <div class="section">
+    	
         <label>요리 순서 *</label>
+        <c:forEach var="seq" items="${post.sequences}" varStatus="stat">
+        	<div class="sequence" data-seq="sequences[${stat.index}]">
+        	<span class="sequence-number">"${seq.recipestep}"</span>
+        	<textarea name="sequences[${stat.index}].explain" placeholder="설명" required>${seq.explain}</textarea>
+        	<input type="file" class="seq-image" name="sequences[${stat.index}].images" multiple>
+        	<c:if test="${not empty seq.attachments}">
+        		<c:forEach var="satt" items="${seq.attachments}" varStatus="stat">
+        			<div class="col-md-3 mb-3">
+        				<input type="hidden" name="attachments[${stat.index}].attachmentid" value=${satt.attachmentid}">
+        				<img src="/upload/${satt.fileuuid}.${satt.fileext}" class="img-fluid rounded" width="200">
+        				<button type="button" class="remove-seq-img">삭제</button>
+        			</div>
+        		</c:forEach>
+        	</c:if>
+        	<div class="section"><label>레시피 동영상 링크</label>
+        	<br>
+        	<c:set var="youtubeUrl" value="${seq.recipevidlink}"/>
+        	<c:choose>
+        		<c:when test="${fn:contains(youtubeUrl, 'watch?v=')}">
+		        	<c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'v=')}" />
+			    </c:when>
+			    <c:when test="${fn:contains(youtubeUrl, 'youtu.be/')}">
+			        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'youtu.be/')}" />
+			    </c:when>
+			    <c:when test="${fn:contains(youtubeUrl, 'shorts/')}">
+			        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'shorts/')}" />
+			    </c:when>
+        	</c:choose>
+        	<input type="text" class="recipevidlink" name="sequences[${stat.index}].recipevidlink" value="${seq.recipevidlink}" placeholder="유튜브 링크 입력">
+        	<iframe class="videoFrame" src="" width="560" height="315" frameborder="0" allowfullscreen><</iframe>
+        	</div>
+        	<div id="seq-preview"></div>
+        	<br>
+        	<label>
+	        	<input type="hidden" name="sequences[${stat.index}].ingactivate" value="0">
+			    <input type="checkbox" class="toggle" data-target="ingredient"
+			           name="sequences[${stat.index}].ingactivate" value="1"
+			           <c:if test="${seq.ingactivate == 1}">checked</c:if>>
+				    재료
+				</label>
+				<div class="extra ingredient" style="<c:if test="${seq.ingactivate == 0}">display:none;</c:if>">
+				    설명: <input type="text" name="sequences[${stat.index}].ingexp" value="${seq.ingexp}">
+				</div>
+			
+			<label>
+				<input type="hidden" name="sequences[${stat.index}].toolactivate" value="0">
+			    <input type="checkbox" class="toggle" data-target="tool"
+			           name="sequences[${stat.index}].toolactivate" value="1"
+			           <c:if test="${seq.toolactivate == 1}">checked</c:if>>
+			    도구
+			</label>
+			<div class="extra tool" style="<c:if test="${seq.toolactivate == 0}">display:none;</c:if>">
+			    설명: <input type="text" name="sequences[${stat.index}].toolexp" value="${seq.toolexp}">
+			</div>
+			
+			<label>
+				<input type="hidden" name="sequences[${stat.index}].fireactivate" value="0">
+			    <input type="checkbox" class="toggle" data-target="fire"
+			           name="sequences[${stat.index}].fireactivate" value="1"
+			           <c:if test="${seq.fireactivate == 1}">checked</c:if>>
+			    불
+			</label>
+			<div class="extra fire" style="<c:if test="${seq.fireactivate == 0}">display:none;</c:if>">
+			    설명: <input type="text" name="sequences[${stat.index}].fireexp" value="${seq.fireexp}">
+			</div>
+			
+			<label>
+				<input type="hidden" name="sequences[${stat.index}].tipactivate" value="0">
+			    <input type="checkbox" class="toggle" data-target="tip"
+			           name="sequences[${stat.index}].tipactivate" value="1"
+			           <c:if test="${seq.tipactivate == 1}">checked</c:if>>
+			    팁
+			</label>
+			<div class="extra tip" style="<c:if test="${seq.tipactivate == 0}">display:none;</c:if>">
+			    설명: <input type="text" name="sequences[${stat.index}].tipexp" value="${seq.tipexp}">
+			</div>
+        	</div>
+        </c:forEach>
         <div id="sequenceList"></div>
         <button type="button" id="addSequence">순서 추가</button>
     </div>
+
 
     <!-- 공개 여부 -->
     <input type="hidden" id="isprivate" name="isprivate" value="0">
@@ -186,6 +268,7 @@ let tagIndex=0, ingIndex=0, seqIndex=0;
 
 $(function(){
 	var url = $("#recipeMainVidLink").val();
+	
     youtube(url);
 	
     // 대표 이미지 미리보기
@@ -411,6 +494,7 @@ $(document).on("input", ".recipevidlink", function () {
     const url = $(this).val();
     
     youtube(url);
+    seqyoutube(url);
     /*
     let videoId = null;
 
@@ -467,6 +551,34 @@ function youtube(url){
     	document.getElementById("videoPreview").style.display = "none";
     }
 }
+
+ function seqyoutube(sequrl){
+	 let videoId = null;
+	    // 1) https://www.youtube.com/watch?v=VIDEO_ID
+	    const match1 = url.match(/v=([^&]+)/);
+	    if (match1) videoId = match1[1];
+
+	    // 2) https://youtu.be/VIDEO_ID
+	    const match2 = url.match(/youtu\.be\/([^?]+)/);
+	    if (match2) videoId = match2[1];
+	    
+	    // 3) https://www.youtube.com/shorts/VIDEO_ID
+	    const match3 = url.match(/youtube\.com\/shorts\/([^?]+)/);
+	    if (match3) videoId = match3[1];
+
+	    const container = $(this).closest(".sequence");
+	    const preview = container.find(".videoPreview");
+	    const frame = container.find(".videoFrame");
+	    
+	    if (videoId) {
+	        const embedUrl = "https://youtube.com/embed/" + videoId;
+	        frame.attr("src", embedUrl);
+	        preview.show();
+	    } else {
+	        frame.attr("src", "");
+	        preview.hide();
+	    }
+ }
 
 // 시퀀스 재정렬
 function reindexSequences(){

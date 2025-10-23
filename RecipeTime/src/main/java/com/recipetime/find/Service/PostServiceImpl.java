@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.recipetime.find.DAO.AttachmentDAO;
 import com.recipetime.find.DAO.IngredientDAO;
 import com.recipetime.find.DAO.PostDAO;
 import com.recipetime.find.DAO.TagDAO;
@@ -30,6 +32,9 @@ public class PostServiceImpl implements PostService {
 	 
 	 @Autowired
 	 	private IngredientDAO ingredientDAO;
+	 
+	 @Autowired
+	 	private AttachmentDAO attachmentDAO;
 	 
 	    @Override
 	    @Transactional
@@ -140,7 +145,7 @@ public class PostServiceImpl implements PostService {
 	        
 	        for(Ingredients ingredients : originalIngList) {
 	        	int ingorder = ingredients.getIngorder();
-	        	if(ingredientslist.stream().noneMatch(t->t.getIngorder()==ingorder)) {
+	        	if(ingredientslist.stream().noneMatch(i->i.getIngorder()==ingorder)) {
 	        		ingredientDAO.deleteIngredient(ingredients);
 	        	}
 	        }
@@ -148,20 +153,28 @@ public class PostServiceImpl implements PostService {
 	        List<Attachment> attachmentslist = post.getAttachments();
 	        List<Attachment> originalAttList = original.getAttachments();
 	        
+	        System.out.println(attachmentslist);
 	        System.out.println(originalAttList);
 	        
-	        if(attachmentslist != null) {
-	        		        
-	        for(Attachment attachments : attachmentslist) {
-//	        	if(attachments.getIsmain() == 0) {
-//	        		System.out.println("?");
-//	        	}
-//	        	else {
-//	        		System.out.println("!");
-//	        	}
-//	        
+//	        if(attachmentslist != null)
+//	        {
+//	        	attachmentslist = new ArrayList<Attachment>();
+//	        }
+        	attachmentslist = attachmentslist.stream().filter(a->a != null).collect(Collectors.toList());
+	        for(Attachment attachment : attachmentslist) {
+	        	if(attachment.getAttachmentid() <= 0)
+	        	{
+	        		System.out.println("???");
+	        		attachmentDAO.insertAttachment(attachment);
+	        	}
 	        }
-	        }
+	        
+	        for(Attachment attachment : originalAttList) {
+	        	int attachmentId = attachment.getAttachmentid();
+	        	if(attachmentslist.stream().noneMatch(a->a.getAttachmentid()==attachmentId)) {
+	        		attachmentDAO.deleteAttachment(attachment);
+	        	}
+	        }       
 	    }
 
 	    @Override

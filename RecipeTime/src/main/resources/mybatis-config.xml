@@ -26,6 +26,7 @@
 	<mapper resource="mapper/post/tag.xml"/>
 	<mapper resource="mapper/post/ingredients.xml"/>
 	<mapper resource="mapper/post/attachment.xml"/>
+	<mapper resource="mapper/post/sequence.xml"/>
 </mappers>
 
 </configuration>
