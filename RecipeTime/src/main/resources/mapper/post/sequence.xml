@@ -1,1 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sequencesMapper">
+
+	<insert id="insertSequences">
+		INSERT INTO recipesequence (recipestep, explain, recipevidlink, ingactivate, toolactivate, fireactivate, tipactivate, ingexp, toolexp, fireexp, tipexp)
+			VALUES (#{recipestep}, #{explain}, #{recipevidlink}, #{ingactivate}, #{toolactivate}, #{fireactivate}, #{tipactivate}, #{ingexp}, #{toolexp}, #{fireexp}, #{tipexp})
+	</insert>
+	
+	<update id="updateSequences">
+		UPDATE recipesequence
+			SET recipestep = #{recipestep}
+				explain = #{explain},
+				recipevidlink = #{recipevidlink},
+				ingactivate = #{ingactivate},
+				toolactivate = #{toolactivate},
+				fireactivate = #{fireactivate},
+				tipactivate = #{tipactivate},
+				ingexp = #{ingexp},
+				toolexp = #{toolexp},
+				fireexp = #{fireexp},
+				tipexp = #{tipexp} 
+			WHERE recipestepid = #{recipestepid}
+	</update>
+	
+	<delete id="deleteSequences">
+		DELETE FROM recipesequence
+		WHERE recipestepid = #{recipestepid}
+	</delete>
+</mapper>    

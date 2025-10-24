@@ -15,20 +15,17 @@ public class SequenceDAOImpl implements SequenceDAO {
 	
 	@Override
 	public void insertSequence(PostSequence sequences) {
-		// TODO Auto-generated method stub
-
+		sqlSession.insert(namespace + "insertSequences");
 	}
 
 	@Override
 	public void updateSequence(PostSequence sequences) {
-		// TODO Auto-generated method stub
-
+		sqlSession.update(namespace + "updateSequences");
 	}
 
 	@Override
 	public void deleteSequence(PostSequence sequences) {
-		// TODO Auto-generated method stub
-
+		sqlSession.delete(namespace + "deleteSequences");
 	}
 
 }
