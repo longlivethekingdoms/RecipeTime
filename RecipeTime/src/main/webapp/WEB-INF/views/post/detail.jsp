@@ -97,7 +97,7 @@
 
             <!-- 순서별 동영상 -->
             <c:if test="${not empty seq.recipevidlink}">
-                <c:set var="youtubeUrl" value="${post.recipeMainVidLink}" />
+                <c:set var="youtubeUrl" value="${seq.recipevidlink}" />
 				<c:choose>
 				    <c:when test="${fn:contains(youtubeUrl, 'watch?v=')}">
 				        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'v=')}" />

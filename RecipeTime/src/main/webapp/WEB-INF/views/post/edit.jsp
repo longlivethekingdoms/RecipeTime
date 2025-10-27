@@ -200,8 +200,11 @@
 			        <c:set var="videoId" value="${fn:substringAfter(youtubeUrl, 'shorts/')}" />
 			    </c:when>
         	</c:choose>
-        	<input type="text" class="recipevidlink" name="sequences[${stat.index}].recipevidlink" value="${seq.recipevidlink}" placeholder="유튜브 링크 입력">
-        	<iframe class="videoFrame" src="" width="560" height="315" frameborder="0" allowfullscreen><</iframe>
+        	<input type="text" class="recipevidlink" id="${stat.index}" name="sequences[${stat.index}].recipevidlink" value="${seq.recipevidlink}" placeholder="유튜브 링크 입력">
+        	<div id = "seqVideoPreview_${stat.index}" style="margin-top: 15px; display: block;">
+        		<iframe class="videoFrame" id="seqVideoFrame_${stat.index}" src="" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+        	</div>
+        	
         	</div>
         	<div id="seq-preview"></div>
         	<br>
@@ -248,6 +251,7 @@
 			<div class="extra tip" style="<c:if test="${seq.tipactivate == 0}">display:none;</c:if>">
 			    설명: <input type="text" name="sequences[${stat.index}].tipexp" value="${seq.tipexp}">
 			</div>
+			<button type="button" class="remove">삭제</button>
         	</div>
         </c:forEach>
         <div id="sequenceList"></div>
@@ -270,7 +274,14 @@ $(function(){
 	var url = $("#recipeMainVidLink").val();
 	
     youtube(url);
-	
+    
+    for (var i = 0; i < $(".recipevidlink").length; i++) {
+    	let sequrl = $(".recipevidlink")[i].value;
+    	let sequrlId = $(".recipevidlink")[i].id;
+    	seqyoutube(sequrl,sequrlId);
+    	console.log("!");
+	}
+    
     // 대표 이미지 미리보기
     $("#mainImage").on("change", function(e){
         let file = e.target.files[0];
@@ -431,6 +442,7 @@ $("#addSequence").click(function() {
             ' <button type="button" class="remove">삭제</button>' +
         '</div>';
     $("#sequenceList").append(html);
+    reindexSequences();
     
     $("#sequenceList .sequence:last .extra").hide();
 });
@@ -489,41 +501,20 @@ $(document).on("click", ".remove", function() {
     }
 });
 
+
+$(document).on("input", "#recipeMainVidLink", function () {
+	const url = $(this).val();
+    
+    youtube(url);
+})
+
 //동영상 링크 입력 시 미리보기 (이벤트 위임)
 $(document).on("input", ".recipevidlink", function () {
     const url = $(this).val();
-    
-    youtube(url);
-    seqyoutube(url);
-    /*
-    let videoId = null;
-
-    // 1) https://www.youtube.com/watch?v=VIDEO_ID
-    const match1 = url.match(/v=([^&]+)/);
-    if (match1) videoId = match1[1];
-
-    // 2) https://youtu.be/VIDEO_ID
-    const match2 = url.match(/youtu\.be\/([^?]+)/);
-    if (match2) videoId = match2[1];
-    
- 	// 3) https://www.youtube.com/shorts/VIDEO_ID
-    const match3 = url.match(/youtube\.com\/shorts\/([^?]+)/);
-    if (match3) videoId = match3[1];
-
-    const container = $(this).closest(".sequence");
-    const preview = container.find(".videoPreview");
-    const frame = container.find(".videoFrame");
-
-    if (videoId) {
-        const embedUrl = "https://www.youtube.com/embed/" + videoId;
-        frame.attr("src", embedUrl);
-        preview.show();
-    } else {
-        frame.attr("src", "");
-        preview.hide();
-    }
-    */
+    const urlId = $(this).attr("id");
+    seqyoutube(url,urlId);
 });
+
 
 function youtube(url){
 	let videoId = null;
@@ -552,37 +543,35 @@ function youtube(url){
     }
 }
 
- function seqyoutube(sequrl){
-	 let videoId = null;
+ function seqyoutube(sequrl,sequrlId){
+	 	let videoId = null;
 	    // 1) https://www.youtube.com/watch?v=VIDEO_ID
-	    const match1 = url.match(/v=([^&]+)/);
+	    const match1 = sequrl.match(/v=([^&]+)/);
 	    if (match1) videoId = match1[1];
 
 	    // 2) https://youtu.be/VIDEO_ID
-	    const match2 = url.match(/youtu\.be\/([^?]+)/);
+	    const match2 = sequrl.match(/youtu\.be\/([^?]+)/);
 	    if (match2) videoId = match2[1];
 	    
 	    // 3) https://www.youtube.com/shorts/VIDEO_ID
-	    const match3 = url.match(/youtube\.com\/shorts\/([^?]+)/);
+	    const match3 = sequrl.match(/youtube\.com\/shorts\/([^?]+)/);
 	    if (match3) videoId = match3[1];
 
 	    const container = $(this).closest(".sequence");
-	    const preview = container.find(".videoPreview");
 	    const frame = container.find(".videoFrame");
-	    
+
 	    if (videoId) {
 	        const embedUrl = "https://youtube.com/embed/" + videoId;
-	        frame.attr("src", embedUrl);
-	        preview.show();
+	        document.getElementById("seqVideoFrame_"+sequrlId).src = embedUrl;
+	        document.getElementById("seqVideoPreview_"+sequrlId).style.display = "block";
 	    } else {
-	        frame.attr("src", "");
-	        preview.hide();
+	    	document.getElementById("seqVideoPreview_"+sequrlId).style.display = "none";
 	    }
  }
 
 // 시퀀스 재정렬
 function reindexSequences(){
-    $("#sequenceList .sequence").each(function(index){
+    $(".sequence").each(function(index){
         $(this).attr("data-seq", index);
         $(this).find(".sequence-number").text((index+1) + ".");
         $(this).find("[name]").each(function(){
