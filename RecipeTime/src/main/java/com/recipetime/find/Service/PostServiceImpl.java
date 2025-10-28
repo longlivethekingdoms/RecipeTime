@@ -39,7 +39,7 @@ public class PostServiceImpl implements PostService {
 	    @Override
 	    @Transactional
 	    public void insertPost(Post post) {
-	        // 1) recipepost insert -> post.recipeid Ã¤¿öÁü (useGeneratedKeys in mapper)
+	        // 1) recipepost insert -> post.recipeid Ã¤ï¿½ï¿½ï¿½ï¿½ (useGeneratedKeys in mapper)
 	        postDAO.insertPost(post);
 	        int recipeId = post.getRecipeid();
 
@@ -56,7 +56,7 @@ public class PostServiceImpl implements PostService {
 	            for (int i = 0; i < post.getIngredients().size(); i++) {
 	                Ingredients ing = post.getIngredients().get(i);
 	                ing.setRecipeid(recipeId);
-	                //ing.setIngorder(i + 1); // ¹Ýµå½Ã ¼ø¼­ ÁöÁ¤
+	                //ing.setIngorder(i + 1); // ï¿½Ýµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	            }
 	            postDAO.insertIngredients(post.getIngredients());
 	        }
@@ -73,12 +73,12 @@ public class PostServiceImpl implements PostService {
 	                    for (Attachment a : seq.getAttachments()) {
 	                        a.setRecipestepid(stepId);
 	                    }
-	                    postDAO.insertseqAttachments(seq.getAttachments()); // ¿©±â¼­¸¸ insert
+	                    postDAO.insertseqAttachments(seq.getAttachments()); // ï¿½ï¿½ï¿½â¼­ï¿½ï¿½ insert
 	                }
 	            }
 	        }
 
-	        // 5) top-level attachments¸¸ ¸ðÀ½
+	        // 5) top-level attachmentsï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	        if (post.getAttachments() != null && !post.getAttachments().isEmpty()) {
 	            for (Attachment a : post.getAttachments()) {
 	                a.setRecipeid(recipeId);
@@ -86,7 +86,7 @@ public class PostServiceImpl implements PostService {
 	            }
 	        }
 
-	        // 6) insertAttachments´Â recipe-level¸¸ insert
+	        // 6) insertAttachmentsï¿½ï¿½ recipe-levelï¿½ï¿½ insert
 	        if (!attachmentsToInsert.isEmpty()) {
 	            postDAO.insertAttachments(attachmentsToInsert);
 	        }
@@ -112,6 +112,8 @@ public class PostServiceImpl implements PostService {
 	        postDAO.updatePost(post);
 	        List<Tag> taglist = post.getTags();
 	        List<Tag> originalTagList = original.getTags();
+	        if(taglist != null)
+	        {
 	        for (Tag tag : taglist) {
 				tag.setRecipeid(post.getRecipeid());
 	        	if(tag.getTagid() > 0) {
@@ -129,9 +131,11 @@ public class PostServiceImpl implements PostService {
 	        		tagDAO.deleteTag(tag);
 	        	}
 	        }
+	        }
 	        
 	        List<Ingredients> ingredientslist = post.getIngredients();
 	        List<Ingredients> originalIngList = original.getIngredients();
+	        if(ingredientslist != null) {
 	        for(Ingredients ingredients : ingredientslist) {
 	        	ingredients.setRecipeid(post.getRecipeid());
 	        	if(ingredients.getIngorder() > 0) {
@@ -149,22 +153,17 @@ public class PostServiceImpl implements PostService {
 	        		ingredientDAO.deleteIngredient(ingredients);
 	        	}
 	        }
+	        }
 	        
 	        List<Attachment> attachmentslist = post.getAttachments();
 	        List<Attachment> originalAttList = original.getAttachments();
 	        
-	        System.out.println(attachmentslist);
-	        System.out.println(originalAttList);
-	        
-//	        if(attachmentslist != null)
-//	        {
-//	        	attachmentslist = new ArrayList<Attachment>();
-//	        }
+	        if(attachmentslist != null)
+	        {
         	attachmentslist = attachmentslist.stream().filter(a->a != null).collect(Collectors.toList());
 	        for(Attachment attachment : attachmentslist) {
 	        	if(attachment.getAttachmentid() <= 0)
 	        	{
-	        		System.out.println("???");
 	        		attachmentDAO.insertAttachment(attachment);
 	        	}
 	        }
@@ -174,7 +173,8 @@ public class PostServiceImpl implements PostService {
 	        	if(attachmentslist.stream().noneMatch(a->a.getAttachmentid()==attachmentId)) {
 	        		attachmentDAO.deleteAttachment(attachment);
 	        	}
-	        }       
+	        }     
+	        }
 	    }
 
 	    @Override
@@ -228,8 +228,8 @@ public class PostServiceImpl implements PostService {
 				Post item = new Post();
 				
 				item.setUserid(users.getUserid());
-				item.setRecipetitle("°Ô½Ã±Û¸í " + i);
-				item.setRecipecontent("¾îÂ¼±¸ÀúÂ¼±¸ " + i);
+				item.setRecipetitle("ï¿½Ô½Ã±Û¸ï¿½ " + i);
+				item.setRecipecontent("ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ " + i);
 				item.setTypeid(1);
 				item.setSituationid(5);
 				item.setMethodid(9);

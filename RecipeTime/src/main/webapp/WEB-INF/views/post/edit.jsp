@@ -426,8 +426,8 @@ $("#addSequence").click(function() {
             '<div class="section"><label>레시피 동영상 링크</label>' +
             '<br>' +
             '<input type="text" class="recipevidlink" name="sequences[' + i + '].recipevidlink" placeholder="유튜브 링크 입력"></div>' + 
-            '<div class="videoPreview" style="margin-top: 15px; display: none;">' +
-            '<iframe class="videoFrame" width="560" height="315" frameborder="0" allowfullscreen></iframe>' +
+            '<div class="seqVideoPreview_" style="margin-top: 15px; display: none;">' +
+            '<iframe class="seqVideoFrame_" width="560" height="315" frameborder="0" allowfullscreen></iframe>' +
             '</div>' +
             '<div class="seq-preview"></div>' +  
             '<br>' +

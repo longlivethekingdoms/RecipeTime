@@ -265,9 +265,6 @@ public class RecipeWriteController {
                        att.setRecipeid(recipeid);
                        post.getAttachments().add(att);
                    }      
-
-        System.out.println(mainImage);
-        System.out.println(uploadFiles);
         
         post.setRecipeid(recipeid);
         post.setUserid(original.getUserid()); // 작성자 유지
