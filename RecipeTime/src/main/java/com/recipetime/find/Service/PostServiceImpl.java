@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.recipetime.find.DAO.AttachmentDAO;
 import com.recipetime.find.DAO.IngredientDAO;
 import com.recipetime.find.DAO.PostDAO;
+import com.recipetime.find.DAO.SequenceDAO;
 import com.recipetime.find.DAO.TagDAO;
 import com.recipetime.find.Model.*;
 import com.recipetime.find.pager.Pager;
@@ -36,10 +37,13 @@ public class PostServiceImpl implements PostService {
 	 @Autowired
 	 	private AttachmentDAO attachmentDAO;
 	 
+	 @Autowired
+	 	private SequenceDAO sequenceDAO;
+	 
 	    @Override
 	    @Transactional
 	    public void insertPost(Post post) {
-	        // 1) recipepost insert -> post.recipeid ä���� (useGeneratedKeys in mapper)
+	        // 1) recipepost insert -> post.recipeid 채워짐 (useGeneratedKeys in mapper)
 	        postDAO.insertPost(post);
 	        int recipeId = post.getRecipeid();
 
@@ -56,7 +60,7 @@ public class PostServiceImpl implements PostService {
 	            for (int i = 0; i < post.getIngredients().size(); i++) {
 	                Ingredients ing = post.getIngredients().get(i);
 	                ing.setRecipeid(recipeId);
-	                //ing.setIngorder(i + 1); // �ݵ�� ���� ����
+	              //ing.setIngorder(i + 1); // 반드시 순서 지정
 	            }
 	            postDAO.insertIngredients(post.getIngredients());
 	        }
@@ -78,7 +82,7 @@ public class PostServiceImpl implements PostService {
 	            }
 	        }
 
-	        // 5) top-level attachments�� ����
+	        // 5) top-level attachments만 모음
 	        if (post.getAttachments() != null && !post.getAttachments().isEmpty()) {
 	            for (Attachment a : post.getAttachments()) {
 	                a.setRecipeid(recipeId);
@@ -86,7 +90,7 @@ public class PostServiceImpl implements PostService {
 	            }
 	        }
 
-	        // 6) insertAttachments�� recipe-level�� insert
+	        // 6) insertAttachments는 recipe-level만 insert
 	        if (!attachmentsToInsert.isEmpty()) {
 	            postDAO.insertAttachments(attachmentsToInsert);
 	        }
@@ -175,6 +179,29 @@ public class PostServiceImpl implements PostService {
 	        	}
 	        }     
 	        }
+	        
+//	        List<PostSequence> sequencelist = post.getSequences();
+//	        List<PostSequence> originalseqlist = original.getSequences();
+//	        if(sequencelist != null) {
+//	        	for(PostSequence sequences : sequencelist) {
+//	        		sequences.setRecipeid(post.getRecipeid());
+//	        		if(sequences.getRecipestepid() > 0) {
+//	        			sequenceDAO.updateSequence(sequences);
+//	        		}
+//	        		else
+//	        		{
+//	        			sequenceDAO.insertSequence(sequences);
+//	        		}
+//	        	}
+//	        	
+//	        	for(PostSequence sequences : originalseqlist) {
+//	        		int seqstepid = sequences.getRecipestepid();
+//	        		if(sequencelist.stream().noneMatch(i->i.getRecipestepid()==seqstepid)) {
+//	        			sequenceDAO.deleteSequence(sequences);
+//	        		}
+//	        	}
+//	        }
+	        
 	    }
 
 	    @Override
@@ -228,8 +255,8 @@ public class PostServiceImpl implements PostService {
 				Post item = new Post();
 				
 				item.setUserid(users.getUserid());
-				item.setRecipetitle("�Խñ۸� " + i);
-				item.setRecipecontent("��¼����¼�� " + i);
+				item.setRecipetitle("게시글" + i);
+				item.setRecipecontent("게시글 내용" + i);
 				item.setTypeid(1);
 				item.setSituationid(5);
 				item.setMethodid(9);

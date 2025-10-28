@@ -16,9 +16,9 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public void insertUserAdmin(Users users) {
-		//1.recipeuseradminÃß°¡
+		//1.recipeuseradminì¶”ê°€
 		userDAO.insertUserAdmin(users);
-		//2.userloginstateÃß°¡
+		//2.userloginstateì¶”ê°€
 		userDAO.insertUserLoginState(users.getUserid());
 		
 	}
@@ -27,59 +27,59 @@ public class UserServiceImpl implements UserService {
 	public String validateUser(Users users) {
 		
 		if (users.getUserid() == null || users.getUserid().isEmpty()) {
-			return "ID¸¦ ÀÔ·ÂÇÏ¼¼¿ä";
+			return "IDë¥¼ ì…ë ¥í•˜ì„¸ìš”";
 		}
 		
 		if (!users.getIsduplicateIDCheck()) {			
-			return "ID Áßº¹ Ã¼Å©¸¦ ÇØÁÖ¼¼¿ä.";
+			return "ID ì¤‘ë³µ ì²´í¬ë¥¼ í•´ì£¼ì„¸ìš”.";
 		}
 		
 		if (userDAO.duplicateIDCheck(users.getUserid())> 0) {
-			return "ÀÌ¹Ì »ç¿ë ÁßÀÎ IDÀÔ´Ï´Ù.";
+			return "ì´ë¯¸ ì‚¬ìš© ì¤‘ì¸ IDì…ë‹ˆë‹¤.";
 		}
 		
 		if (users.getUserpw() == null || users.getUserpw().isEmpty()) {
-			return "ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇÏ¼¼¿ä.";
+			return "ë¹„ë°€ë²ˆí˜¸ë¥¼ ì…ë ¥í•˜ì„¸ìš”.";
 		}
 		
 		if (users.getConfirmPw() == null || users.getConfirmPw().isEmpty()) {
-			return "ºñ¹Ğ¹øÈ£ È®ÀÎÀ» ÀÔ·ÂÇÏ¼¼¿ä.";
+			return "ë¹„ë°€ë²ˆí˜¸ í™•ì¸ì„ ì…ë ¥í•˜ì„¸ìš”.";
 		}
 		
 		if (!users.getUserpw().equals(users.getConfirmPw())) {
-            return "ºñ¹Ğ¹øÈ£°¡ ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù.";
+            return "ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.";
         }
 		
 		if (users.getNickname() == null || users.getNickname().isEmpty()) {
-			return "´Ğ³×ÀÓÀ» ÀÔ·ÂÇÏ¼¼¿ä.";
+			return "ë‹‰ë„¤ì„ì„ ì…ë ¥í•˜ì„¸ìš”.";
 		}
 		
 		if (!users.getIsduplicateNickname()) {
-			return "´Ğ³×ÀÓ Áßº¹Ã¼Å©¸¦ ÇØÁÖ½Ê½Ã¿À.";
+			return "ë‹‰ë„¤ì„ ì¤‘ë³µì²´í¬ë¥¼ í•´ì£¼ì‹­ì‹œì˜¤.";
 		}
 
         if (userDAO.duplicateNickname(users.getNickname())> 0) {
-            return "ÀÌ¹Ì »ç¿ë ÁßÀÎ ´Ğ³×ÀÓÀÔ´Ï´Ù.";
+            return "ì´ë¯¸ ì‚¬ìš© ì¤‘ì¸ ë‹‰ë„¤ì„ì…ë‹ˆë‹¤.";
         }
         
         if (users.getUseremail() == null || users.getUseremail().isEmpty()) {
-        	return "ÀÌ¸ŞÀÏÀ» ÀÔ·ÂÇÏ¼¼¿ä.";
+        	return "ì´ë©”ì¼ì„ ì…ë ¥í•˜ì„¸ìš”.";
         }
         
         if (!users.getIsduplicateEmail()) {
-        	return "ÀÌ¸ŞÀÏ Áßº¹Ã¼Å©¸¦ ÇØÁÖ½Ê½Ã¿À.";
+        	return "ì´ë©”ì¼ ì¤‘ë³µì²´í¬ë¥¼ í•´ì£¼ì‹­ì‹œì˜¤.";
         }
         
         if (userDAO.duplicateEmail(users.getUseremail()) > 0) {
-            return "ÀÌ¹Ì »ç¿ë ÁßÀÎ ÀÌ¸ŞÀÏÀÔ´Ï´Ù.";
+            return "ì´ë¯¸ ì‚¬ìš© ì¤‘ì¸ ì´ë©”ì¼ì…ë‹ˆë‹¤.";
         }
   
         if (users.getUsertel() == null || users.getUsertel().isEmpty()) {
-            return "ÀüÈ­¹øÈ£¸¦ ÀÔ·ÂÇÏ¼¼¿ä.";
+            return "ì „í™”ë²ˆí˜¸ë¥¼ ì…ë ¥í•˜ì„¸ìš”.";
         }
         
         if (users.getUserbirth() == null) {
-        	return "»ı³â¿ùÀÏÀ» ÀÔ·ÂÇÏ¼¼¿ä.";
+        	return "ìƒë…„ì›”ì¼ì„ ì…ë ¥í•˜ì„¸ìš”.";
         }
 		
 		return null;

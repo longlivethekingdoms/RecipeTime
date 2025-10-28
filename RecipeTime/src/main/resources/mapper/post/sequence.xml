@@ -4,14 +4,15 @@
 <mapper namespace="sequencesMapper">
 
 	<insert id="insertSequences">
-		INSERT INTO recipesequence (recipestep, explain, recipevidlink, ingactivate, toolactivate, fireactivate, tipactivate, ingexp, toolexp, fireexp, tipexp)
-			VALUES (#{recipestep}, #{explain}, #{recipevidlink}, #{ingactivate}, #{toolactivate}, #{fireactivate}, #{tipactivate}, #{ingexp}, #{toolexp}, #{fireexp}, #{tipexp})
+		INSERT INTO recipesequence (recipeid, recipestep, `explain`, recipevidlink, ingactivate, toolactivate, fireactivate, tipactivate, ingexp, toolexp, fireexp, tipexp)
+			VALUES (#{recipeid}, #{recipestep}, #{explain}, #{recipevidlink}, #{ingactivate}, #{toolactivate}, #{fireactivate}, #{tipactivate}, #{ingexp}, #{toolexp}, #{fireexp}, #{tipexp})
 	</insert>
 	
 	<update id="updateSequences">
 		UPDATE recipesequence
-			SET recipestep = #{recipestep}
-				explain = #{explain},
+			SET recipeid = #{recipeid}
+				recipestep = #{recipestep}
+				`explain` = #{explain},
 				recipevidlink = #{recipevidlink},
 				ingactivate = #{ingactivate},
 				toolactivate = #{toolactivate},
