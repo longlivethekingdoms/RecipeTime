@@ -417,7 +417,9 @@ function reindexIngredients(){
 
 //시퀀스 추가 시 체크박스 상태를 확인하고 처리
 $("#addSequence").click(function() {
-    var i = $("#sequenceList .sequence").length; // 현재 개수 기반
+//      var i = $("#sequenceList .sequence").length; // 현재 개수 기반
+    var i = $(".recipevidlink").length;
+    
     var html =
         '<div class="sequence" data-seq="' + i + '">' +
             '<span class="sequence-number">' + (i + 1) + '.</span>' +
@@ -425,9 +427,9 @@ $("#addSequence").click(function() {
             '<input type="file" class="seq-image" name="sequences[' + i + '].images" multiple>' +
             '<div class="section"><label>레시피 동영상 링크</label>' +
             '<br>' +
-            '<input type="text" class="recipevidlink" name="sequences[' + i + '].recipevidlink" placeholder="유튜브 링크 입력"></div>' + 
-            '<div class="seqVideoPreview_" style="margin-top: 15px; display: none;">' +
-            '<iframe class="seqVideoFrame_" width="560" height="315" frameborder="0" allowfullscreen></iframe>' +
+            '<input type="text" class="recipevidlink" id="'+ i + '" name="sequences[' + i + '].recipevidlink" placeholder="유튜브 링크 입력"></div>' + 
+            '<div id="seqVideoPreview_'+i+'" style="margin-top: 15px; display: none;">' +
+            '<iframe id="seqVideoFrame_'+i+'" width="560" height="315" frameborder="0" allowfullscreen></iframe>' +
             '</div>' +
             '<div class="seq-preview"></div>' +  
             '<br>' +

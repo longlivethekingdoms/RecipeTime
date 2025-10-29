@@ -179,28 +179,30 @@ public class PostServiceImpl implements PostService {
 	        	}
 	        }     
 	        }
-	        
-//	        List<PostSequence> sequencelist = post.getSequences();
-//	        List<PostSequence> originalseqlist = original.getSequences();
-//	        if(sequencelist != null) {
-//	        	for(PostSequence sequences : sequencelist) {
-//	        		sequences.setRecipeid(post.getRecipeid());
-//	        		if(sequences.getRecipestepid() > 0) {
-//	        			sequenceDAO.updateSequence(sequences);
-//	        		}
-//	        		else
-//	        		{
-//	        			sequenceDAO.insertSequence(sequences);
-//	        		}
-//	        	}
-//	        	
-//	        	for(PostSequence sequences : originalseqlist) {
-//	        		int seqstepid = sequences.getRecipestepid();
-//	        		if(sequencelist.stream().noneMatch(i->i.getRecipestepid()==seqstepid)) {
-//	        			sequenceDAO.deleteSequence(sequences);
-//	        		}
-//	        	}
-//	        }
+	       	        	        
+	        List<PostSequence> sequencelist = post.getSequences();
+	        List<PostSequence> originalseqlist = original.getSequences();
+	        if(sequencelist != null) {
+	        	for(PostSequence sequences : sequencelist) {
+	        		sequences.setRecipeid(post.getRecipeid());
+	        		System.out.println(sequences.getRecipeid());
+	        		if(sequences.getRecipestepid() > 0) {
+	        			sequenceDAO.updateSequence(sequences);
+	        		}
+	        		else
+	        		{
+	        			System.out.println(sequences.getRecipeid());
+	        			sequenceDAO.insertSequence(sequences);
+	        		}
+	        	}
+	        	
+	        	for(PostSequence sequences : originalseqlist) {
+	        		int seqstepid = sequences.getRecipestepid();
+	        		if(sequencelist.stream().noneMatch(i->i.getRecipestepid()==seqstepid)) {
+	        			sequenceDAO.deleteSequence(sequences);
+	        		}
+	        	}
+	        }
 	        
 	    }
 

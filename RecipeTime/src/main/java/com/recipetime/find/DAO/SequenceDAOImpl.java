@@ -17,17 +17,19 @@ public class SequenceDAOImpl implements SequenceDAO {
 	
 	@Override
 	public void insertSequence(PostSequence sequences) {
-		sqlSession.insert(namespace + "insertSequences");
+		System.out.println(namespace + "insertSequences");
+		sqlSession.insert(namespace + "insertSequences", sequences);
+		System.out.println("?");
 	}
 
 	@Override
 	public void updateSequence(PostSequence sequences) {
-		sqlSession.update(namespace + "updateSequences");
+		sqlSession.update(namespace + "updateSequences", sequences);
 	}
 
 	@Override
 	public void deleteSequence(PostSequence sequences) {
-		sqlSession.delete(namespace + "deleteSequences");
+		sqlSession.delete(namespace + "deleteSequences", sequences);
 	}
 
 }
