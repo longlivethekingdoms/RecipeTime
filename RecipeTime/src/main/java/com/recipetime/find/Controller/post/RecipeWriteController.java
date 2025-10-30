@@ -264,7 +264,43 @@ public class RecipeWriteController {
                        att.setFileext(ext);
                        att.setRecipeid(recipeid);
                        post.getAttachments().add(att);
-                   }      
+                   }
+           
+        // 시퀀스 이미지 처리
+           if (post.getSequences() != null) {
+               for (int i = 0; i < post.getSequences().size(); i++) {
+                   PostSequence seq = post.getSequences().get(i);
+                   //String paramName = "sequences[" + i + "]";
+                   //MultipartFile[] seqFiles = ((MultipartHttpServletRequest) request).getFiles(paramName).toArray(new MultipartFile[0]);
+                   List<MultipartFile> seqFiles = seq.getImages();
+                   if (seqFiles != null && seqFiles.size() > 0) {
+                       List<Attachment> seqAtts = new ArrayList<>();
+                       for (MultipartFile file : seqFiles) {
+                           if (!file.isEmpty()) {
+                           	String uuid = UUID.randomUUID().toString();
+                               String originalName = file.getOriginalFilename();
+                               String ext = originalName.substring(originalName.lastIndexOf(".")+1);
+                               File dest = new File(uploadDir, uuid + "." + ext);
+                               file.transferTo(dest);
+                               
+                               Attachment att = new Attachment();
+                               att.setFilename(file.getOriginalFilename());
+                               att.setFileuuid(uuid);
+                               att.setFileext(ext);
+                               seqAtts.add(att);
+                           }
+                           
+                       }
+                       System.out.println("시퀀스 이미지");
+                       
+                       if(seqAtts.size() > 0 || seq.getAttachments() == null)
+                       {
+                    	   System.out.println(seq.getRecipestepid() + ", " + seqAtts + ", " + seq.getAttachments());
+                           seq.setAttachments(seqAtts);
+                       }
+                   }
+               }
+           }
         
         post.setRecipeid(recipeid);
         post.setUserid(original.getUserid()); // 작성자 유지

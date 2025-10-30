@@ -173,19 +173,23 @@
     	
         <label>요리 순서 *</label>
         <c:forEach var="seq" items="${post.sequences}" varStatus="stat">
+        	<input type="hidden" name="sequences[${stat.index}].recipestepid" value="${seq.recipestepid}">
         	<div class="sequence" data-seq="sequences[${stat.index}]">
+        	<input type="hidden" name="sequences[${stat.index}].recipestep" value="${seq.recipestep}">
         	<span class="sequence-number">"${seq.recipestep}"</span>
         	<textarea name="sequences[${stat.index}].explain" placeholder="설명" required>${seq.explain}</textarea>
         	<input type="file" class="seq-image" name="sequences[${stat.index}].images" multiple>
-        	<c:if test="${not empty seq.attachments}">
-        		<c:forEach var="satt" items="${seq.attachments}" varStatus="stat">
+        	<div class="seq-preview">
+        		<c:if test="${not empty seq.attachments}">
+        		<c:forEach var="satt" items="${seq.attachments}" varStatus="st">
         			<div class="col-md-3 mb-3">
-        				<input type="hidden" name="attachments[${stat.index}].attachmentid" value=${satt.attachmentid}">
+        				<input type="hidden" name="sequences[${stat.index}].attachments[${st.index}].attachmentid" value="${satt.attachmentid}">
         				<img src="/upload/${satt.fileuuid}.${satt.fileext}" class="img-fluid rounded" width="200">
         				<button type="button" class="remove-seq-img">삭제</button>
         			</div>
         		</c:forEach>
         	</c:if>
+        	</div> 	
         	<div class="section"><label>레시피 동영상 링크</label>
         	<br>
         	<c:set var="youtubeUrl" value="${seq.recipevidlink}"/>
@@ -417,21 +421,22 @@ function reindexIngredients(){
 
 //시퀀스 추가 시 체크박스 상태를 확인하고 처리
 $("#addSequence").click(function() {
-//      var i = $("#sequenceList .sequence").length; // 현재 개수 기반
     var i = $(".recipevidlink").length;
-    
+    var recipestep = i + 1;  // 기존 시퀀스의 갯수를 기반으로 recipestep을 설정 (1부터 시작)
+
     var html =
         '<div class="sequence" data-seq="' + i + '">' +
-            '<span class="sequence-number">' + (i + 1) + '.</span>' +
+            '<input type="hidden" name="sequences[' + i + '].recipestep" value="' + recipestep + '">' +  // recipestep을 여기에 추가
+            '<span class="sequence-number">' + recipestep + '.</span>' +
             '<textarea name="sequences[' + i + '].explain" placeholder="설명" required></textarea>' +
             '<input type="file" class="seq-image" name="sequences[' + i + '].images" multiple>' +
+            '<div class="seq-preview"></div>' +  
             '<div class="section"><label>레시피 동영상 링크</label>' +
             '<br>' +
             '<input type="text" class="recipevidlink" id="'+ i + '" name="sequences[' + i + '].recipevidlink" placeholder="유튜브 링크 입력"></div>' + 
             '<div id="seqVideoPreview_'+i+'" style="margin-top: 15px; display: none;">' +
             '<iframe id="seqVideoFrame_'+i+'" width="560" height="315" frameborder="0" allowfullscreen></iframe>' +
             '</div>' +
-            '<div class="seq-preview"></div>' +  
             '<br>' +
             '<label><input type="checkbox" class="toggle" data-target="ingredient" name="sequences[' + i + '].ingactivate" value="1"> 재료 </label>' +
             '<div class="extra ingredient">설명: <input type="text" name="sequences[' + i + '].ingexp"></div>' +
@@ -445,7 +450,7 @@ $("#addSequence").click(function() {
         '</div>';
     $("#sequenceList").append(html);
     reindexSequences();
-    
+
     $("#sequenceList .sequence:last .extra").hide();
 });
 
@@ -454,7 +459,7 @@ $(document).on("change", ".seq-image", function(e){
     let container = $(this).closest(".sequence");
     let preview = container.find(".seq-preview");
     preview.empty();
-
+	console.log(container, preview);
     let files = e.target.files;
     Array.from(files).forEach((file, idx) => {
         if(file.type.startsWith("image/")){
@@ -572,14 +577,15 @@ function youtube(url){
  }
 
 // 시퀀스 재정렬
-function reindexSequences(){
-    $(".sequence").each(function(index){
+function reindexSequences() {
+    $(".sequence").each(function(index) {
         $(this).attr("data-seq", index);
-        $(this).find(".sequence-number").text((index+1) + ".");
-        $(this).find("[name]").each(function(){
+        $(this).find(".sequence-number").text((index + 1) + ".");
+        $(this).find("[name]").each(function() {
             var name = $(this).attr("name");
             name = name.replace(/sequences\[\d+\]/, "sequences[" + index + "]");
             $(this).attr("name", name);
+            if(name.endsWith(".recipestep")) $(this).val(index + 1);
         });
     });
 }

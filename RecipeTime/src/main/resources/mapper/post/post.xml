@@ -292,6 +292,8 @@
 	    </where>
 	
 		ORDER BY p.recipewritedate DESC
+		
+		limit #{perPage} offset 0
     </select>
     
     <!-- 글 상세 (대표이미지, 첨부, 태그, 재료, 순서, 순서별 첨부 포함) -->

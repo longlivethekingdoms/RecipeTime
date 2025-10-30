@@ -185,20 +185,56 @@ public class PostServiceImpl implements PostService {
 	        if(sequencelist != null) {
 	        	for(PostSequence sequences : sequencelist) {
 	        		sequences.setRecipeid(post.getRecipeid());
-	        		System.out.println(sequences.getRecipeid());
+	        		System.out.println(sequences.getRecipestepid()+"표시");
 	        		if(sequences.getRecipestepid() > 0) {
 	        			sequenceDAO.updateSequence(sequences);
+	        			
+        				
+	        			int stepId = sequences.getRecipestepid();
+	        			System.out.println(stepId + "스텝");
+	        			
+		                if (sequences.getAttachments() != null && !sequences.getAttachments().isEmpty()) {
+		                    for (Attachment a : sequences.getAttachments()) {
+		                    	if(a.getAttachmentid()<= 0)
+		                    	{
+		                    		a.setRecipestepid(stepId);
+		                    		postDAO.insertseqAttachments(List.of(a));
+		                    	}
+		                       
+		                    }
+		                    // ���⼭�� insert
+		                }
+		                
+		                PostSequence originalSequence = originalseqlist.stream().filter(s->s.getRecipestepid()==sequences.getRecipestepid()).findFirst().get();
+		                for(Attachment osa : originalSequence.getAttachments()) {
+		                	if(sequences.getAttachments().stream().noneMatch(i->i.getAttachmentid()==osa.getAttachmentid()))
+		                	{
+		                		attachmentDAO.deleteAttachment(osa);
+		                	}	        				
+	        			}
+	        			
+	        			        			
 	        		}
 	        		else
 	        		{
 	        			System.out.println(sequences.getRecipeid());
 	        			sequenceDAO.insertSequence(sequences);
+	        			
+	        			int stepId = sequences.getRecipestepid();
+		                if (sequences.getAttachments() != null && !sequences.getAttachments().isEmpty()) {
+		                    for (Attachment a : sequences.getAttachments()) {
+		                        a.setRecipestepid(stepId);
+		                    }
+		                    postDAO.insertseqAttachments(sequences.getAttachments()); // ���⼭�� insert
+		                }
 	        		}
 	        	}
 	        	
 	        	for(PostSequence sequences : originalseqlist) {
 	        		int seqstepid = sequences.getRecipestepid();
+	        		System.out.println(seqstepid+"여기");
 	        		if(sequencelist.stream().noneMatch(i->i.getRecipestepid()==seqstepid)) {
+	        			System.out.println(seqstepid+"여기2");
 	        			sequenceDAO.deleteSequence(sequences);
 	        		}
 	        	}
